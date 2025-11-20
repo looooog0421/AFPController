@@ -49,7 +49,7 @@ if __name__ == "__main__":
         z_offset = A * np.sin(2 * np.pi * t / T)
         target_pos = cur_ee_pos + np.array([0.0, 0.0, z_offset]).T
         print("target_pos: ", target_pos)
-        controller.move_to_cartesian(target_pos, velocity=0.5, wait4complete=False)
+        controller.move_to_cartesian(target_pos, velocity=0.2, wait4complete=False)
         controller.rate.sleep()
     end_time = time.time()
     print(f"Completed sin wave trajectory in {end_time - start_time:.2f} seconds.")

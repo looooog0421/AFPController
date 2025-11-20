@@ -10,7 +10,7 @@ pcanview.log
 src/afp_mjc/env/AFPhead/meshes/
 src/afp_mjc/env/AFPhead/urdf/*.STL
 
-src/afp_mjc/env/frange_model/meshes/
-src/afp_mjc/env/frange_model/urdf/*.STL
+src/afp_mjc/env/flange_model/meshes/
+src/afp_mjc/env/flange_model/urdf/*.STL
 
 src/afp_mjc/env/mujoco_ur5e/assets/
