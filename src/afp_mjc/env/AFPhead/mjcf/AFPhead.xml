@@ -1,0 +1,52 @@
+<mujoco model="AFPhead">
+  <compiler angle="radian" meshdir="../meshes" autolimits="true"/>
+
+  <asset>
+    <mesh name="AFP_base_link" file="base_link.STL"/>
+    <mesh name="shoujuan_link" file="shoujuan_link.STL"/>
+    <mesh name="fangjuan_link" file="fangjuan_link.STL"/>
+    <mesh name="roll_link" file="roll_link.STL"/>
+    <mesh name="chongsong_link" file="chongsong_link.STL"/>
+  </asset>
+
+  <default class="afphead">
+    <joint damping="0.1" armature="0.01"/>
+    <geom contype="1" conaffinity="1"/>
+  </default>
+
+  <!-- <worldbody> -->
+  <body name="AFP_base" childclass="AFPhead">
+    <inertial pos="0.0428762 -0.0285344 0.0550524" mass="0.796857" 
+              diaginertia="0.00118905 0.000915620 0.000567181"/>
+    <geom type="mesh" rgba="1 1 1 1" mesh="afp_base_link"/>
+  <!-- <geom type="mesh" rgba="1 1 1 1" mesh="AFP_base_link"/> -->
+    <body name="shoujuan_link" pos="0.09 0.00765 -0.11247" quat="0.707105 -0.707108 0 0">
+      <inertial pos="0 0 -0.0091764" quat="0.5 0.5 -0.5 0.5" mass="0.0370388" diaginertia="1.43996e-05 8.04874e-06 8.04874e-06"/>
+      <joint name="shoujuan_joint" pos="0 0 0" axis="0 0 1"/>
+      <geom type="mesh" rgba="0.752941 0.752941 0.752941 1" mesh="shoujuan_link"/>
+    </body>
+    <body name="fangjuan_link" pos="0.09 0.00615 -0.0244735" quat="0.707107 -0.707107 0 0">
+      <inertial pos="0 0 -0.0125449" quat="0.5 0.5 -0.5 0.5" mass="0.0759149" diaginertia="4.89304e-05 2.70071e-05 2.70071e-05"/>
+      <joint name="fangjuan_joint" pos="0 0 0" axis="0 0 -1"/>
+      <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="fangjuan_link"/>
+    </body>
+    <body name="roll_link" pos="0 0 0.161">
+      <inertial pos="0 -0.000136865 0" quat="0.707107 0.707107 0 0" mass="0.00221391" diaginertia="8.7214e-08 8.7214e-08 4.26069e-08"/>
+      <joint name="roll_joint" pos="0 0 0" axis="0 1 0"/>
+      <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="roll_link"/>
+    </body>
+    <body name="chongsong_link" pos="0.086028 0 0.089591" quat="0.707105 -0.707108 0 0">
+      <inertial pos="-3.06003e-06 4.60329e-06 -0.00273291" quat="0.472477 0.00275841 -0.00147876 0.881338" mass="0.00486684" diaginertia="2.96121e-07 2.94001e-07 2.54651e-07"/>
+      <joint name="chongsong_joint" pos="0 0 0" axis="0 0 -1"/>
+      <geom type="mesh" rgba="1 1 1 1" mesh="chongsong_link"/>
+    </body>
+  </body>
+  <!-- </worldbody> -->
+<!-- 
+  <actuator>
+    <motor name="afp_shoujuan" joint="afp_shoujuan_joint" gear="1" ctrllimited="true" ctrlrange="-10 10"/>
+    <motor name="afp_fangjuan" joint="afp_fangjuan_joint" gear="1" ctrllimited="true" ctrlrange="-10 10"/>
+    <motor name="afp_roll" joint="afp_roll_joint" gear="1" ctrllimited="true" ctrlrange="-5 5"/>
+    <motor name="afp_chongsong" joint="afp_chongsong_joint" gear="1" ctrllimited="true" ctrlrange="-5 5"/>
+  </actuator> -->
+</mujoco>

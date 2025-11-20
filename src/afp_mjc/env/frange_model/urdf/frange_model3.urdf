@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="frange_model">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.0186054908844352 -0.0127222624658468 0.978090059487407"
+        rpy="0 0 0" />
+      <mass
+        value="0.431287434264272" />
+      <inertia
+        ixx="0.00154115433579534"
+        ixy="-3.98109298041337E-08"
+        ixz="7.78562632937673E-08"
+        iyy="0.00284296939434445"
+        iyz="0.000172310795285532"
+        izz="0.00229506553359086" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://frange_model/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://frange_model/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="AFPhead">
+  <link
+    name="afp_base_link">
+    <inertial>
+      <origin
+        xyz="0.0428761782499959 -0.0285343862178325 0.0550524220470005"
+        rpy="0 0 0" />
+      <mass
+        value="0.796856880665087" />
+      <inertia
+        ixx="0.000915619736444308"
+        ixy="-7.76783132248655E-06"
+        ixz="0.000179759010656708"
+        iyy="0.00118904676661886"
+        iyz="-9.4553964379079E-06"
+        izz="0.000567181290442572" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="../meshes/afp_base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="../meshes/afp_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="shoujuan_link">
+    <inertial>
+      <origin
+        xyz="-2.81892564846231E-17 0 -0.00917639702991779"
+        rpy="0 0 0" />
+      <mass
+        value="0.0370388090432498" />
+      <inertia
+        ixx="8.04873544094614E-06"
+        ixy="-2.96388233360475E-22"
+        ixz="1.25661044156512E-22"
+        iyy="8.04873544094614E-06"
+        iyz="2.01110984226303E-22"
+        izz="1.43996448956194E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="../meshes/shoujuan_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="../meshes/shoujuan_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="shoujuan_joint"
+    type="revolute">
+    <origin
+      xyz="0.09 0.00765 -0.11247"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="afp_base_link" />
+    <child
+      link="shoujuan_link" />
+    <axis
+      xyz="0 0 1" />
+    <!-- 限位：根据实际机械限位调整 lower/upper 值（单位：弧度） -->
+    <limit
+      effort="10"
+      velocity="10"
+      lower="628.3185307179586"
+      upper="628.3185307179586" />
+  </joint>
+  <link
+    name="fangjuan_link">
+    <inertial>
+      <origin
+        xyz="0 0 -0.0125448509693068"
+        rpy="0 0 0" />
+      <mass
+        value="0.0759149239612695" />
+      <inertia
+        ixx="0.000027"
+        ixy="0"
+        ixz="0"
+        iyy="0.000027"
+        iyz="0"
+        izz="0.000049" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="../meshes/fangjuan_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="../meshes/fangjuan_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="fangjuan_joint"
+    type="revolute">
+    <origin
+      xyz="0.09 0.00615 -0.0244734741190361"
+      rpy="-1.5707963267949 0 0" />
+    <parent
+      link="afp_base_link" />
+    <child
+      link="fangjuan_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      effort="10"
+      velocity="10"
+      lower="628.3185307179586"
+      upper="628.3185307179586" />
+  </joint>
+  <link
+    name="roll_link">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.00221391175891126" />
+      <inertia
+        ixx="8.72139516716221E-08"
+        ixy="-7.68944503776066E-25"
+        ixz="-1.44644504803075E-24"
+        iyy="4.26069007786622E-08"
+        iyz="6.79097244508694E-25"
+        izz="8.72139516716221E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="../meshes/roll_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="../meshes/roll_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="roll_joint"
+    type="revolute">
+    <origin
+      xyz="0 0 0.161"
+      rpy="0 0 0" />
+    <parent
+      link="afp_base_link" />
+    <child
+      link="roll_link" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      effort="10"
+      velocity="10"
+      lower="628.3185307179586"
+      upper="628.3185307179586" />
+  </joint>
+  <link
+    name="chongsong_link">
+    <inertial>
+      <origin
+        xyz="-3.06003494402531E-06 4.60329285939531E-06 -0.00273290790036885"
+        rpy="0 0 0" />
+      <mass
+        value="0.00486684169418581" />
+      <inertia
+        ixx="2.94650009204501E-07"
+        ixy="-9.76508473943714E-10"
+        ixz="-1.43712321740903E-10"
+        iyy="2.95470231744523E-07"
+        iyz="2.16166506519378E-10"
+        izz="2.54652377710915E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="../meshes/chongsong_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="../meshes/chongsong_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="chongsong_joint"
+    type="revolute">
+    <origin
+      xyz="0.086028 0 0.089591"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="afp_base_link" />
+    <child
+      link="chongsong_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      effort="10"
+      velocity="10"
+      lower="628.3185307179586"
+      upper="628.3185307179586" />
+  </joint>
+</robot>
