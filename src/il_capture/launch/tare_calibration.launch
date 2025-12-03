@@ -1,0 +1,25 @@
+<launch>
+    <!-- 1. 启动 VRPN Client (连接动捕系统) -->
+    <!-- server 参数通常是动捕主机的IP地址，这里默认 localhost，如果动捕在另一台电脑上，请修改 value -->
+    <arg name="server" default="localhost"/>
+    <include file="$(find vrpn_client_ros)/launch/sample.launch">
+        <arg name="server" value="$(arg server)"/>
+    </include>
+
+    <!-- 2. 启动 NetFT Node (力传感器驱动) -->
+    <!-- address 参数设置为您的传感器IP: 192.168.10.104 -->
+    <node pkg="netft_utils" type="netft_node" name="netft_node" output="screen"
+        args="--address=192.168.10.104 --rate=100"/>
+
+    <!-- 3. 启动 Rigid Body Tracker (刚体追踪计算) -->
+    <!-- 假设 rigidbodytracker.py 在 il_capture/script 目录下 -->
+    <node pkg="il_capture" type="rigidbodytracker.py" name="rigid_body_tracker" output="screen">
+    </node>
+
+    <!-- 4. 启动 Tare ROS (重力标定逻辑) -->
+    <!-- 假设 tare_ros.py 在 il_capture/script 目录下 -->
+    <!-- output="screen" 确保能看到标定过程的打印信息 -->
+    <node pkg="il_capture" type="tare_ros.py" name="tool_gravity_tare" output="screen">
+    </node>
+
+</launch>
