@@ -218,21 +218,28 @@ class ToolGravityTare:
             if isinstance(static_torque_offset, np.ndarray) and static_torque_offset.ndim > 1:
                 static_torque_offset = np.mean(static_torque_offset, axis=1)
 
+            decimals = 5
+            mass_save = round(float(mass), decimals)
+            force_save = np.round(static_force_offset, decimals).tolist()
+            torque_save = np.round(static_torque_offset, decimals).tolist()
+            com_save = np.round(center_of_mass.flatten(), decimals).tolist()
+
             results_data = {
                     'description': 'Tool gravity calibration results based on motion capture data.',
-                    'mass_kg': float(mass),
-                    'static_force_offset_N': static_force_offset.tolist(),
-                    'center_of_mass_m': center_of_mass.flatten().tolist(),
-                    'static_torque_offset_Nm': static_torque_offset.tolist(),
+                    'mass_kg': mass_save,
+                    'static_force_offset_N': force_save,
+                    'center_of_mass_m': com_save,
+                    'static_torque_offset_Nm': torque_save,
                     'coordinate_system_note': 'Rigid body pose was transformed by R_GF = R_Y(180) before calibration.'
                 }
             
             # 4. 输出并保存结果
             rospy.loginfo("\n--- 工具重力标定结果 ---")
-            rospy.loginfo("  - Mass (kg): %.4f", mass)
-            rospy.loginfo("  - Static Force Offset (N): %s", static_force_offset.tolist())
-            rospy.loginfo("  - Center of Mass (m): %s", center_of_mass)
-            rospy.loginfo("  - Static Torque Offset (Nm): %s", static_torque_offset.tolist())
+            rospy.loginfo(f"  - Mass (kg): {mass_save}")
+            rospy.loginfo(f"  - Static Force Offset (N): {force_save}")
+            rospy.loginfo(f"  - Center of Mass (m): {com_save}")
+            rospy.loginfo(f"  - Static Torque Offset (Nm): {torque_save}")
+            
             self.save_yaml_results(results_data)        
         
         except Exception as e:
@@ -255,7 +262,8 @@ class ToolGravityTare:
         except Exception as e:
             rospy.logerr(f"Failed to save calibration results: {e}")
             
-
+def format_list(lst, precision=4):
+    return "[" + ", ".join(f"{x:.{precision}f}" for x in lst) + "]"
 
 if __name__ == "__main__":
     try:
@@ -265,3 +273,4 @@ if __name__ == "__main__":
         pass
     except Exception as e:
         rospy.logerr(f"Unexpected error: {e}")
+    

@@ -101,7 +101,7 @@ class RigidBodyTracker:
 
         rospy.loginfo("Rigid Body Tracker Initialized. Publishing pose and twist.")
 
-    def sync_callback(self, *msgs):
+    def sync_callback(self, *msgs: KineticStateStamped):
         """
         只有当五个marker的PoseStamped消息同时到达时才会调用此回调函数
         """
