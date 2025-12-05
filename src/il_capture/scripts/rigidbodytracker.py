@@ -44,11 +44,11 @@ class RigidBodyTracker:
         sqrt_3 = np.sqrt(3)
 
         self.local_markers = np.array([
-            [0.0, 0.0, 0.1175],               # Marker 1
-            [0.04 * sqrt_3, 0.04, -0.003],    # Marker 2
-            [-0.03 * sqrt_3, 0.03, -0.003], # Marker 3
-            [-0.035 * sqrt_3, -0.03, -0.003],  # Marker 4
-            [0.03 * sqrt_3, -0.03, -0.003]    # Marker 5
+            [0.0, 0.0, -0.1175],               # Marker 1
+            [-0.04, 0.04 * sqrt_3, -0.000003],    # Marker 2
+            [0.03, 0.03 * sqrt_3, -0.000003], # Marker 3
+            [0.035, -0.03 * sqrt_3, -0.000003],  # Marker 4
+            [-0.03, -0.03 * sqrt_3, -0.000003]    # Marker 5
         ])
         # 3. 创建订阅者列表
         # ROS 1 中 message_filters.Subscriber 不需要传 node 对象，也没有 QoS 参数

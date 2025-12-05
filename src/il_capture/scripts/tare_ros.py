@@ -139,7 +139,7 @@ class ToolGravityTare:
                 rospy.logwarn(f"Tool acceleration too high (linear_a: {lin_a_mag:.3f}, angular_a: {ang_a_mag:.3f}). Hold still for accurate tare.")
                 return  # 工具加速度过大, 不进行记录
 
-            self.record_data(current_quat, dot_product)
+            self.record_data(current_quat)
 
             # 更新记录姿态
             self.last_quat = current_quat
@@ -155,7 +155,7 @@ class ToolGravityTare:
                 # 关闭节点
                 rospy.signal_shutdown("Calibration complete.")
 
-    def record_data(self, quat, dot_product):
+    def record_data(self, quat):
             """
             记录数据
             """
@@ -175,7 +175,8 @@ class ToolGravityTare:
         假设已知动捕坐标系到力传感器坐标系的固定变换关系
         """
 
-        R_body_sensor = tf_trans.rotation_matrix(np.pi, [0, 1, 0])  # 绕Y轴旋转180度
+        # R_body_sensor = tf_trans.rotation_matrix(np.pi, [0, 1, 0])  # 绕Y轴旋转180度
+        R_body_sensor = tf_trans.rotation_matrix(0, [0, 1, 0])
         # R_GF = np.diag([-1, 1, -1, 1])  # 这个坐标变换矩阵表示的是力传感器的坐标系与我建立的刚体之间的坐标变换
 
         quat_xyzw = [quat[1], quat[2], quat[3], quat[0]]  # 转换为(x,y,z,w)顺序
