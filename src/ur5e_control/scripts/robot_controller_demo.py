@@ -1,13 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import rospy
 from control_msgs.msg import FollowJointTrajectoryActionGoal
 from trajectory_msgs.msg import JointTrajectoryPoint
-from ur5e_controller import UR5eController
-import ur5e_controller
+# from ur5e_control.src.ur5e_control.ur5e_controller import UR5eController
 import numpy as np
-
+from ur5e_control import UR5eController
 
 if __name__ == "__main__":
     # 初始化控制器

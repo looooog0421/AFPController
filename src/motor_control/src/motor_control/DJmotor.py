@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 # 适用于大疆M2006电机 1khz时的PID控制器
 # sudo ip link set can0 up type can bitrate 1000000
 import rospy
