@@ -1,15 +1,14 @@
 import rospy
-import rospy
 import threading
 import numpy as np
 import time
 from std_msgs.msg import Float32
 import copy
 
-import ur5e_controller
-from ur5e_controller import UR5eController
+# import ur5e_control.scripts.ur5e_controller as ur5e_controller
 from tension_control import TensionController
-
+from ur5e_control import UR5eController
+from motor_control import MotorLowLevelControl
 """
 AFP控制器
 应该包含路径规划
@@ -37,7 +36,7 @@ AFP控制器
 该控制器只做集成和上层算法
 """
 
-class AFPController:
-    def __init__(self):
-        self.ur5e_controller = UR5eController()
+# class AFPController:
+#     def __init__(self):
+#        #  self.ur5e_controller = UR5eController()
         

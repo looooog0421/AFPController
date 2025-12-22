@@ -521,7 +521,7 @@ class RigidBodyTracker:
 
         kinetic_msg = KineticStateStamped()
         kinetic_msg.Header.stamp = current_time
-        kinetic_msg.Header.frame_id = "nokov"
+        kinetic_msg.Header.frame_id = "world"
 
         # 填充 Pose
         x, y, z = T[0, 3], T[1, 3], T[2, 3]
