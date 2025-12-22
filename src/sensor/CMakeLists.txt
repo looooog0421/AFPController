@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(afp_controller)
+project(sensor)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,17 +8,13 @@ project(afp_controller)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  control_msgs
   geometry_msgs
   roscpp
   rospy
+  sensor_msgs
   std_msgs
-  # motor_control
-  # motor_msgs
-  ur5e_control  
-  motor_control
-  motor_msgs
-  sensor
-  # pinocchio
+  trajectory_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -28,7 +24,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-# catkin_python_setup()
+catkin_python_setup()
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -78,7 +74,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   geometry_msgs#   std_msgs
+#   control_msgs#   geometry_msgs#   sensor_msgs#   std_msgs#   trajectory_msgs
 # )
 
 ################################################
@@ -112,8 +108,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES afp_controller
-#  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs
+#  LIBRARIES sensor
+ CATKIN_DEPENDS control_msgs geometry_msgs roscpp rospy sensor_msgs std_msgs trajectory_msgs 
 #  DEPENDS system_lib
 )
 
@@ -130,7 +126,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/afp_controller.cpp
+#   src/${PROJECT_NAME}/sensor.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -141,7 +137,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/afp_controller_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/sensor_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -168,7 +164,8 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 # catkin_install_python(PROGRAMS
-#   scripts/my_python_script
+#   scripts/robot_controller_demo.py
+#   # scripts/sensor_controller.py
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
@@ -205,11 +202,9 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_afp_controller.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
-# target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} pinocchio::pinocchio)
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
