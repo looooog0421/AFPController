@@ -29,7 +29,7 @@ class TensionSensor:
         rospy.init_node('tension_sensor_node', anonymous=True)
 
         # 参数
-        port = rospy.get_param('~port', '/dev/ttyUSB1')
+        port = rospy.get_param('~port', '/dev/ttyUSB0')
         baudrate = rospy.get_param('~baudrate', 9600)
         timeout = rospy.get_param('~timeout', 0.02)
         self.read_interval = rospy.get_param('~read_interval', 0.02)
