@@ -1,27 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-重构的阻抗控制系统
-模块化设计，支持多种规划器和控制器组合
-"""
+
 import rospy
 import pinocchio as pin
 import numpy as np
 import os
-from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
-from typing import Optional, Tuple, Union
-from enum import Enum
-from collections import deque
-import yaml
+import sys
 from sensor_msgs.msg import JointState
 from geometry_msgs.msg import WrenchStamped 
 from std_msgs.msg import Float32, String
 
-from force_sensor_filter import ForceSensorFilter, GravityCompensator, ForceTorqueData
-from afp_robot_control.src.utils.robot_kinimatics import RobotKinematics, RotationType
-from impedance_controller import ImpedanceController, RobotState, ControlCommand, ImpedanceParams, MotionParams
-
+try:
+    sys.path.append('/home/hzk/AFPController/src/ur5e_control/src') 
+    from ur5e_control.ur5e_controller import UR5eController
+except ImportError:
+    UR5eController = None
 
 class ImpedanceFeederNode:
     def __init__(self):

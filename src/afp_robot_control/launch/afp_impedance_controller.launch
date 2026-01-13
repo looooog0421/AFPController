@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- AFP任务专用启动文件 -->
+    
+    <!-- 笛卡尔空间阻抗控制器 - AFP配置 -->
+    <node name="afp_impedance_controller" 
+          pkg="afp_robot_control" 
+          type="cartesian_impedance_controller_node.py" 
+          output="screen">
+        
+        <!-- 加载AFP配置 -->
+        <rosparam command="load" file="$(find afp_robot_control)/config/afp_task_config.yaml" />
+        
+    </node>
+    
+    <!-- 其他AFP相关节点可以在这里添加 -->
+    <!-- 例如：轨迹规划器、参数调整器等 -->
+    
+</launch>
