@@ -136,15 +136,22 @@ pub.publish(msg)
 
 ### 发布的Topics (Publishers)
 
-#### 1. `/joint_position_command` (std_msgs/Float32MultiArray)
-**功能**: 发送关节位置指令
+#### 1. `/joint_states` (sensor_msgs/JointState)
+**功能**: 发送关节位置指令给MuJoCo仿真或真实机器人
 
 **消息格式**:
 ```python
-data: [q1, q2, q3, q4, q5, q6]  # 目标关节角度 (rad)
+header:
+  stamp: <当前时间戳>
+  frame_id: "base_link"
+name: ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
+       'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
+position: [q1, q2, q3, q4, q5, q6]  # 目标关节角度 (rad)
+velocity: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+effort: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 ```
 
-**接收方**: UR机器人位置控制器
+**接收方**: MuJoCo仿真节点或真实UR机器人控制器
 
 **控制频率**: 
 - 默认: 125 Hz（UR5e限制）
@@ -152,7 +159,19 @@ data: [q1, q2, q3, q4, q5, q6]  # 目标关节角度 (rad)
 
 ---
 
-#### 2. `/impedance_debug` (std_msgs/Float32MultiArray)
+#### 2. `/joint_position_command` (std_msgs/Float32MultiArray)
+**功能**: 发送关节位置指令（调试用简化格式）
+
+**消息格式**:
+```python
+data: [q1, q2, q3, q4, q5, q6]  # 目标关节角度 (rad)
+```
+
+**接收方**: 调试工具或日志记录
+
+---
+
+#### 3. `/impedance_debug` (std_msgs/Float32MultiArray)
 **功能**: 调试信息输出（需启用debug模式）
 
 **消息格式**:

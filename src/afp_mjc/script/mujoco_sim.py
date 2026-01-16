@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import mujoco
 from mujoco import viewer
 import numpy as np
@@ -14,10 +16,144 @@ from sensor_msgs.msg import PointCloud2
 from scipy.spatial.transform import Rotation as R
 from sensor_msgs import point_cloud2
 import threading
+from typing import Literal
 
 ROI_X = [-0.8, -0.4]
 ROI_Y = [-0.45, 0.0]
 ROI_Z = [0.01, 0.5]
+
+def resample_pointcloud(
+    points: np.ndarray, 
+    target_num: int = 2048,
+    method: Literal['random', 'farthest'] = 'farthest'
+) -> np.ndarray:
+    """
+    将点云重采样到目标点数
+    
+    参数:
+        points: (N, 3) 的numpy数组，表示点云的位置信息
+        target_num: 目标点数，默认2048
+        method: 采样方法
+            - 'random': 随机采样（快速）
+            - 'farthest': 最远点采样（质量更好，保持几何结构）
+    
+    返回:
+        resampled_points: (target_num, 3) 的numpy数组
+    """
+    if not isinstance(points, np.ndarray):
+        raise TypeError("points必须是numpy数组")
+    
+    if points.ndim != 2 or points.shape[1] != 3:
+        raise ValueError(f"points形状必须是(N, 3)，当前形状: {points.shape}")
+    
+    n_points = points.shape[0]
+    
+    if n_points == 0:
+        raise ValueError("输入点云为空")
+    
+    # 如果点数已经等于目标点数，直接返回副本
+    if n_points == target_num:
+        return points.copy()
+    
+    # 下采样
+    if n_points > target_num:
+        if method == 'random':
+            return random_downsample(points, target_num)
+        elif method == 'farthest':
+            return farthest_point_sample(points, target_num)
+        else:
+            raise ValueError(f"未知的采样方法: {method}")
+    
+    # 上采样
+    else:
+        return upsample_pointcloud(points, target_num)
+
+
+def random_downsample(points: np.ndarray, target_num: int) -> np.ndarray:
+    """
+    随机下采样
+    
+    参数:
+        points: (N, 3) 点云
+        target_num: 目标点数
+    
+    返回:
+        downsampled: (target_num, 3) 下采样后的点云
+    """
+    indices = np.random.choice(points.shape[0], target_num, replace=False)
+    return points[indices]
+
+
+def farthest_point_sample(points: np.ndarray, target_num: int) -> np.ndarray:
+    """
+    最远点采样 (Farthest Point Sampling, FPS)
+    保持点云的几何结构，采样结果更均匀
+    
+    参数:
+        points: (N, 3) 点云
+        target_num: 目标点数
+    
+    返回:
+        sampled: (target_num, 3) 采样后的点云
+    """
+    n_points = points.shape[0]
+    
+    # 初始化
+    sampled_indices = np.zeros(target_num, dtype=np.int32)
+    distances = np.ones(n_points) * np.inf
+    
+    # 随机选择第一个点
+    current_idx = np.random.randint(0, n_points)
+    
+    for i in range(target_num):
+        sampled_indices[i] = current_idx
+        current_point = points[current_idx]
+        
+        # 计算所有点到当前点的距离
+        dist = np.sum((points - current_point) ** 2, axis=1)
+        
+        # 更新每个点到已采样点集的最小距离
+        distances = np.minimum(distances, dist)
+        
+        # 选择距离最远的点作为下一个采样点
+        current_idx = np.argmax(distances)
+    
+    return points[sampled_indices]
+  
+
+def upsample_pointcloud(points: np.ndarray, target_num: int) -> np.ndarray:
+    """
+    上采样点云
+    策略：先重复现有点，然后在每个点周围添加小的随机扰动
+    
+    参数:
+        points: (N, 3) 点云
+        target_num: 目标点数
+    
+    返回:
+        upsampled: (target_num, 3) 上采样后的点云
+    """
+    n_points = points.shape[0]
+    
+    # 计算需要多少倍的重复 + 额外的点
+    repeat_times = target_num // n_points
+    extra_points = target_num % n_points
+    
+    # 重复现有点
+    upsampled = np.repeat(points, repeat_times, axis=0)
+    
+    # 如果还需要额外的点，随机选择
+    if extra_points > 0:
+        extra_indices = np.random.choice(n_points, extra_points, replace=False)
+        upsampled = np.vstack([upsampled, points[extra_indices]])
+    
+    # 添加小的随机扰动，避免完全重复的点
+    # 扰动幅度基于点云的整体尺度
+    scale = np.std(points, axis=0).mean()
+    noise = np.random.randn(*upsampled.shape) * scale * 0.01  # 1%的噪声
+    upsampled = upsampled + noise
+    
+    return upsampled
 
 class MujocoSim:
     def __init__(self, model_path):
@@ -87,12 +223,12 @@ class MujocoSim:
             [0, 0, -1]
         ])
         
-        print(f"相机内参矩阵:\n{self.intr}")
-        print(f"FOV: {fov}°, fx: {fx:.2f}, fy: {fy:.2f}")
-        print("坐标系变换: 成像坐标系 -> MuJoCo相机坐标系 (绕X轴180°)")
+        # print(f"相机内参矩阵:\n{self.intr}")
+        # print(f"FOV: {fov}°, fx: {fx:.2f}, fy: {fy:.2f}")
+        # print("坐标系变换: 成像坐标系 -> MuJoCo相机坐标系 (绕X轴180°)")
 
     def run_simulation(self):
-        print("启动实时仿真与点云发布...")
+        # print("启动实时仿真与点云发布...")
         start_time = time.time()
         pc_interval = 1.0 / self.pointcloud_freq
 
@@ -122,9 +258,9 @@ class MujocoSim:
             rgb, depth = self.render_rgbd()
             
             # 调试：打印深度图信息
-            print(f"深度图形状: {depth.shape}, RGB形状: {rgb.shape}")
-            print(f"深度范围: min={depth.min():.4f}, max={depth.max():.4f}")
-            print(f"有效深度点数: {np.sum((depth > 0) & (depth < 3.0))}")
+            # print(f"深度图形状: {depth.shape}, RGB形状: {rgb.shape}")
+            # print(f"深度范围: min={depth.min():.4f}, max={depth.max():.4f}")
+            # print(f"有效深度点数: {np.sum((depth > 0) & (depth < 2.0))}")
             
             # 获取相机外参（每次调用时更新，因为相机可能移动）
             cam_pos = self.data.cam_xpos[self.camera_id]
@@ -133,8 +269,8 @@ class MujocoSim:
             extr[:3, :3] = cam_rot.T
             extr[:3, 3] = cam_pos
             
-            print(f"相机位置: {cam_pos}")
-            print(f"相机旋转矩阵:\n{cam_rot}")
+            # print(f"相机位置: {cam_pos}")
+            # print(f"相机旋转矩阵:\n{cam_rot}")
             
             # 转换为点云（世界坐标系）
             xyzrgb = self.rgbd_to_pointcloud(rgb, depth, self.intr, extr)
@@ -149,17 +285,20 @@ class MujocoSim:
         points_world = xyzrgb[:, :3]
         colors = xyzrgb[:, 3:]
         
-        print(f"点云统计 - 点数: {points_world.shape[0]}, "
-              f"X范围: [{points_world[:, 0].min():.3f}, {points_world[:, 0].max():.3f}], "
-              f"Y范围: [{points_world[:, 1].min():.3f}, {points_world[:, 1].max():.3f}], "
-              f"Z范围: [{points_world[:, 2].min():.3f}, {points_world[:, 2].max():.3f}]")
-        
         # 可选：ROI裁剪
-        # mask_roi = (points_world[:, 0] > ROI_X[0]) & (points_world[:, 0] < ROI_X[1]) & \
-        #            (points_world[:, 1] > ROI_Y[0]) & (points_world[:, 1] < ROI_Y[1]) & \
-        #            (points_world[:, 2] > ROI_Z[0]) & (points_world[:, 2] < ROI_Z[1])
-        # points_world = points_world[mask_roi]
+        mask_roi = (points_world[:, 0] > ROI_X[0]) & (points_world[:, 0] < ROI_X[1]) & \
+                   (points_world[:, 1] > ROI_Y[0]) & (points_world[:, 1] < ROI_Y[1]) & \
+                   (points_world[:, 2] > ROI_Z[0]) & (points_world[:, 2] < ROI_Z[1])
+        points_world = points_world[mask_roi]
         
+
+               
+        points_world = resample_pointcloud(points_world, target_num=2048, method='farthest')
+
+        # print(f"点云统计 - 点数: {points_world.shape[0]}, "
+        #       f"X范围: [{points_world[:, 0].min():.3f}, {points_world[:, 0].max():.3f}], "
+        #       f"Y范围: [{points_world[:, 1].min():.3f}, {points_world[:, 1].max():.3f}], "
+        #       f"Z范围: [{points_world[:, 2].min():.3f}, {points_world[:, 2].max():.3f}]") 
         # 发布点云
         header = rospy.Header()
         header.stamp = rospy.Time.now()
@@ -181,7 +320,7 @@ class MujocoSim:
         
         return rgb, depth
 
-    def rgbd_to_pointcloud(self, rgb, depth, intr, extr, depth_trunc=3.0):
+    def rgbd_to_pointcloud(self, rgb, depth, intr, extr, depth_trunc=2.0):
         """
         将RGB-D图像转换为点云
         
@@ -206,14 +345,14 @@ class MujocoSim:
             znear = self.model.vis.map.znear
             zfar = self.model.vis.map.zfar
             depth = znear / (1.0 - depth * (1.0 - znear / zfar))
-            print(f"  转换后深度范围: [{depth.min():.4f}, {depth.max():.4f}]米")
+            # print(f"  转换后深度范围: [{depth.min():.4f}, {depth.max():.4f}]米")
         
         # 生成像素网格
         cc, rr = np.meshgrid(np.arange(self.width), np.arange(self.height), sparse=True)
         
         # 过滤有效深度
         valid = (depth > 0) & (depth < depth_trunc)
-        print(f"有效深度像素: {np.sum(valid)} / {depth.size} ({100*np.sum(valid)/depth.size:.1f}%)")
+        # print(f"有效深度像素: {np.sum(valid)} / {depth.size} ({100*np.sum(valid)/depth.size:.1f}%)")
         
         z = np.where(valid, depth, np.nan)
         
@@ -233,7 +372,7 @@ class MujocoSim:
         xyz_image = xyz_image[~mask]
         color = color[~mask]
         
-        print(f"过滤后的3D点数: {xyz_image.shape[0]}")
+        # print(f"过滤后的3D点数: {xyz_image.shape[0]}")
         
         if xyz_image.shape[0] == 0:
             print("错误: 没有有效的3D点！")
@@ -245,7 +384,10 @@ class MujocoSim:
         # 步骤3: 从MuJoCo相机坐标系转换到世界坐标系
         xyz_h = np.hstack([xyz_image, np.ones((xyz_image.shape[0], 1))])
         
-
+        extr_ori = np.array([[ 0.99784269,  -0.01867954, 0.06293679],
+                            [-0.05087261,  -0.82596274, 0.56142456],
+                            [ 0.04149629,  -0.56341515,  -0.82513115]])
+        extr[:3, :3] = extr_ori  # 使用固定外参进行测试
         xyz_world = (extr @ xyz_h.T).T
         
         # 组合xyz和rgb

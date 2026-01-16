@@ -9,6 +9,7 @@ import numpy as np
 import os
 import sys
 from collections import deque
+import pinocchio as pin
 
 # ROS消息类型
 from sensor_msgs.msg import JointState
@@ -86,6 +87,20 @@ class ImpedanceControllerNode:
         self.reference_pose = None
         self.impedance_params = self._create_default_impedance_params()
         
+        # Home position: [0, -90, 90, -90, -90, 90] degrees
+        self.home_position = np.deg2rad([0, -90, 90, -90, -90, 90])
+        self.at_home_position = False
+        
+        # Pinocchio模型用于IK计算
+        self.robot_model_ik = pin.buildModelFromUrdf(self.urdf_path)
+        self.robot_data_ik = self.robot_model_ik.createData()
+        
+        # 关节名称
+        self.joint_names = [
+            'shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
+            'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint'
+        ]
+        
         self.data_received = {
             'joint_state': False,
             'wrench': False,
@@ -100,21 +115,22 @@ class ImpedanceControllerNode:
         
         # ============ ROS订阅 ============
         rospy.Subscriber('/joint_states', JointState, self.joint_state_callback, queue_size=1)
-        rospy.Subscriber('/netft_data', WrenchStamped, self.wrench_callback, queue_size=1)
+        rospy.Subscriber('/mujoco/ee_wrench', WrenchStamped, self.wrench_callback, queue_size=1)
         rospy.Subscriber('/reference_trajectory', PoseStamped, self.reference_callback, queue_size=1)
         
         # 动态阻抗参数订阅（使用Float32MultiArray临时替代自定义消息）
         rospy.Subscriber('/impedance_params_dynamic', Float32MultiArray, self.impedance_params_callback, queue_size=1)
         
         # ============ ROS发布 ============
-        self.joint_cmd_pub = rospy.Publisher('/joint_position_command', Float32MultiArray, queue_size=1)
-        
-        # 发布到UR控制器格式（用于MuJoCo仿真）
-        self.ur_traj_pub = rospy.Publisher(
+        # 发布UR轨迹命令到MuJoCo仿真或真实机器人
+        self.joint_cmd_pub = rospy.Publisher(
             '/scaled_pos_joint_traj_controller/follow_joint_trajectory/goal',
             FollowJointTrajectoryActionGoal,
             queue_size=1
         )
+        
+        # 调试用：发布Float32MultiArray格式
+        self.joint_debug_pub = rospy.Publisher('/joint_position_command', Float32MultiArray, queue_size=1)
         
         # 调试信息发布
         if self.debug_enabled:
@@ -124,12 +140,14 @@ class ImpedanceControllerNode:
         rospy.loginfo("Cartesian Impedance Controller Node Initialized")
         rospy.loginfo(f"Task Type: {self.task_type}")
         rospy.loginfo(f"Control Frequency: {self.control_freq} Hz")
+        rospy.loginfo(f"Home Position: {np.rad2deg(self.home_position)} deg")
         rospy.loginfo(f"Waiting for sensor data...")
         rospy.loginfo("=" * 60)
         
         # ============ 控制循环 ============
         self.rate = rospy.Rate(self.control_freq)
-        self.control_loop()
+        self.move_to_home_position()
+        # self.control_loop()
     
     def load_parameters(self):
         """从ROS参数服务器加载参数"""
@@ -167,6 +185,9 @@ class ImpedanceControllerNode:
         self.sensor_rotation_axis = rospy.get_param('~sensor/rotation_axis', 'z')
         self.sensor_rotation_angle = rospy.get_param('~sensor/rotation_angle', 0.0)
         self.enable_bias_calibration = rospy.get_param('~sensor/enable_bias_calibration', True)
+        
+        # 运动控制参数
+        self.max_joint_vel = rospy.get_param('~max_joint_velocity', 0.2)  # rad/s
     
     def _create_default_impedance_params(self) -> ImpedanceParams:
         """创建默认阻抗参数"""
@@ -179,10 +200,13 @@ class ImpedanceControllerNode:
     
     def joint_state_callback(self, msg: JointState):
         """关节状态回调"""
-        if len(msg.position) >= 6:
-            self.current_joint_state = np.array(msg.position[:6])
-            self.current_joint_velocity = np.array(msg.velocity[:6]) if len(msg.velocity) >= 6 else np.zeros(6)
+        order = [2, 1, 0, 3, 4, 5] # 根据你的实际映射调整
+        try:
+            self.current_joint_state = np.array(msg.position)[order]
+            self.current_joint_velocity = np.array(msg.velocity)[order]
             self.data_received['joint_state'] = True
+        except Exception as e:
+            rospy.logwarn(f"Error processing joint state: {e}")
     
     def wrench_callback(self, msg: WrenchStamped):
         """力/力矩传感器回调"""
@@ -236,6 +260,7 @@ class ImpedanceControllerNode:
             timestamp=msg.header.stamp.to_sec()
         )
         self.data_received['reference'] = True
+        print(f"position: {position}, orientation: {orientation}")
     
     def impedance_params_callback(self, msg: Float32MultiArray):
         """动态阻抗参数回调"""
@@ -268,8 +293,71 @@ class ImpedanceControllerNode:
         else:
             rospy.logwarn(f"Invalid impedance params length: {len(data)}, expected 12, 18 or 19")
     
+    def move_to_home_position(self):
+        """移动到home位置 [0, -90, -90, -90, 90, -90] degrees"""
+        rospy.loginfo("Moving to home position...")
+        
+        # 等待关节状态
+        timeout = rospy.Time.now() + rospy.Duration(5.0)
+        while not rospy.is_shutdown() and self.current_joint_state is None:
+            if rospy.Time.now() > timeout:
+                rospy.logwarn("Timeout waiting for joint states, skipping home position")
+                return
+            rospy.sleep(0.01)
+        
+        rospy.loginfo(f"Start: {np.rad2deg(self.current_joint_state)} deg")
+        rospy.loginfo(f"Target: {np.rad2deg(self.home_position)} deg")
+        
+        # 直接调用move_to
+        self.move_to(self.home_position, velocity=self.max_joint_vel, wait4complete=False)
+        
+        self.at_home_position = True
+        rospy.loginfo("Home position initialization complete")
+        rospy.sleep(5.0)
+    
+    def IK(self, target_position, target_orientation, q_init=None, max_iter=1000, eps=1e-4, damp=1e-6):
+        """逆运动学计算
+        
+        Args:
+            target_position: [x, y, z] 位置
+            target_orientation: [w, x, y, z] 四元数
+            q_init: 初始关节角度
+        
+        Returns:
+            q: 关节角度
+            success: 是否成功
+        """
+        # 构造目标SE3
+        quat = pin.Quaternion(target_orientation[0], target_orientation[1], 
+                             target_orientation[2], target_orientation[3])
+        target_SE3 = pin.SE3(quat.toRotationMatrix(), np.array(target_position))
+        
+        if q_init is None:
+            q = self.current_joint_state.copy() if self.current_joint_state is not None else np.zeros(6)
+        else:
+            q = q_init.copy()
+        
+        frame_id = self.robot_model_ik.getFrameId(self.ee_frame)
+        
+        for i in range(max_iter):
+            pin.forwardKinematics(self.robot_model_ik, self.robot_data_ik, q)
+            pin.updateFramePlacement(self.robot_model_ik, self.robot_data_ik, frame_id)
+            err = pin.log6(self.robot_data_ik.oMf[frame_id].inverse() * target_SE3).vector
+            
+            if np.linalg.norm(err) < eps:
+                return q, True
+            
+            J = pin.computeFrameJacobian(self.robot_model_ik, self.robot_data_ik, q, frame_id, pin.LOCAL)
+            JTJ = J.T.dot(J) + damp * np.eye(self.robot_model_ik.nv)
+            d_q = np.linalg.solve(JTJ, J.T.dot(err))
+            q = pin.integrate(self.robot_model_ik, q, d_q)
+        
+        return q, False
+    
     def control_loop(self):
         """主控制循环 - 200Hz"""
+        rospy.loginfo("Starting impedance control loop...")
+        
         while not rospy.is_shutdown():
             # 检查数据是否就绪
             if not all(self.data_received.values()):
@@ -280,11 +368,23 @@ class ImpedanceControllerNode:
                 continue
             
             try:
-                # 1. 坐标转换：传感器 -> 末端
+                # 1. IK: 将笛卡尔目标转换为关节角度
+                target_joint_positions, ik_success = self.IK(
+                    self.reference_pose.position,
+                    self.reference_pose.orientation,
+                    q_init=self.current_joint_state
+                )
+                
+                if not ik_success:
+                    rospy.logwarn_throttle(1.0, "IK failed")
+                    self.rate.sleep()
+                    continue
+                
+                # 2. 坐标转换：传感器 -> 末端
                 wrench_ee = self.coord_transformer.transform_wrench_to_ee(
                     self.current_wrench_sensor)
                 
-                # 2. 控制计算
+                # 3. 控制计算
                 output = self.controller.compute_control(
                     current_joint_state=self.current_joint_state,
                     current_joint_velocity=self.current_joint_velocity,
@@ -293,13 +393,14 @@ class ImpedanceControllerNode:
                     impedance_params=self.impedance_params
                 )
                 
-                # 3. 发布关节指令
+                # 4. 发布关节指令
                 if output.success:
-                    self.publish_joint_command(output.joint_positions)
+                    # 使用move_to发布命令，不等待完成
+                    self.move_to(output.joint_positions, velocity=self.max_joint_vel, wait4complete=False)
                 else:
                     rospy.logwarn_throttle(1.0, f"Control failed: {output.error_msg}")
                 
-                # 4. 发布调试信息
+                # 5. 发布调试信息
                 if self.debug_enabled and output.debug_info:
                     self.publish_debug_info(output.debug_info)
             
@@ -308,27 +409,52 @@ class ImpedanceControllerNode:
             
             self.rate.sleep()
     
-    def publish_joint_command(self, joint_positions: np.ndarray):
-        """发布关节位置指令"""
-        # 发布Float32MultiArray格式（兼容旧版）
-        msg = Float32MultiArray()
-        msg.data = joint_positions.tolist()
-        self.joint_cmd_pub.publish(msg)
+    def move_to(self, target_pos, duration=None, velocity=None, wait4complete=False):
+        """移动到目标关节位置
         
-        # 发布FollowJointTrajectoryActionGoal格式（用于UR控制器/MuJoCo仿真）
-        traj_goal = FollowJointTrajectoryActionGoal()
-        traj_goal.header.stamp = rospy.Time.now()
-        traj_goal.goal.trajectory.joint_names = [
-            'shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint',
-            'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint'
-        ]
+        Args:
+            target_pos: 目标关节角度 [6]
+            duration: 运动持续时间，如果None则根据velocity计算
+            velocity: 最大关节速度 (rad/s)
+            wait4complete: 是否等待运动完成
+        """
+        target_pos = np.array(target_pos)
+        try: 
+            current_pos = np.array(self.current_joint_state)
+        except: 
+            current_pos = np.zeros_like(target_pos)
         
-        point = JointTrajectoryPoint()
-        point.positions = joint_positions.tolist()
-        point.time_from_start = rospy.Duration(1.0 / self.control_freq)  # 下一个控制周期
+        if velocity is None: 
+            velocity = self.max_joint_vel
         
-        traj_goal.goal.trajectory.points = [point]
-        self.ur_traj_pub.publish(traj_goal)
+        diffs = target_pos - current_pos
+        max_delta = float(np.max(np.abs(diffs)))
+        
+        if duration is None:
+            duration = 0.01 if max_delta <= 1e-6 else max(0.01, max_delta / float(velocity))
+        
+        vel_cmd = diffs / max(1e-6, float(duration))
+        vel_cmd = np.clip(vel_cmd, -self.max_joint_vel, self.max_joint_vel)
+        
+        p0 = JointTrajectoryPoint()
+        p0.positions = current_pos.astype(float).tolist()
+        p0.velocities = [0.0]*6
+        p0.time_from_start = rospy.Duration(0.0)
+        
+        p1 = JointTrajectoryPoint()
+        p1.positions = target_pos.astype(float).tolist()
+        p1.velocities = vel_cmd.tolist()
+        p1.time_from_start = rospy.Duration(duration)
+        
+        goal = FollowJointTrajectoryActionGoal()
+        goal.goal.trajectory.joint_names = self.joint_names
+        goal.goal.trajectory.points = [p0, p1]
+        self.joint_cmd_pub.publish(goal)
+        
+        if wait4complete: 
+            rospy.sleep(duration)
+
+        rospy.sleep(5)  # 确保命令发送出去
     
     def publish_debug_info(self, debug_info: dict):
         """发布调试信息"""
@@ -350,6 +476,30 @@ class ImpedanceControllerNode:
                          f"ΔF: {debug_info.get('delta_F_norm', 0):.4f}, "
                          f"Δx: {debug_info.get('delta_x_norm', 0):.4f}")
 
+    # def move_to(self, target_pos, duration=None, velocity=None, wait4complete=False):
+    #     target_pos = np.array(target_pos)
+    #     try: current_pos = np.array(self.current_joint_state)
+    #     except: current_pos = np.zeros_like(target_pos)
+        
+    #     if velocity is None: velocity = self.max_joint_vel
+    #     diffs = target_pos - current_pos
+    #     max_delta = float(np.max(np.abs(diffs)))
+    #     if duration is None:
+    #         duration = 0.01 if max_delta <= 1e-6 else max(0.01, max_delta / float(velocity))
+        
+    #     vel_cmd = diffs / max(1e-6, float(duration))
+    #     vel_cmd = np.clip(vel_cmd, -self.max_joint_vel, self.max_joint_vel)
+        
+    #     p0 = JointTrajectoryPoint()
+    #     p0.positions = current_pos.astype(float).tolist(); p0.velocities = [0.0]*6; p0.time_from_start = rospy.Duration(0.0)
+    #     p1 = JointTrajectoryPoint()
+    #     p1.positions = target_pos.astype(float).tolist(); p1.velocities = vel_cmd.tolist(); p1.time_from_start = rospy.Duration(duration)
+        
+    #     goal = FollowJointTrajectoryActionGoal()
+    #     goal.goal.trajectory.joint_names = self.joint_names
+    #     goal.goal.trajectory.points = [p0, p1]
+    #     self.joint_cmd_pub.publish(goal)
+    #     if wait4complete: rospy.sleep(duration)
 
 if __name__ == '__main__':
     try:

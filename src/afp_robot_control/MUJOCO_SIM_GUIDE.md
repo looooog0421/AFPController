@@ -12,8 +12,7 @@
 
 ```
 测试节点 → 参考轨迹 → 控制节点 → 关节角度 → MuJoCo仿真
-         /reference_trajectory    /scaled_pos_joint_traj_controller/
-                                  follow_joint_trajectory/goal
+         /reference_trajectory    /joint_states
 ```
 
 ## 快速开始
@@ -91,10 +90,13 @@ rostopic list
 
 应该看到：
 - `/reference_trajectory` - 参考轨迹
-- `/joint_states` - 关节状态
-- `/netft_data` - 力传感器数据
-- `/scaled_pos_joint_traj_controller/follow_joint_trajectory/goal` - 关节控制命令
+- `/joint_states` - 关节状态（控制节点发布给MuJoCo）
+- `/netft_data` - 力传感器数据（MuJoCo发布）
+- `/joint_position_command` - 关节控制命令（Float32Array格式，调试用）
 - `/impedance_debug` - 调试信息
+- `/mujoco/ee_pose` - 末端位姿（MuJoCo发布）
+- `/mujoco/ee_wrench` - 末端力/力矩（MuJoCo发布）
+- `/mujoco/depth_camera/pointcloud` - 深度相机点云（MuJoCo发布）
 
 ### 2. 监控参考轨迹
 ```bash
@@ -103,7 +105,11 @@ rostopic echo /reference_trajectory
 
 ### 3. 查看控制命令
 ```bash
-rostopic echo /scaled_pos_joint_traj_controller/follow_joint_trajectory/goal
+# 查看发送给MuJoCo的关节状态
+rostopic echo /joint_states
+
+# 或查看调试格式的命令
+rostopic echo /joint_position_command
 ```
 
 ### 4. 查看调试信息

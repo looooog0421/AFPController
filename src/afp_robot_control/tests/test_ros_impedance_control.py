@@ -15,6 +15,8 @@ from sensor_msgs.msg import JointState
 from geometry_msgs.msg import WrenchStamped
 from std_msgs.msg import Float32MultiArray
 import sys
+import pinocchio as pin
+import os
 
 
 class ImpedanceControllerTester:
@@ -31,11 +33,11 @@ class ImpedanceControllerTester:
         
         # 固定位置模式参数
         self.target_position = rospy.get_param('~target_position', [0.5, 0.0, 0.4])
-        self.target_orientation = rospy.get_param('~target_orientation', [1.0, 0.0, 0.0, 0.0])  # [w, x, y, z]
+        self.target_orientation = rospy.get_param('~target_orientation', [0.0, 1.0, 0.0, 0.0])  # [w, x, y, z]
         
         # 圆形轨迹参数
         self.circle_center = rospy.get_param('~circle_center', [0.5, 0.0, 0.4])
-        self.circle_radius = rospy.get_param('~circle_radius', 0.05)  # 5cm
+        self.circle_radius = rospy.get_param('~circle_radius', 0.2)  # 20cm
         self.circle_angular_vel = rospy.get_param('~circle_angular_vel', 0.5)  # rad/s
         
         # XY平面运动参数
@@ -52,6 +54,12 @@ class ImpedanceControllerTester:
         self.current_joint_state = None
         self.current_wrench = None
         self.start_time = None
+        
+        # ============ Pinocchio运动学模型 ============
+        urdf_path = os.path.join(os.path.expanduser("~"), "Project/AFP/src/afp_mjc/env/mujoco_ur5e/ur5e.urdf")
+        self.robot_model = pin.buildModelFromUrdf(urdf_path)
+        self.robot_data = self.robot_model.createData()
+        rospy.loginfo(f"Loaded robot model from: {urdf_path}")
         
         # ============ ROS发布器 ============
         self.traj_pub = rospy.Publisher('/reference_trajectory', PoseStamped, queue_size=10)
@@ -79,6 +87,24 @@ class ImpedanceControllerTester:
     def wrench_callback(self, msg):
         """力/力矩传感器回调"""
         self.current_wrench = msg
+    
+    def compute_forward_kinematics(self, joint_positions):
+        """计算末端位置（FK）
+        
+        Args:
+            joint_positions: 关节角度 (6,)
+        
+        Returns:
+            np.ndarray: 末端位置 [x, y, z]
+        """
+        q = np.array(joint_positions)
+        pin.forwardKinematics(self.robot_model, self.robot_data, q)
+        pin.updateFramePlacements(self.robot_model, self.robot_data)
+        
+        # 获取flange frame的位置
+        flange_id = self.robot_model.getFrameId("flange")
+        ee_transform = self.robot_data.oMf[flange_id]
+        return ee_transform.translation
     
     def publish_impedance_params(self, position_stiffness, position_damping, 
                                  orientation_stiffness, orientation_damping):
@@ -114,6 +140,70 @@ class ImpedanceControllerTester:
         s = 10*tau**3 - 15*tau**4 + 6*tau**5
         return np.array(start) + s * (np.array(end) - np.array(start))
     
+    def move_to_start_position(self, target_position, duration=10.0):
+        """缓慢移动到测试起点
+        
+        Args:
+            target_position: 目标位置 [x, y, z]
+            duration: 移动持续时间（秒）
+        """
+        rospy.loginfo(f"\n{'='*60}")
+        rospy.loginfo("Moving to start position...")
+        rospy.loginfo(f"Target: {target_position}, Duration: {duration}s")
+        rospy.loginfo(f"{'='*60}")
+        
+        # 等待接收当前关节状态
+        wait_time = 0
+        while self.current_joint_state is None and wait_time < 3.0 and not rospy.is_shutdown():
+            rospy.loginfo("Waiting for current joint states...")
+            rospy.sleep(0.5)
+            wait_time += 0.5
+        
+        # 从FK计算当前末端位置
+        if self.current_joint_state is not None:
+            # 假设关节名称顺序与ur5e标准顺序
+            joint_positions = list(self.current_joint_state.position[:6])
+            start_position = self.compute_forward_kinematics(joint_positions)
+            rospy.loginfo(f"Starting from current position (FK): [{start_position[0]:.3f}, {start_position[1]:.3f}, {start_position[2]:.3f}]")
+        else:
+            # 备用：如果没有接收到关节状态，使用默认值
+            start_position = np.array([0.4, 0.0, 0.5])
+            rospy.logwarn(f"No joint states received, using default: [{start_position[0]:.3f}, {start_position[1]:.3f}, {start_position[2]:.3f}]")
+        
+        target_pos = np.array(target_position)
+        
+        # 计算移动距离
+        distance = np.linalg.norm(target_pos - start_position)
+        rospy.loginfo(f"Distance to target: {distance:.3f}m")
+        
+        rate = rospy.Rate(self.control_frequency)
+        start_time = rospy.Time.now()
+        
+        while not rospy.is_shutdown():
+            elapsed = (rospy.Time.now() - start_time).to_sec()
+            
+            if elapsed > duration:
+                rospy.loginfo("Reached start position!")
+                break
+            
+            # 使用五次多项式平滑轨迹
+            current_pos = self.smooth_trajectory(elapsed, duration, start_position, target_pos)
+            
+            # 发布目标位姿
+            msg = self.create_pose_msg(current_pos.tolist(), self.target_orientation)
+            self.traj_pub.publish(msg)
+            
+            # 打印进度（每秒一次）
+            if int(elapsed) != int(elapsed - 1.0/self.control_frequency):
+                progress = (elapsed / duration) * 100
+                rospy.loginfo(f"Progress: {progress:.1f}%, Pos: [{current_pos[0]:.3f}, {current_pos[1]:.3f}, {current_pos[2]:.3f}]")
+            
+            rate.sleep()
+        
+        # 在起点稳定一下
+        rospy.loginfo("Stabilizing at start position...")
+        rospy.sleep(1.0)
+    
     def test_fixed_position(self):
         """测试1: 固定位置保持"""
         rospy.loginfo("\n" + "="*60)
@@ -121,6 +211,9 @@ class ImpedanceControllerTester:
         rospy.loginfo(f"Target Position: {self.target_position}")
         rospy.loginfo(f"Target Orientation: {self.target_orientation}")
         rospy.loginfo("="*60)
+        
+        # 先移动到起点
+        self.move_to_start_position(self.target_position, duration=5.0)
         
         # 设置阻抗参数（标准刚度）
         self.publish_impedance_params(
@@ -162,6 +255,14 @@ class ImpedanceControllerTester:
         rospy.loginfo(f"Center: {self.circle_center}, Radius: {self.circle_radius}m")
         rospy.loginfo(f"Angular Velocity: {self.circle_angular_vel} rad/s")
         rospy.loginfo("="*60)
+        
+        # 先移动到圆形轨迹起点（圆心右侧）
+        circle_start = [
+            self.circle_center[0] + self.circle_radius,
+            self.circle_center[1],
+            self.circle_center[2]
+        ]
+        self.move_to_start_position(circle_start, duration=10.0)
         
         # 设置阻抗参数
         self.publish_impedance_params(
@@ -211,6 +312,9 @@ class ImpedanceControllerTester:
         rospy.loginfo(f"Duration: {self.xy_duration}s")
         rospy.loginfo("="*60)
         
+        # 先移动到起点
+        self.move_to_start_position(self.xy_start, duration=5.0)
+        
         # 设置阻抗参数（Z轴更柔顺）
         self.publish_impedance_params(
             position_stiffness=[500, 500, 50],
@@ -258,6 +362,14 @@ class ImpedanceControllerTester:
         rospy.loginfo(f"End Z: {self.approach_end_z}m")
         rospy.loginfo(f"Duration: {self.approach_duration}s")
         rospy.loginfo("="*60)
+        
+        # 先移动到接近测试起点
+        approach_start_pos = [
+            self.target_position[0],
+            self.target_position[1],
+            self.approach_start_z
+        ]
+        self.move_to_start_position(approach_start_pos, duration=5.0)
         
         # 第一阶段：标准刚度接近
         rospy.loginfo("\nPhase 1: Approaching...")
