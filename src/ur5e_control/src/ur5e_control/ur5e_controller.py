@@ -177,7 +177,6 @@ class UR5eController:
     def reference_trajectory_callback(self, msg: PoseStamped):
         """参考轨迹回调函数"""
         self.reference_pose = msg
-        rospy.loginfo(f"Received reference trajectory point: {msg.pose.position}")
 
     def enable_trajectory_tracking(self, topic_name="/reference_trajectory"):
         """启用轨迹跟踪模式"""
@@ -374,6 +373,17 @@ class UR5eController:
             done = self.client.wait_for_result(rospy.Duration(duration + 0.5))
             if not done:
                 rospy.logwarn("Move timeout or failed!")
+                return False
+            else:
+                # 检查action状态
+                state = self.client.get_state()
+                if state == actionlib.GoalStatus.SUCCEEDED:
+                    # rospy.loginfo("Move completed successfully!")
+                    return True
+                else:
+                    rospy.logwarn(f"Move finished with state: {state}")
+                    return False
+        return None  # 非阻塞模式不返回状态
 
 if __name__ == "__main__":
     # ============ 配置参数 ============

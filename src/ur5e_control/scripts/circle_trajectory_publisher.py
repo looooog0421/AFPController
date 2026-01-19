@@ -27,7 +27,7 @@ class CircleTrajectoryPublisher:
         # 计算圆心 (在y-z平面上，x不变)
         # 假设圆心在起点的z轴上方
         self.center = self.start_point.copy()
-        self.center[2] += self.radius  # z坐标上移半径
+        self.center[2] -= self.radius  # z坐标上移半径
         
         # 验证起点是否在圆上
         dist = np.linalg.norm(self.start_point[1:] - self.center[1:])
@@ -96,8 +96,8 @@ class CircleTrajectoryPublisher:
         msg.pose.position.z = position[2]
         
         # 姿态保持不变 (单位四元数)
-        msg.pose.orientation.w = 1.0
-        msg.pose.orientation.x = 0.0
+        msg.pose.orientation.w = 0.0
+        msg.pose.orientation.x = 1.0
         msg.pose.orientation.y = 0.0
         msg.pose.orientation.z = 0.0
         

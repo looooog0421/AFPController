@@ -13,6 +13,7 @@ import sys
 import os
 import pinocchio as pin
 from collections import deque
+from std_msgs.msg import Bool
 from geometry_msgs.msg import PoseStamped, WrenchStamped
 from dataclasses import dataclass
 from scipy.spatial.transform import Rotation as R
@@ -104,8 +105,12 @@ class UR5eImpedanceController(UR5eController):
         else:
             self.impedance_params = impedance_params
         
+        # 内部状态变量
+        self.xc = np.zeros(6)  # 参考位置/姿态
+        self.dxc = np.zeros(6)  # 参考速度/角速度
+        
         self.target_wrench = np.zeros(6)  # 目标力/力矩 [Fx, Fy, Fz, Tx, Ty, Tz]
-        self.target_wrench[5] = 50
+        self.target_wrench[2] = 10.0  # 默认Z轴10N力
         
         # 当前力/力矩
         self.current_wrench = np.zeros(6)
@@ -169,7 +174,7 @@ class UR5eImpedanceController(UR5eController):
         self.current_wrench = self.force_filter.update(calibrated_wrench)
         self.wrench_received = True
     
-    def compute_impedance_correction(self, reference_position, reference_orientation, target_wrench=None):
+    def compute_impedance_correction(self, target_wrench=None):
         """
         阻抗控制器，
         计算在当前姿态的末端坐标系下的位移修正量
@@ -180,54 +185,36 @@ class UR5eImpedanceController(UR5eController):
         Returns:
             delta_x: 位移修正量 [dx, dy, dz, drx, dry, drz] # 末端坐标系下
         """
+        dt = 1.0 / self.freq
+
         # 力误差
         if target_wrench is None:
-            target_wrench = np.zeros(6)
-        force_error = self.current_wrench - target_wrench
-        
-        # 阻抗公式: F_error = K * delta_x + D * delta_x_dot
-        
-        K = self.impedance_params.stiffness
-        D = self.impedance_params.damping
+            target_wrench = self.target_wrench
+
+        # 外力 环境对机器人的作用力
+        F_ext = self.current_wrench
+        F_err = - (F_ext - target_wrench)  # 力误差 负号是因为力传感器测量的是环境对机器人的力
+
+        # 阻抗参数
+        K = np.diag(self.impedance_params.stiffness)
+        D = np.diag(self.impedance_params.damping)
         if self.impedance_params.mass is not None:
-            M = self.impedance_params.mass
+            M = np.diag(self.impedance_params.mass)
         else:
-            M = np.array([1.0, 1.0, 1.0, 0.1, 0.1, 0.1])
-        
-        
-        T_be = self.robot_state.ee_state.robot_trans # 末端位姿在基座坐标系下
-        T_br = np.eye(4) # 参考位姿在基座坐标系下
-        T_br[:3, :3] = R.from_quat(reference_orientation).as_matrix()
-        T_br[:3, 3] = reference_position
+            M = np.diag(np.ones(6))
 
-        T_er = np.linalg.inv(T_be) @ T_br # 参考位姿在末端坐标系下
+        # 导纳模型计算加速度
+        ddxc = np.linalg.solve(M, F_err - D @ self.dxc - K @ self.xc)
 
-        # 位置误差
-        err_pos = T_er[:3, 3]
-        
-        # 姿态误差
-        err_rot = R.from_matrix(T_er[:3, :3]).as_rotvec()
-
-        err_state = np.hstack((err_pos, err_rot))
-
-        # 计算位置修正
-        x_dd = (1/ M) * (force_error
-                         - D * self.robot_state.ee_state.ee_vel
-                         - K * (err_state))
-        x_d = self.robot_state.ee_state.ee_vel + x_dd / self.freq
-        delta_x = x_d / self.freq
-        
-        # 限制修正量
-        position_correction = delta_x[:3]
-        position_correction_norm = np.linalg.norm(position_correction)
-        if position_correction_norm > self.max_position_correction:
-            position_correction = position_correction / position_correction_norm * self.max_position_correction
-            delta_x[:3] = position_correction
+        # 数值积分得到速度和位置
+        self.dxc += ddxc * dt
+        self.xc += self.dxc * dt
+        delta_x = self.xc.copy()
         
         # 滤波修正量
         delta_x_filtered = self.delta_x_filter.update(delta_x)
-
-        
+        delta_x_filtered[:2] = 0.0  # 仅Z轴方向阻抗控制
+        delta_x_filtered[3:] = 0.0  # 不进行姿态阻抗控制
         return delta_x_filtered
     
     def run_impedance_control_loop(self):
@@ -268,60 +255,69 @@ class UR5eImpedanceController(UR5eController):
             loop_start_time = time.time()
             
             try:
-                # 1. 从reference_pose提取位置和姿态
-                reference_position = np.array([
-                    self.reference_pose.pose.position.x,
-                    self.reference_pose.pose.position.y,
-                    self.reference_pose.pose.position.z
-                ])
-                reference_orientation = np.array([
-                    self.reference_pose.pose.orientation.w,
-                    self.reference_pose.pose.orientation.x,
-                    self.reference_pose.pose.orientation.y,
-                    self.reference_pose.pose.orientation.z
-                ])
+                if self.reference_pose is not None:
+                    # 1. 从reference_pose提取位置和姿态
+                    reference_position = np.array([
+                        self.reference_pose.pose.position.x,
+                        self.reference_pose.pose.position.y,
+                        self.reference_pose.pose.position.z
+                    ])
+                    reference_orientation = np.array([
+                        self.reference_pose.pose.orientation.w,
+                        self.reference_pose.pose.orientation.x,
+                        self.reference_pose.pose.orientation.y,
+                        self.reference_pose.pose.orientation.z
+                    ])
 
-                if np.linalg.norm(reference_orientation) < 0.5:
-                    reference_orientation = R.from_matrix(self.robot_state.ee_state.robot_trans[:3, :3]).as_quat()
-                # 2. 计算阻抗修正
-                delta_x_ee = self.compute_impedance_correction(reference_position, reference_orientation, self.target_wrench)
-                delta_pos_base = self.robot_state.ee_state.robot_trans[:3, :3] @ delta_x_ee[:3]
-                delta_rot_base = self.robot_state.ee_state.robot_trans[:3, :3] @ delta_x_ee[3:]
-            
-                # 3. 计算修正后的目标位置
-                corrected_position = reference_position + delta_pos_base
-                corrected_orientation = reference_orientation  # 暂时不修正姿态
+                    self.reference_pose = None  # 清除参考轨迹，等待下一次更新
 
-                corrected_orientation = (R.from_rotvec(delta_rot_base) * R.from_quat(corrected_orientation)).as_matrix()
-                # 4. IK求解
-                target_joint_pos, ik_success = self.IK(
-                                                self.robot_model, 
-                                                pin.SE3(corrected_orientation, corrected_position),
-                                                "tool0",
-                                                self.robot_state.joint_state.position)
+                    if np.linalg.norm(reference_orientation) < 0.5:
+                        reference_orientation = R.from_matrix(self.robot_state.ee_state.robot_trans[:3, :3]).as_quat()
+                    # 2. 计算阻抗修正
+                    delta_x_ee = self.compute_impedance_correction(self.target_wrench)
+                    delta_pos_base = self.robot_state.ee_state.robot_trans[:3, :3] @ delta_x_ee[:3]
+                    delta_rot_base = self.robot_state.ee_state.robot_trans[:3, :3] @ delta_x_ee[3:]
                 
-                if not ik_success:
-                    rospy.logwarn_throttle(1.0, "IK failed in impedance control")
-                    self.rate.sleep()
-                    continue
-                
-                # 5. 发送命令
-                self.move_to(target_joint_pos, wait4complete=False)
-                
-                loop_count += 1
-                
-                # 6. 打印状态
-                if time.time() - last_print_time >= 1.0:
-                    loop_duration = loop_start_time - last_loop_time
-                    if loop_duration > 0:
-                        current_freq = 1.0 / loop_duration
-                        force_error = self.current_wrench - self.target_wrench
-                        rospy.loginfo(f"Freq: {current_freq:.1f}Hz | "
-                                      f"Force Error: [{force_error[0]:.2f}, {force_error[1]:.2f}, {force_error[2]:.2f}]N | "
-                                      f"Delta_x: [{delta_pos_base[0]*1000:.2f}, {delta_pos_base[1]*1000:.2f}, {delta_pos_base[2]*1000:.2f}]mm")
-                    last_print_time = time.time()
-                
-                last_loop_time = loop_start_time
+                    # 3. 计算修正后的目标位置
+                    corrected_position = reference_position + delta_pos_base
+                    corrected_orientation = reference_orientation  # 暂时不修正姿态
+
+                    corrected_orientation = (R.from_rotvec(delta_rot_base) * R.from_quat(corrected_orientation)).as_matrix()
+                    # 4. IK求解
+                    target_joint_pos, ik_success = self.IK(
+                                                    self.robot_model, 
+                                                    pin.SE3(corrected_orientation, corrected_position),
+                                                    "tool0",
+                                                    self.robot_state.joint_state.position)
+                    
+                    if not ik_success:
+                        rospy.logwarn_throttle(1.0, "IK failed in impedance control")
+                        self.rate.sleep()
+                        continue
+                    
+                    # 5. 发送命令
+                    done = self.move_to(target_joint_pos, wait4complete=True)
+                    
+                    # print(f"Move to target joint position done: {done}")
+
+                    loop_count += 1
+                    
+                    # 6. 打印状态
+                    if time.time() - last_print_time >= 1.0:
+                        loop_duration = loop_start_time - last_loop_time
+                        if loop_duration > 0:
+                            current_freq = 1.0 / loop_duration
+                            force_error = self.current_wrench - self.target_wrench
+                            rospy.loginfo(f"Freq: {current_freq:.1f}Hz | "
+                                        f"Force Error: [{force_error[0]:.2f}, {force_error[1]:.2f}, {force_error[2]:.2f}]N | "
+                                        f"Delta_x: [{delta_pos_base[0]*1000:.2f}, {delta_pos_base[1]*1000:.2f}, {delta_pos_base[2]*1000:.2f}]mm"
+                                        f"Stiffness: {self.impedance_params.stiffness[:3]} | ")
+                        last_print_time = time.time()
+                    
+                    last_loop_time = loop_start_time
+                else:
+                    self.trigger_pub.publish(Bool(data=True))
+                    # rospy.loginfo("Waiting for reference trajectory...")
                 
             except Exception as e:
                 rospy.logerr_throttle(1.0, f"Error in impedance control loop: {e}")
@@ -337,7 +333,7 @@ if __name__ == "__main__":
     
     # 阻抗参数
     impedance_params = ImpedanceParams(
-        stiffness=np.array([800.0, 800.0, 800.0, 80.0, 80.0, 80.0]),  # 刚度
+        stiffness=np.array([800.0, 800.0, 1.0, 80.0, 80.0, 80.0]),  # 刚度
         damping=np.array([80.0, 80.0, 80.0, 8.0, 8.0, 8.0])           # 阻尼
     )
     

@@ -16,7 +16,7 @@
 
   <body name="afp_roll_link" pos="0 0 0.161">
     <inertial pos="0 -0.000136865 0" mass="0.00221391" diaginertia="8.7214e-08 8.7214e-08 4.26069e-08"/>
-    <site name="ee_site" type="cylinder" size="0.0375 0.0001" pos="0 0.0 0.0" euler="0 0 0" rgba="1 0 0 1" />
+    <site name="ee_site" type="cylinder" size="0.006 0.009" pos="0 0.0 0.0" euler="0 0 0" rgba="1 0 0 1" />
 
     <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="afp_roll_link"/>
   </body>
