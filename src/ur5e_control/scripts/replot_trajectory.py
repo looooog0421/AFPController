@@ -153,26 +153,24 @@ class TrajectoryReplotter:
         return success
     
     def setup_plots(self):
-        """设置图形布局 (4行3列)"""
-        # 第1行: 3D + XY + XZ
-        self.ax_3d = self.fig.add_subplot(4, 3, 1, projection='3d')
-        self.ax_xy = self.fig.add_subplot(4, 3, 2)
-        self.ax_xz = self.fig.add_subplot(4, 3, 3)
-        
-        # 第2行: YZ + 速度X + 速度Y
-        self.ax_yz = self.fig.add_subplot(4, 3, 4)
-        self.ax_vx = self.fig.add_subplot(4, 3, 5)
-        self.ax_vy = self.fig.add_subplot(4, 3, 6)
-        
-        # 第3行: 速度Z + 总速度 + 跟踪误差
-        self.ax_vz = self.fig.add_subplot(4, 3, 7)
-        self.ax_speed = self.fig.add_subplot(4, 3, 8)
-        self.ax_error = self.fig.add_subplot(4, 3, 9)
-        
-        # 第4行: 误差XYZ分量
-        self.ax_error_x = self.fig.add_subplot(4, 3, 10)
-        self.ax_error_y = self.fig.add_subplot(4, 3, 11)
-        self.ax_error_z = self.fig.add_subplot(4, 3, 12)
+        """设置图形布局 (4行3列)，列分组：轨迹 / 速度 / 误差"""
+        # 第1列：轨迹
+        self.ax_3d = self.fig.add_subplot(4, 3, 1, projection='3d')   # 3D轨迹
+        self.ax_xy = self.fig.add_subplot(4, 3, 4)                     # XY
+        self.ax_xz = self.fig.add_subplot(4, 3, 7)                     # XZ
+        self.ax_yz = self.fig.add_subplot(4, 3, 10)                    # YZ
+
+        # 第2列：速度
+        self.ax_speed = self.fig.add_subplot(4, 3, 2)                  # 总速度
+        self.ax_vx = self.fig.add_subplot(4, 3, 5)                     # Vx
+        self.ax_vy = self.fig.add_subplot(4, 3, 8)                     # Vy
+        self.ax_vz = self.fig.add_subplot(4, 3, 11)                    # Vz
+
+        # 第3列：误差
+        self.ax_error = self.fig.add_subplot(4, 3, 3)                  # 总误差
+        self.ax_error_x = self.fig.add_subplot(4, 3, 6)                # Ex
+        self.ax_error_y = self.fig.add_subplot(4, 3, 9)                # Ey
+        self.ax_error_z = self.fig.add_subplot(4, 3, 12)               # Ez
     
     def plot_trajectory(self):
         """绘制轨迹对比"""

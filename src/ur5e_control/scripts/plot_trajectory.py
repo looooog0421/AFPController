@@ -162,8 +162,8 @@ class TrajectoryPlotter:
             pin.updateFramePlacements(self.robot_model, self.robot_data)
             
             # 获取末端位置
-            flange_id = self.robot_model.getFrameId("flange")
-            ee_transform = self.robot_data.oMf[flange_id]
+            tool0_id = self.robot_model.getFrameId("tool0")
+            ee_transform = self.robot_data.oMf[tool0_id]
             ee_position = ee_transform.translation
             ee_orientation = ee_transform.rotation
             ee_quat = pin.Quaternion(ee_orientation).coeffs()

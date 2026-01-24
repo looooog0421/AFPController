@@ -360,6 +360,14 @@ if __name__ == "__main__":
     controller.move2default()
     rospy.sleep(1.0)
     
+    # 移动到模具上方
+    rospy.loginfo("Moving to above the mold...")
+    controller.move_to_cartesian(
+        target_pos=np.array([-0.54936, -0.20258, 0.00463]),
+        target_orin=R.from_euler('xyz', [0, 180, 0], degrees=True).as_quat(),
+        wait4complete=True
+    )
+
     # 启用轨迹跟踪（如果需要）
     if ENABLE_TRACKING:
         controller.enable_trajectory_tracking("/reference_trajectory")
