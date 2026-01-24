@@ -12,8 +12,8 @@ T_old = np.loadtxt(HAND_EYE_FILE)
 HAND_EYE_FILE = '/home/lgx/Project/hand_eye_calib/src/calibrate/result_hand_eye.txt'
 T_new = np.loadtxt(HAND_EYE_FILE)
 
-raw_file_path = '/home/lgx/Project/AFP/src/il_capture/data/layup_1767859976_20260108_161256_cleaned.hdf5'
-corrected_file_path = '/home/lgx/Project/AFP/src/il_capture/data/layup_1767859976_20260108_161256_corrected.hdf5'
+raw_file_path = '/home/lgx/Project/AFP/src/il_capture/data/layup_1768983281_20260121_161441_90_selected_selected.hdf5'
+corrected_file_path = '/home/lgx/Project/AFP/src/il_capture/data/layup_1768983281_20260121_161441_90_selected_selected_corrected.hdf5'
 TARGET_POINTS = 2048
 
 
@@ -65,11 +65,11 @@ def main():
     print(f"目标文件: {corrected_file_path}")
 
     with h5py.File(raw_file_path, 'r') as f_src, h5py.File(corrected_file_path, 'w') as f_dst:
-        if 'data' not in f_src:
-            print("错误：源文件中找不到 'data' 组")
+        if 'data_selected' not in f_src:
+            print("错误：源文件中找不到 'data_selected' 组")
             return
 
-        src_data_grp = f_src['data']
+        src_data_grp = f_src['data_selected']
         dst_data_grp = f_dst.create_group('data')
 
         # [重要] 1. 复制全局属性 (global attributes)

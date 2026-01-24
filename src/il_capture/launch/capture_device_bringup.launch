@@ -7,9 +7,14 @@
         <arg name="server" value="$(arg server)"/>
     </include>
 
-    <include file="$(find astra_camera)/launch/astra.launch">
+    <!-- <include file="$(find astra_camera)/launch/astra.launch">
         <arg name="color_depth_synchronization" value="true"/>
+    </include> -->
+
+<!-- roslaunch realsense2_camera rs_camera.launch -->
+    <include file="$(find realsense2_camera)/launch/demo_pointcloud.launch">
     </include>
+
 
     <node pkg="netft_utils" type="netft_node" name="netft_node"
         args="--address=192.168.10.104 --rate=500"/>

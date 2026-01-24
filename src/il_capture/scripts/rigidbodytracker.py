@@ -45,9 +45,9 @@ class RigidBodyTracker:
 
         self.local_markers = np.array([
             [0.0, 0.0, -0.1175],               # Marker 1
-            [-0.04, 0.04 * sqrt_3, -0.000003],    # Marker 2
+            [0.04, -0.04 * sqrt_3, -0.000003],    # Marker 2
             [0.03, 0.03 * sqrt_3, -0.000003], # Marker 3
-            [0.035, -0.03 * sqrt_3, -0.000003],  # Marker 4
+            [-0.035, 0.035 * sqrt_3, -0.000003],  # Marker 4
             [-0.03, -0.03 * sqrt_3, -0.000003]    # Marker 5
         ])
         # 3. 创建订阅者列表
@@ -113,7 +113,7 @@ class RigidBodyTracker:
             position = msgs[i].pose.position
             current_point_pos.append([(position.x)/1000, (position.y)/1000, (position.z)/1000])  # 转换为米
 
-        # 验证是否为5个点
+        # 验证是否为5个点   
         if len(current_point_pos) != 5:
             rospy.logwarn("Expected 5 marker points, but received {}".format(len(current_point_pos)))
             return
@@ -205,12 +205,12 @@ class RigidBodyTracker:
         """
         if local_points is None:
             local_points = np.array([
-                [0, 0, 0.1175],
-                [0.03 * np.sqrt(3), 0.03, -0.003],
-                [0.035 * np.sqrt(3), -0.035, -0.003],
-                [-0.03 * np.sqrt(3), -0.03, -0.003],
-                [-0.04 * np.sqrt(3), 0.04, -0.003]
-            ])
+            [0.0, 0.0, -0.1175],               # Marker 1
+            [0.04, -0.04 * np.sqrt(3), -0.000003],    # Marker 2
+            [0.03, 0.03 * np.sqrt(3), -0.000003], # Marker 3
+            [-0.035, 0.035 * np.sqrt(3), -0.000003],  # Marker 4
+            [-0.03, -0.03 * np.sqrt(3), -0.000003]    # Marker 5
+        ])
         
         A = np.array(local_points)
         B = np.array(global_points)
@@ -520,8 +520,8 @@ class RigidBodyTracker:
             current_time = rospy.Time.now()
 
         kinetic_msg = KineticStateStamped()
-        kinetic_msg.Header.stamp = current_time
-        kinetic_msg.Header.frame_id = "world"
+        kinetic_msg.header.stamp = current_time
+        kinetic_msg.header.frame_id = "world"
 
         # 填充 Pose
         x, y, z = T[0, 3], T[1, 3], T[2, 3]

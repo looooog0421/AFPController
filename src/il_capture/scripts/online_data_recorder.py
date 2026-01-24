@@ -33,7 +33,7 @@ ROI_Z = [0.0, 0.5]
 TARGET_POINT_NUM = 10000  # 目标点云采样点数
 
 # 变换矩阵
-TRANS_MATRIX_PATH = "/home/lgx/Project/AFP/src/il_capture/config/gravity_tare.yaml"
+TRANS_MATRIX_PATH = "/home/lgx/Project/AFP/src/il_capture/config/capture_config.yaml"
 
 # ===================================
 
@@ -96,10 +96,10 @@ class OnlineDataRecorder:
 
         # 订阅点云话题
         rospy.loginfo("订阅点云话题...")
-        rospy.Subscriber('/camera/depth/points', PointCloud2, self.pcd_callback, queue_size=1, buff_size=2**24)
+        rospy.Subscriber('/camera/depth/color/points', PointCloud2, self.pcd_callback, queue_size=1, buff_size=2**24)
 
         # 【调试】 发布处理后的点云数据
-        # self.pcd_pub = rospy.Publisher('/debug/roi_pointcloud', PointCloud2, queue_size=1)
+        self.pcd_pub = rospy.Publisher('/debug/roi_pointcloud', PointCloud2, queue_size=1)
 
         rospy.loginfo(f"ROI Settings: X{ROI_X}, Y{ROI_Y}, Z{ROI_Z}")
         rospy.loginfo("Recorder 节点初始化完成。等待指令...")
@@ -169,6 +169,11 @@ class OnlineDataRecorder:
             return 
         
         with self.lock:
+            # 检查是否有点云输入
+            if pcd_msg is None:
+                rospy.logwarn("未收到点云数据，跳过该帧")
+                return
+
             if self.lastest_mocap_msg is None:
                 rospy.logwarn("尚未收到动捕数据，无法处理点云")
                 return
@@ -269,6 +274,14 @@ class OnlineDataRecorder:
             self.buffer['ee_quat'].append(ee_quat_in_base)
             self.buffer['ee_wrench'].append(comp_wrench)
             self.buffer['pointclouds'].append(pointclouds)
+
+            # 【调试】 发布裁剪后的点云
+            # debug_pcd_msg = ros_numpy.point_cloud2.array_to_pointcloud2(
+            #     np.hstack([roi_points, roi_colors]),
+            #     frame_id=pcd_msg.header.frame_id,
+            #     stamp=pcd_msg.header.stamp
+            # )
+            # self.pcd_pub.publish(debug_pcd_msg)
 
             # TODO: 定时打印状态
             if len(self.buffer['timestamp']) % 60 == 0:

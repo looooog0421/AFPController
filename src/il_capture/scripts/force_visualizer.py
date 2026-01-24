@@ -25,7 +25,7 @@ class ForceVisualizer:
 
         # 加载重力补偿配置
         script_dir = get_parent_dir()
-        config_path = os.path.join(os.path.dirname(script_dir), 'config', 'gravity_tare.yaml')
+        config_path = os.path.join(os.path.dirname(script_dir), 'config', 'capture_config.yaml')
         print("config_path: ", config_path)
         self.gravity_compensator = GravityCompensator(config_path)
 
