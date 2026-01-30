@@ -135,6 +135,10 @@ class UR5eImpedanceController(UR5eController):
         # 位置积分限制（防止积分饱和）
         self.max_position_correction = 0.05  # 5cm
         
+        self.contact_force_threshold = 3.0  # N，接触力阈值
+        self.in_contact = False  # 是否接触
+        self.release_decay = 0.95
+        
         # 订阅力传感器
         self.wrench_sub = rospy.Subscriber("/mujoco/ee_wrench", WrenchStamped, self.wrench_callback)
         
@@ -206,13 +210,26 @@ class UR5eImpedanceController(UR5eController):
         # 导纳模型计算加速度
         ddxc = np.linalg.solve(M, F_err - D @ self.dxc - K @ self.xc)
 
-        # 数值积分得到速度和位置
-        self.dxc += ddxc * dt
-        self.xc += self.dxc * dt
+        # ========= 接触判断 =========
+        force_norm = np.linalg.norm(F_ext[:3] - target_wrench[:3])
+
+        if force_norm > self.contact_force_threshold:
+            self.in_contact = True
+            self.dxc += ddxc * dt
+            self.xc += self.dxc * dt
+        else:
+            if self.in_contact:
+                # 刚刚脱离接触，开始衰减
+                self.in_contact = False
+            # 衰减位置和速度
+            self.dxc *= self.release_decay
+            self.xc *= self.release_decay
+        
         delta_x = self.xc.copy()
         
         # 滤波修正量
         delta_x_filtered = self.delta_x_filter.update(delta_x)
+        # TODO: 根据需要屏蔽某些方向的阻抗控制
         delta_x_filtered[:2] = 0.0  # 仅Z轴方向阻抗控制
         delta_x_filtered[3:] = 0.0  # 不进行姿态阻抗控制
         return delta_x_filtered
@@ -269,7 +286,7 @@ class UR5eImpedanceController(UR5eController):
                         self.reference_pose.pose.orientation.z
                     ])
 
-                    self.reference_pose = None  # 清除参考轨迹，等待下一次更新
+                    # self.reference_pose = None  # 清除参考轨迹，等待下一次更新
 
                     if np.linalg.norm(reference_orientation) < 0.5:
                         reference_orientation = R.from_matrix(self.robot_state.ee_state.robot_trans[:3, :3]).as_quat()
@@ -295,8 +312,15 @@ class UR5eImpedanceController(UR5eController):
                         self.rate.sleep()
                         continue
                     
+                    # 限制单关节跳变
+                    dq = target_joint_pos - self.robot_state.joint_state.position
+                    max_step = 0.01  # rad
+                    dq = np.clip(dq, -max_step, max_step)
+                    target_joint_pos = self.robot_state.joint_state.position + dq
+
                     # 5. 发送命令
-                    done = self.move_to(target_joint_pos, wait4complete=True)
+                    # done = self.move_to(target_joint_pos, wait4complete=True)
+                    self.servo_joint_command(target_joint_pos)
                     
                     # print(f"Move to target joint position done: {done}")
 
@@ -363,8 +387,7 @@ if __name__ == "__main__":
     # 移动到模具上方
     rospy.loginfo("Moving to above the mold...")
     controller.move_to_cartesian(
-        # target_pos=np.array([-0.54936, -0.20258, 0.00463]),
-        target_pos=np.array([-0.3, -0.3, 0.4]),
+        target_pos=np.array([-0.54936, -0.20258, 0.00463]),
         target_orin=R.from_euler('xyz', [0, 180, 0], degrees=True).as_quat(),
         wait4complete=True
     )
