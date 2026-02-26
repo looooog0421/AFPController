@@ -129,6 +129,7 @@ class MujocoSim:
         self.pointcloud_freq = 30
         
         rospy.Timer(rospy.Duration(1.0 / wrench_freq), lambda event: self.publish_wrench())
+        rospy.Timer(rospy.Duration(1.0 / joint_state_freq), lambda event: self.publish_state())
         rospy.Timer(rospy.Duration(1.0 / joint_state_freq), lambda event: self.publish_joint_states())
 
         self._precompute_camera_params()
@@ -255,8 +256,8 @@ class MujocoSim:
                 # ====================================
 
                 if wall_time - self.last_pc_time >= pc_interval:
-                    self.pointcloud_publisher()
-                    self.publish_state()
+                    # self.pointcloud_publisher()
+                    # self.publish_state()
                     self.last_pc_time = wall_time
 
                 sim.sync()

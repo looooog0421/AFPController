@@ -27,6 +27,7 @@ from trajectory_msgs.msg import JointTrajectoryPoint
 from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
 from controller_manager_msgs.srv import SwitchController, SwitchControllerRequest
 from dataclasses import dataclass, field
+import threading
 
 # 工具类
 sys.path.insert(0, os.path.dirname(__file__))
@@ -124,6 +125,7 @@ class UR5eController:
         # ── 机器人状态 ──
         self.robot_state = RobotState()
         self.joint_idx_mapping = None  
+        self.kinematics_lock = threading.Lock()
 
         # —— 力传感器 ——
         self.current_wrench = np.zeros(6)  # [fx, fy, fz, tx, ty, tz]
@@ -190,25 +192,26 @@ class UR5eController:
             vel = np.array(msg.velocity)[self.joint_idx_mapping]
             eff = np.array(msg.effort)[self.joint_idx_mapping]
 
-            self.robot_state.joint_state.position = pos
-            self.robot_state.joint_state.velocity = vel
-            self.robot_state.joint_state.effort   = eff
+            with self.kinematics_lock:
+                self.robot_state.joint_state.position = pos
+                self.robot_state.joint_state.velocity = vel
+                self.robot_state.joint_state.effort   = eff
 
-            # 正向运动学求解末端执行器位姿和速度
-            pin.forwardKinematics(self.pin_model, self.pin_data, pos, vel)
-            pin.updateFramePlacements(self.pin_model, self.pin_data)
+                # 正向运动学求解末端执行器位姿和速度
+                pin.forwardKinematics(self.pin_model, self.pin_data, pos, vel)
+                pin.updateFramePlacements(self.pin_model, self.pin_data)
 
-            fid = self.pin_model.getFrameId("tool0")
-            self.robot_state.ee_state.robot_trans = self.pin_data.oMf[fid].homogeneous
+                fid = self.pin_model.getFrameId("tool0")
+                self.robot_state.ee_state.robot_trans = self.pin_data.oMf[fid].homogeneous
 
-            ## 获取末端执行器在世界坐标系和局部坐标系下的速度
-            v_world = pin.getFrameVelocity(
-                self.pin_model, self.pin_data, fid, pin.pinocchio_pywrap_default.ReferenceFrame.WORLD)
-            self.robot_state.ee_state.robot_vel = np.hstack((v_world.linear, v_world.angular))
+                ## 获取末端执行器在世界坐标系和局部坐标系下的速度
+                v_world = pin.getFrameVelocity(
+                    self.pin_model, self.pin_data, fid, pin.pinocchio_pywrap_default.ReferenceFrame.WORLD)
+                self.robot_state.ee_state.robot_vel = np.hstack((v_world.linear, v_world.angular))
 
-            v_ee = pin.getFrameVelocity(
-                self.pin_model, self.pin_data, fid, pin.pinocchio_pywrap_default.ReferenceFrame.LOCAL)
-            self.robot_state.ee_state.local_vel = np.hstack((v_ee.linear, v_ee.angular))
+                v_ee = pin.getFrameVelocity(
+                    self.pin_model, self.pin_data, fid, pin.pinocchio_pywrap_default.ReferenceFrame.LOCAL)
+                self.robot_state.ee_state.local_vel = np.hstack((v_ee.linear, v_ee.angular))
 
         except Exception as e:
             rospy.logwarn_throttle(5.0, f"joint_state_callback error: {e}")
@@ -384,12 +387,10 @@ class UR5eController:
             vel_cmd = target_joint_vel
 
         # print(f"max_joint_vel: {self.max_joint_vel}")
-        print(f"Servo Command: {vel_cmd}")
+        # print(f"Servo Command: {vel_cmd}")
         msg = Float64MultiArray()
         msg.data = vel_cmd.tolist()
         self._vel_pub.publish(msg)
-        # 控制频率
-        self.rate.sleep()
 
     def stop_servo(self):
         self.servo_joint_command(np.zeros(6))
@@ -405,8 +406,15 @@ class UR5eController:
         rospy.loginfo("Shutdown complete.")
 
     def servo_cartesian_pos(self, target_pos, target_rot):
-        current_pos = self.robot_state.ee_state.robot_trans[:3, 3]
-        current_rot = self.robot_state.ee_state.robot_trans[:3, :3]
+        
+        with self.kinematics_lock:
+            current_pos = self.robot_state.ee_state.robot_trans[:3, 3]
+            current_rot = self.robot_state.ee_state.robot_trans[:3, :3]
+            q = self.robot_state.joint_state.position
+
+            pin.computeJointJacobians(self.pin_model, self.pin_data, q)
+            pin.updateFramePlacement(self.pin_model, self.pin_data, self.pin_model.getFrameId("tool0"))
+            J = pin.computeFrameJacobian(self.pin_model, self.pin_data, q, self.pin_model.getFrameId("tool0"), pin.LOCAL_WORLD_ALIGNED)
 
         err_pos =  target_pos - current_pos
 
@@ -421,11 +429,6 @@ class UR5eController:
         max_angular_vel = 0.5
         v_cartesian[:3] = np.clip(v_cartesian[:3], -max_linear_vel, max_linear_vel)
         v_cartesian[3:] = np.clip(v_cartesian[3:], -max_angular_vel, max_angular_vel)
-
-        q = self.robot_state.joint_state.position
-        pin.computeJointJacobians(self.pin_model, self.pin_data, q)
-        pin.updateFramePlacement(self.pin_model, self.pin_data, self.pin_model.getFrameId("tool0"))
-        J = pin.computeFrameJacobian(self.pin_model, self.pin_data, q, self.pin_model.getFrameId("tool0"), pin.LOCAL_WORLD_ALIGNED)
 
         damp = 1e-4
         JTT = J.T @ J + damp * np.eye(self.pin_model.nv)
@@ -526,20 +529,9 @@ class UR5eController:
             target_rot: (3, 3) 目标旋转矩阵
         
         """
-        q_sol, success = self.IK(
-            self.pin_model,
-            pin.SE3(target_rot, target_pos),
-            "tool0",
-            q_init=np.concatenate((self.robot_state.joint_state.position, np.zeros(self.pin_model.nq - 6)))
-        )
+        self.servo_cartesian_pos(target_pos=target_pos, target_rot=target_rot)
 
-        if not success:
-            return None
-        
-        dq = q_sol - self.robot_state.joint_state.position
-        # dq = np.clip(dq, -self.max_joint_vel * self.dt, self.max_joint_vel * self.dt)
-        
-        return self.robot_state.joint_state.position + dq
+        return target_pos, target_rot
     
     def run_tracking_loop(self):
         """
@@ -571,12 +563,8 @@ class UR5eController:
                         # 姿态无效，保持当前
                         ref_rot = self.robot_state.ee_state.robot_trans[:3, :3]
 
-                    # print(f"Reference Rot(quat):\n{R.from_matrix(ref_rot).as_quat()}")
-                    # q_target = self.compute_servo_command(ref_pos, ref_rot)
-                    # # rospy.loginfo(f"Reference Pos: {ref_pos}, Target Joint Pos: {q_target}")
-                    # if q_target is not None:
-                    #     self.servo_joint_pos(q_target)
-                    self.servo_cartesian_pos(ref_pos, ref_rot)
+                    
+                    self.compute_servo_command(ref_pos, ref_rot)
                     
                     loop_count += 1
 
@@ -599,6 +587,8 @@ class UR5eController:
 
             except Exception as e:
                 rospy.logwarn_throttle(1.0, f"Error in tracking loop: {e}")
+
+            self.rate.sleep()
 
     # ═══════════════════════════════════════════════════════════
     #  工具函数
