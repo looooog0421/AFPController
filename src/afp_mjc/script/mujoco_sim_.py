@@ -102,6 +102,7 @@ class MujocoSim:
         
         self.current_mode = "position"  # 控制模式状态机
         self.target_vel = np.zeros(6)   # 缓存速度指令
+        self.last_vel_cmd_time = time.time()
         
         # 2. 提供假的切换控制器服务，骗过控制器的安全检查
         self.switch_srv = rospy.Service('/controller_manager/switch_controller', SwitchController, self.handle_switch_controller)
@@ -151,6 +152,7 @@ class MujocoSim:
         """接收高频速度指令"""
         if self.current_mode == "velocity" and len(msg.data) >= 6:
             self.target_vel = np.array(msg.data[:6])
+            self.last_vel_cmd_time = time.time()
 
     def traj_execute_cb(self, goal):
         """处理大范围位置轨迹跟踪 (模拟真实的底层样条插补器)"""
@@ -241,8 +243,13 @@ class MujocoSim:
                     with self.data_lock:
                         if self.current_mode == "velocity":
                             # 速度模式下，将速度指令积分到目标位置 (假设XML中配置的是位置执行器)
+                            if time.time() - self.last_vel_cmd_time > 0.05:
+                                self.target_vel = np.zeros(6)  # 超过0.05s没有新指令，认为速度为0
+                            
                             self.ctrl_q[:6] += self.target_vel * dt
                             
+                            self.ctrl_q[:6] = np.clip(self.ctrl_q[:6], self.model.actuator_ctrlrange[:6, 0], self.model.actuator_ctrlrange[:6, 1])
+
                         self.data.ctrl[:self.model.nu] = self.ctrl_q[:self.model.nu]
                         mujoco.mj_step(self.model, self.data)
                 # ====================================

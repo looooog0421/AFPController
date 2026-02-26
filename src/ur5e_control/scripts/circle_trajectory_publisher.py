@@ -97,8 +97,8 @@ class CircleTrajectoryPublisher:
         
         # 姿态保持不变 (单位四元数)
         msg.pose.orientation.w = 0.0
-        msg.pose.orientation.x = 1.0
-        msg.pose.orientation.y = 0.0
+        msg.pose.orientation.x = 0.0
+        msg.pose.orientation.y = -1.0
         msg.pose.orientation.z = 0.0
         
         return msg
