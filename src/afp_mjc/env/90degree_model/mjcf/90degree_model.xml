@@ -19,7 +19,8 @@
   </asset>
 
   <worldbody>
-    <body name="90degree_model" pos="-0.59788575 -0.18203986 -0.01228407" quat="0.70166206 -0.0043159 -0.00123646 -0.71249575">
+    <!-- <body name="90degree_model" pos="-0.59788575 -0.18203986 -0.01228407" quat="0.70166206 -0.0043159 -0.00123646 0.71249575"> -->
+    <body name="90degree_model" pos="-0.59788575 -0.18203986 0.06228407" quat="0.70166206 -0.0043159 -0.00123646 0.71249575">
         <body name="col_0">
             <geom type="mesh" mesh="90degree_model_col_0" group="2"/>
         </body>

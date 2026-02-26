@@ -121,7 +121,7 @@ class UR5eImpedanceController(UR5eController):
         self.bias_calibration_samples = []
         self.bias_calibration_num = 100
         self.bias_calibrated = False
-        
+
         # 滤波器
         self.filter_type = filter_type
         if filter_type == 'exponential':
@@ -319,8 +319,8 @@ class UR5eImpedanceController(UR5eController):
                     target_joint_pos = self.robot_state.joint_state.position + dq
 
                     # 5. 发送命令
-                    # done = self.move_to(target_joint_pos, wait4complete=True)
-                    self.servo_joint_command(target_joint_pos)
+                    done = self.move_to(target_joint_pos, wait4complete=True)
+                    # self.servo_joint_command(target_joint_pos)
                     
                     # print(f"Move to target joint position done: {done}")
 

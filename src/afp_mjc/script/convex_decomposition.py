@@ -22,7 +22,7 @@ scene = trimesh.Scene()
 
 # 原始模型可以选择以线框模式加入，作为参考（可选）
 mesh.visual.face_colors = [200, 200, 200, 50] # 设为极淡的灰色
-scene.add_geometry(mesh)
+# scene.add_geometry(mesh)
 
 # 遍历分解后的结果，转为 Mesh 对象并加入场景
 for verts, faces in parts:
@@ -36,12 +36,12 @@ print("正在打开可视化窗口...")
 scene.show()
 
 # 4. 保存
-save_confirm = input("是否保存分解后的模型？(y/n): ")
-if save_confirm.lower() == 'y':
-    for i, (verts, faces) in enumerate(parts):
-        sub_mesh = trimesh.Trimesh(verts, faces)
-        sub_mesh.export(f"/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/90degree_model_part_{i}.STL")
-    print("保存完成。")
+# save_confirm = input("是否保存分解后的模型？(y/n): ")
+# if save_confirm.lower() == 'y':
+#     for i, (verts, faces) in enumerate(parts):
+#         sub_mesh = trimesh.Trimesh(verts, faces)
+#         sub_mesh.export(f"/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/90degree_model_part_{i}.STL")
+#     print("保存完成。")
 
 # ==========================================
 # 3. 生成 MuJoCo XML 内容
