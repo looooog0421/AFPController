@@ -384,11 +384,12 @@ if __name__ == "__main__":
     controller.move2default()
     rospy.sleep(1.0)
     
+    target_rot = R.from_quat([-0.0098799, 0.98947, 0.015474, -0.14354]).as_matrix()
     # 移动到模具上方
     rospy.loginfo("Moving to above the mold...")
     controller.move_to_cartesian(
-        target_pos=np.array([-0.54936, -0.20258, 0.00463]),
-        target_orin=R.from_euler('xyz', [0, 180, 0], degrees=True).as_quat(),
+        target_pos=np.array([-0.5322, -0.1385, 0.004237]),
+        target_orin=target_rot,
         wait4complete=True
     )
 

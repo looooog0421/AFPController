@@ -228,7 +228,7 @@ class UR5eAdmittanceController(UR5eController):
 if __name__ == "__main__":
     
     params = AdmittanceParams(
-        stiffness=np.array([800.0, 800.0, 800.0, 80.0, 80.0, 80.0]),
+        stiffness=np.array([400.0, 400.0, 400.0, 80.0, 80.0, 80.0]),
         damping=np.array([60.0, 60.0, 60.0, 20.0, 20.0, 20.0]),
         mass=None,
         enabled_axes=np.array([False, False, True, False, False, False]),
@@ -254,13 +254,14 @@ if __name__ == "__main__":
     controller.move2default(velocity=0.5, wait4complete=True)
     rospy.sleep(1.0)
 
+    # quat = np.array([-0.0098799, 0.98947, 0.015474, -0.14354]) # xyzw
+    target_rot = R.from_quat([-0.0098799, 0.98947, 0.015474, -0.14354]).as_matrix()
 
     rospy.loginfo("Moving to above the mold...")
     controller.move_to_cartesian(
-        target_pos=np.array([-0.54936, -0.20258, 0.00463]),
-        # target_pos=np.array([-0.3, -0.3, 0.4]),
-        
-        target_rot=R.from_euler('xyz', [0, 180, 0], degrees=True).as_matrix(),
+        target_pos=np.array([-0.5322, -0.1385, 0.004237]),
+        # target_pos=np.array([-0.3, -0.3, 0.4]),        
+        target_rot=target_rot,
         wait4complete=True
     )
 

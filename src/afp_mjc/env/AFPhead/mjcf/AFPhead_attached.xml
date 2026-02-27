@@ -1,16 +1,17 @@
 
 <body name="afp_base" childclass="afphead">
-  <inertial pos="0.0428762 -0.0285344 0.0550524" mass="0.796857" 
+  <inertial pos="0.0428762 -0.0285344 0.0550524" 
+            mass="0.1" 
             diaginertia="0.00118905 0.000915620 0.000567181"/>
   <geom type="mesh" rgba="1 1 1 1" mesh="afp_base_link"/>
 
   <body name="afp_shoujuan_link" pos="0.09 0.00765 -0.11247" quat="0.707105 -0.707108 0 0">
-    <inertial pos="0 0 -0.0091764" mass="0.0370388" diaginertia="1.43996e-05 8.04874e-06 8.04874e-06"/>
+    <inertial pos="0 0 -0.0091764" mass="0.01" diaginertia="1.43996e-05 8.04874e-06 8.04874e-06"/>
     <geom type="mesh" rgba="0.752941 0.752941 0.752941 1" mesh="afp_shoujuan_link"/>
   </body>
 
   <body name="afp_fangjuan_link" pos="0.09 0.00615 -0.0244735" quat="0.707107 -0.707107 0 0">
-    <inertial pos="0 0 -0.0125449" mass="0.0759149" diaginertia="4.89304e-05 2.70071e-05 2.70071e-05"/>
+    <inertial pos="0 0 -0.0125449" mass="0.01" diaginertia="4.89304e-05 2.70071e-05 2.70071e-05"/>
     <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="afp_fangjuan_link"/>
   </body>
 

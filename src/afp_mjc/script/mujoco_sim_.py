@@ -84,7 +84,7 @@ class MujocoSim:
 
         self.ctrl_q = np.zeros(self.model.nu)
         
-        self.ee_body_name = "afp_roll_link"
+        self.ee_body_name = "flange"
         self.force_sensor_name = "ee_force_sensor"
         self.torque_sensor_name = "ee_torque_sensor"
         self.joint_names = [
@@ -121,16 +121,22 @@ class MujocoSim:
         # ==================================
 
         self.data_lock = threading.Lock()
+        self.pc_buffer_lock = threading.Lock()
+        self.latest_render_data = None
+
         self.last_pc_time = 0
 
         # 定时发布传感器消息
         wrench_freq = 500
         joint_state_freq = 500  # 必须高频发布，控制器的 IK 依赖它
         self.pointcloud_freq = 30
+
+        self.current_sim_vel = np.zeros(6)
         
         rospy.Timer(rospy.Duration(1.0 / wrench_freq), lambda event: self.publish_wrench())
         rospy.Timer(rospy.Duration(1.0 / joint_state_freq), lambda event: self.publish_state())
         rospy.Timer(rospy.Duration(1.0 / joint_state_freq), lambda event: self.publish_joint_states())
+        rospy.Timer(rospy.Duration(1.0 / self.pointcloud_freq), lambda event: self.pointcloud_publisher())
 
         self._precompute_camera_params()
         self.run_simulation()
@@ -230,6 +236,8 @@ class MujocoSim:
         self.intr = np.array([[fx, 0, cx], [0, fy, cy], [0, 0, 1]])
         self.image_to_camera = np.array([[1, 0, 0], [0, -1, 0], [0, 0, -1]])
 
+        self.cc, self.rr = np.meshgrid(np.arange(self.width), np.arange(self.height), sparse=False)
+
     def run_simulation(self):
         start_time = time.time()
         pc_interval = 1.0 / self.pointcloud_freq
@@ -247,42 +255,70 @@ class MujocoSim:
                             if time.time() - self.last_vel_cmd_time > 0.05:
                                 self.target_vel = np.zeros(6)  # 超过0.05s没有新指令，认为速度为0
                             
+                            # alpha = 0.1
+                            # self.current_sim_vel = (1-alpha) * self.current_sim_vel + alpha * self.target_vel
+
                             self.ctrl_q[:6] += self.target_vel * dt
                             
+
                             self.ctrl_q[:6] = np.clip(self.ctrl_q[:6], self.model.actuator_ctrlrange[:6, 0], self.model.actuator_ctrlrange[:6, 1])
 
                         self.data.ctrl[:self.model.nu] = self.ctrl_q[:self.model.nu]
                         mujoco.mj_step(self.model, self.data)
                 # ====================================
 
+                # if wall_time - self.last_pc_time >= pc_interval:
+                #     self.pointcloud_publisher()
+                #     # self.publish_state()
+                #     self.last_pc_time = wall_time
+                # === 修改核心：主线程只负责极其快速的渲染并把数据交接给后台 ===
                 if wall_time - self.last_pc_time >= pc_interval:
-                    # self.pointcloud_publisher()
-                    # self.publish_state()
+                    with self.data_lock:
+                        mujoco.mj_forward(self.model, self.data)
+                        rgb, depth = self.render_rgbd()
+                        cam_pos = self.data.cam_xpos[self.camera_id].copy()
+                        cam_rot = self.data.cam_xmat[self.camera_id].reshape(3, 3).copy()
+                    
+                    # 将渲染结果放入缓冲区，供 Timer 线程提取
+                    with self.pc_buffer_lock:
+                        self.latest_render_data = (rgb, depth, cam_pos, cam_rot)
+                    
                     self.last_pc_time = wall_time
 
                 sim.sync()
                 time.sleep(0.001)
 
     def pointcloud_publisher(self):
-        with self.data_lock:
-            mujoco.mj_forward(self.model, self.data)
-            rgb, depth = self.render_rgbd()
-            cam_pos = self.data.cam_xpos[self.camera_id]
-            cam_rot = self.data.cam_xmat[self.camera_id].reshape(3, 3)
-            extr = np.eye(4)
-            extr[:3, :3] = cam_rot.T
-            extr[:3, 3] = cam_pos
-            xyzrgb = self.rgbd_to_pointcloud(rgb, depth, self.intr, extr)
+        with self.pc_buffer_lock:
+            if self.latest_render_data is None:
+                return
+            rgb, depth, cam_pos, cam_rot = self.latest_render_data
+            self.latest_render_data = None  # 清空缓冲区，等待下一帧数据
+
+        extr = np.eye(4)
+        extr[:3, :3] = cam_rot.T
+        extr[:3, 3] = cam_pos
+        xyzrgb = self.rgbd_to_pointcloud(rgb, depth, self.intr, extr)
             
         if xyzrgb.shape[0] == 0: return
+
         points_world = xyzrgb[:, :3]
         colors = xyzrgb[:, 3:]
+
         mask_roi = (points_world[:, 0] > ROI_X[0]) & (points_world[:, 0] < ROI_X[1]) & \
                    (points_world[:, 1] > ROI_Y[0]) & (points_world[:, 1] < ROI_Y[1]) & \
                    (points_world[:, 2] > ROI_Z[0]) & (points_world[:, 2] < ROI_Z[1])
         points_world = points_world[mask_roi]
+
+        if points_world.shape[0] == 0: return
+
+        pcd = o3d.geometry.PointCloud()
+        pcd.points = o3d.utility.Vector3dVector(points_world)
+        pcd = pcd.voxel_down_sample(voxel_size=0.008)
+        points_world = np.asarray(pcd.points)
         
         points_world = resample_pointcloud(points_world, target_num=2048, method='farthest')
+
         header = rospy.Header()
         header.stamp = rospy.Time.now()
         header.frame_id = "world"
@@ -302,13 +338,28 @@ class MujocoSim:
             znear = self.model.vis.map.znear
             zfar = self.model.vis.map.zfar
             depth = znear / (1.0 - depth * (1.0 - znear / zfar))
-        cc, rr = np.meshgrid(np.arange(self.width), np.arange(self.height), sparse=True)
+
+
+        # cc, rr = np.meshgrid(np.arange(self.width), np.arange(self.height), sparse=True)
         valid = (depth > 0) & (depth < depth_trunc)
-        z = np.where(valid, depth, np.nan)
-        x = np.where(valid, z * (cc - intr[0, 2]) / intr[0, 0], 0)
-        y = np.where(valid, z * (rr - intr[1, 2]) / intr[1, 1], 0)
-        xyz_image = np.vstack([e.flatten() for e in [x, y, z]]).T
-        color = rgb.transpose([2, 0, 1]).reshape((3, -1)).T / 255.0
+        if not np.any(valid):
+            return np.zeros((0, 6))
+        
+        # z = np.where(valid, depth, np.nan)
+        # x = np.where(valid, z * (cc - intr[0, 2]) / intr[0, 0], 0)
+        # y = np.where(valid, z * (rr - intr[1, 2]) / intr[1, 1], 0)
+        z = depth[valid]
+        u = self.cc[valid]
+        v = self.rr[valid]
+
+        x = z * (u - intr[0, 2]) / intr[0, 0]
+        y = z * (v - intr[1, 2]) / intr[1, 1]
+        
+        # xyz_image = np.vstack([e.flatten() for e in [x, y, z]]).T
+        xyz_image = np.vstack((x, y, z)).T
+
+        color = rgb[valid] / 255.0
+
         mask = np.isnan(xyz_image[:, 2])
         xyz_image = xyz_image[~mask]
         color = color[~mask]
