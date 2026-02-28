@@ -35,139 +35,147 @@ def get_parent_dir():
 """
 
 class ToolGravityTare:
-    def __init__(self, required_samples=10, quat_dot_threashold=0.9):
-        # 初始化节点
+    def __init__(self, required_samples=30, quat_dot_threshold=0.95):
         rospy.init_node('tool_gravity_tare', anonymous=True)
-    
+        
         # 参数
         self.required_samples = required_samples
-        self.quat_dot_threashold = quat_dot_threashold
-
+        self.quat_dot_threshold = quat_dot_threshold
+        
         # 标定数据列表
         self.force_list = []
         self.torque_list = []
         self.quat_list = []
-
-        # 上次记录的姿态
-        self.last_quat = np.array([1.0, 0.0, 0.0, 0.0])  # 初始为单位四元数
+        self.last_quat = np.array([0.0, 0.0, 0.0, 1.0])
         self.is_collecting = True
-
-        # 缓存最新的传感器数据
-        self.last_force = None
-        self.latest_force = None
-        self.latest_twist = None
-        self.latest_accel = None
-
-        # 订阅力传感器数据和动捕点数据话题
-        rospy.Subscriber("/netft_data", WrenchStamped, self.wrench_callback, queue_size=1)
         
-        # 订阅刚体姿态话题
-        rospy.Subscriber("/mimic_tool/kinetic_state", KineticStateStamped, self.kinetic_callback, queue_size=1)
-
-        self.MAX_LINEAR_V = 0.03
-        self.MAX_ANGULAR_V = 0.08
-        self.MAX_LINEAR_A = 0.3
-        self.MAX_ANGULAR_A = 0.8
+        # 阈值参数
+        self.MAX_LINEAR_V = 0.01
+        self.MAX_ANGULAR_V = 0.03
+        self.MAX_LINEAR_A = 0.15
+        self.MAX_ANGULAR_A = 0.5
         
-        rospy.loginfo("Tool Gravity Tare Node Initialized.")
-        rospy.loginfo(f"Thresholds -> V: {self.MAX_LINEAR_V}, W: {self.MAX_ANGULAR_V}, A: {self.MAX_LINEAR_A}, Alpha: {self.MAX_ANGULAR_A}")
-        rospy.loginfo("Waiting for data...")
-
-    def wrench_callback(self, msg):
+        # ===== 使用 ApproximateTimeSynchronizer =====
+        
+        # 1. 创建订阅者（不直接指定callback）
+        wrench_sub = message_filters.Subscriber("/netft_data", WrenchStamped)
+        kinetic_sub = message_filters.Subscriber("/mimic_tool/kinetic_state", KineticStateStamped)
+        
+        # 2. 创建时间同步器
+        # queue_size: 缓存队列大小，越大越容易匹配但延迟更高
+        # slop: 允许的最大时间差（秒），0.05表示50ms
+        self.sync = message_filters.ApproximateTimeSynchronizer(
+            [wrench_sub, kinetic_sub],
+            queue_size=10,
+            slop=0.05,  # 50ms的时间容差
+            allow_headerless=False
+        )
+        
+        # 3. 注册同步回调函数
+        self.sync.registerCallback(self.synchronized_callback)
+        
+        rospy.loginfo("=" * 60)
+        rospy.loginfo("Tool Gravity Tare Node Initialized (with Time Sync)")
+        rospy.loginfo("=" * 60)
+        rospy.loginfo(f"Required samples: {self.required_samples}")
+        rospy.loginfo(f"Time synchronization tolerance: 50ms")
+        rospy.loginfo("=" * 60)
+    
+    def synchronized_callback(self, wrench_msg, kinetic_msg):
         """
-        self.latest_force: 缓存最新的力传感器数据
+        同步回调函数：同时接收力传感器和动捕数据
+        只有当两个消息的时间戳在slop范围内时才会被调用
         """
-        # print("Received wrench message.")
-        force = np.array([msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z])
-        torque = np.array([msg.wrench.torque.x, msg.wrench.torque.y, msg.wrench.torque.z])
-        self.latest_force = (force, torque)
-
-    def kinetic_callback(self, msg):
-        """
-        处理刚体姿态消息, 进行数据采集
-        """
-        # print("Received kinetic state message.")
-        self.latest_kinematic_state = msg
-
         if not self.is_collecting:
             return
         
-        if self.latest_force is None:
-            # rospy.logwarn("Waiting for force/torque and twist data...")
-            return  # 尚未收到力传感器数据
-
-
-        # 提取四元数
-        current_quat_msg = msg.pose.orientation
-        current_quat = np.array([
-                    current_quat_msg.w,
-                    current_quat_msg.x, 
-                    current_quat_msg.y, 
-                    current_quat_msg.z
-                ])
+        # 提取力和力矩数据
+        force = np.array([
+            wrench_msg.wrench.force.x,
+            wrench_msg.wrench.force.y,
+            wrench_msg.wrench.force.z
+        ])
+        torque = np.array([
+            wrench_msg.wrench.torque.x,
+            wrench_msg.wrench.torque.y,
+            wrench_msg.wrench.torque.z
+        ])
         
-        # 检查姿态变化是否足够大
+        # 数据有效性检查
+        if np.any(np.isnan(force)) or np.any(np.isnan(torque)):
+            rospy.logwarn_throttle(2.0, "Received invalid force/torque data (NaN values)")
+            return
+        
+        # 提取四元数
+        current_quat = np.array([
+            kinetic_msg.pose.orientation.x,
+            kinetic_msg.pose.orientation.y,
+            kinetic_msg.pose.orientation.z,
+            kinetic_msg.pose.orientation.w
+        ])
+        
+        # 提取速度和加速度
+        linear_v = np.array([
+            kinetic_msg.twist.linear.x,
+            kinetic_msg.twist.linear.y,
+            kinetic_msg.twist.linear.z
+        ])
+        angular_v = np.array([
+            kinetic_msg.twist.angular.x,
+            kinetic_msg.twist.angular.y,
+            kinetic_msg.twist.angular.z
+        ])
+        linear_a = np.array([
+            kinetic_msg.accel.linear.x,
+            kinetic_msg.accel.linear.y,
+            kinetic_msg.accel.linear.z
+        ])
+        angular_a = np.array([
+            kinetic_msg.accel.angular.x,
+            kinetic_msg.accel.angular.y,
+            kinetic_msg.accel.angular.z
+        ])
+        
+        # 静态检测
+        lin_v_mag = np.linalg.norm(linear_v)
+        ang_v_mag = np.linalg.norm(angular_v)
+        lin_a_mag = np.linalg.norm(linear_a)
+        ang_a_mag = np.linalg.norm(angular_a)
+        
+        if lin_v_mag > self.MAX_LINEAR_V or ang_v_mag > self.MAX_ANGULAR_V:
+            rospy.logwarn_throttle(1.0,
+                f"Tool moving too fast: v_lin={lin_v_mag:.4f} m/s, v_ang={ang_v_mag:.4f} rad/s")
+            return
+        
+        if lin_a_mag > self.MAX_LINEAR_A or ang_a_mag > self.MAX_ANGULAR_A:
+            rospy.logwarn_throttle(1.0,
+                f"Tool acceleration too high: a_lin={lin_a_mag:.4f} m/s², a_ang={ang_a_mag:.4f} rad/s²")
+            return
+        
+        # 检查姿态变化
         dot_product = np.abs(np.dot(self.last_quat, current_quat))
-        should_record = (dot_product < self.quat_dot_threashold) or (len(self.force_list) == 0)
-
-        # print(f"Quat dot product: {dot_product:.3f}, Should record: {should_record}")
+        should_record = (dot_product < self.quat_dot_threshold) or (len(self.force_list) == 0)
+        
         if should_record:
-            # 提取数据
-            # rospy.loginfo("Received pose message.")
-            linear_v = np.array([msg.twist.linear.x, msg.twist.linear.y, msg.twist.linear.z])
-            angular_v = np.array([msg.twist.angular.x, msg.twist.angular.y, msg.twist.angular.z])
-            # self.latest_twist = (linear_v, angular_v)
-
-            linear_a = np.array([msg.accel.linear.x, msg.accel.linear.y, msg.accel.linear.z])
-            angular_a = np.array([msg.accel.angular.x, msg.accel.angular.y, msg.accel.angular.z])
-            self.latest_accel = (linear_a, angular_a)        
-
-            # 静态检测: 检查刚体速度是否足够小
-            # linear_v, angular_v = self.latest_twist
-            lin_v_mag = np.linalg.norm(linear_v)
-            ang_v_mag = np.linalg.norm(angular_v)
-            lin_a_mag = np.linalg.norm(linear_a)
-            ang_a_mag = np.linalg.norm(angular_a)
-
-            # 检查速度
-            if lin_v_mag > self.MAX_LINEAR_V or ang_v_mag > self.MAX_ANGULAR_V:
-                rospy.logwarn(f"Tool is moving too fast (linear_v: {lin_v_mag:.3f}, angular_v: {ang_v_mag:.3f}). Hold still for accurate tare.")
-                return  # 工具移动过快, 不进行记录
+            # 转换四元数到力传感器坐标系
+            quat_in_ft_frame = self.trans_quat2ft_frame(current_quat)
             
-            # 检查加速度
-            if lin_a_mag > self.MAX_LINEAR_A or ang_a_mag > self.MAX_ANGULAR_A:
-                rospy.logwarn(f"Tool acceleration too high (linear_a: {lin_a_mag:.3f}, angular_a: {ang_a_mag:.3f}). Hold still for accurate tare.")
-                return  # 工具加速度过大, 不进行记录
-
-            self.record_data(current_quat)
-
-            # 更新记录姿态
-            self.last_quat = current_quat
-
-            rospy.loginfo(f"Collected {len(self.force_list)}/{self.required_samples} samples.")
-            if len(self.force_list) >= self.required_samples:
-                # 采集完毕， 开始标定
-                self.is_collecting = False
-                self.quat_list = self.trans_quat_list(self.quat_list)
-                self.calibrate_and_output()
-                rospy.loginfo("Data collection and calibration complete.")
-
-                # 关闭节点
-                rospy.signal_shutdown("Calibration complete.")
-
-    def record_data(self, quat):
-            """
-            记录数据
-            """
-            force, torque = self.latest_force
-
+            # 记录数据
             self.force_list.append(force)
             self.torque_list.append(torque)
-            self.quat_list.append(quat)
+            self.quat_list.append(quat_in_ft_frame)
+            
+            self.last_quat = current_quat
+            
+            rospy.loginfo(f"✓ Sample {len(self.force_list)}/{self.required_samples} collected "
+                         f"(pose change: {np.arccos(min(dot_product, 1.0))*180/np.pi:.1f}°)")
+            
+            if len(self.force_list) >= self.required_samples:
+                self.is_collecting = False
+                self.calibrate_and_output()
+                rospy.signal_shutdown("Calibration complete.")
 
-            self.last_quat = quat
 
-            # rospy.loginfo(f"Recorded sample {len(self.force_list)}/{self.required_samples} (quat dot: {dot_product:.3f})")
 
     def trans_quat2ft_frame(self, quat):
         """
@@ -176,42 +184,31 @@ class ToolGravityTare:
         """
 
         # R_body_sensor = tf_trans.rotation_matrix(np.pi, [0, 1, 0])  # 绕Y轴旋转180度
-        R_body_sensor = tf_trans.rotation_matrix(0, [0, 1, 0])
-        # R_GF = np.diag([-1, 1, -1, 1])  # 这个坐标变换矩阵表示的是力传感器的坐标系与我建立的刚体之间的坐标变换
+        R_body_sensor = tf_trans.rotation_matrix(0, [0, 0, 1]) # 单位矩阵
 
-        quat_xyzw = [quat[1], quat[2], quat[3], quat[0]]  # 转换为(x,y,z,w)顺序
-
-        M_world_body = tf_trans.quaternion_matrix(quat_xyzw)
-
+        M_world_body = tf_trans.quaternion_matrix(quat)
         M_world_sensor = np.dot(M_world_body, R_body_sensor)
         
         quat_wf = tf_trans.quaternion_from_matrix(M_world_sensor)
 
         return quat_wf
 
-    def trans_quat_list(self, quat_list):
-        """
-        将四元数列表从动捕坐标系转换到力传感器坐标系
-        """
-
-        transformed_quat_list = []
-        for quat in quat_list:
-            transformed_quat = self.trans_quat2ft_frame(quat)
-            transformed_quat_list.append(transformed_quat)
-        
-        return transformed_quat_list
-
     def calibrate_and_output(self):
         """
         调用 tare_netft 进行标定, 并输出结果
         """
 
-        rospy.loginfo("================================")
-        rospy.loginfo("=======数据采集完成(%d samples)=======", self.required_samples)
-        rospy.loginfo("=======开始进行标定计算=========")
+        rospy.loginfo("=" * 60)
+        rospy.loginfo(f"Data collection complete ({self.required_samples} samples)")
+        rospy.loginfo("Starting calibration calculation...")
+        rospy.loginfo("=" * 60)
 
         try: 
-            mass, static_force_offset, center_of_mass, static_torque_offset = tare_netft(self.force_list, self.torque_list, self.quat_list)
+            mass, static_force_offset, center_of_mass, static_torque_offset = tare_netft(
+                self.force_list, 
+                self.torque_list, 
+                self.quat_list
+            )
 
             if isinstance(static_force_offset, np.ndarray) and static_force_offset.ndim > 1:
                 static_force_offset = np.mean(static_force_offset, axis=1)
@@ -226,25 +223,74 @@ class ToolGravityTare:
             com_save = np.round(center_of_mass.flatten(), decimals).tolist()
 
             results_data = {
-                    'description': 'Tool gravity calibration results based on motion capture data.',
-                    'mass_kg': mass_save,
-                    'static_force_offset_N': force_save,
-                    'center_of_mass_m': com_save,
-                    'static_torque_offset_Nm': torque_save,
-                    'coordinate_system_note': 'Rigid body pose was transformed by R_GF = R_Y(180) before calibration.'
+                'description': 'Tool gravity calibration results based on motion capture data.',
+                'mass_kg': mass_save,
+                'static_force_offset_N': force_save,
+                'center_of_mass_m': com_save,
+                'static_torque_offset_Nm': torque_save,
+                'coordinate_system_note': 'All values in force/torque sensor coordinate frame',
+                'quaternion_format': 'xyzw'
                 }
             
-            # 4. 输出并保存结果
-            rospy.loginfo("\n--- 工具重力标定结果 ---")
-            rospy.loginfo(f"  - Mass (kg): {mass_save}")
-            rospy.loginfo(f"  - Static Force Offset (N): {force_save}")
-            rospy.loginfo(f"  - Center of Mass (m): {com_save}")
-            rospy.loginfo(f"  - Static Torque Offset (Nm): {torque_save}")
+            # 输出结果
+            rospy.loginfo("=" * 60)
+            rospy.loginfo("CALIBRATION RESULTS")
+            rospy.loginfo("=" * 60)
+            rospy.loginfo(f"  Mass (kg):                 {mass_save}")
+            rospy.loginfo(f"  Static Force Offset (N):   {format_list(force_save)}")
+            rospy.loginfo(f"  Center of Mass (m):        {format_list(com_save)}")
+            rospy.loginfo(f"  Static Torque Offset (Nm): {format_list(torque_save)}")
+            rospy.loginfo("=" * 60)
             
+            # 输出一些有用的诊断信息
+            self.print_diagnostics()
+            
+            # 保存结果
             self.save_yaml_results(results_data)        
         
         except Exception as e:
-            rospy.logerr(f"Calibration failed: {e}")
+            rospy.logerr("=" * 60)
+            rospy.logerr(f"CALIBRATION FAILED: {e}")
+            rospy.logerr("=" * 60)
+            import traceback
+            rospy.logerr(traceback.format_exc())
+
+    def print_diagnostics(self):
+        """
+        打印诊断信息，帮助判断数据质量
+        """
+        rospy.loginfo("=" * 60)
+        rospy.loginfo("DATA DIAGNOSTICS")
+        rospy.loginfo("=" * 60)
+        
+        force_array = np.array(self.force_list)
+        torque_array = np.array(self.torque_list)
+        
+        rospy.loginfo(f"Force range:")
+        rospy.loginfo(f"  X: [{np.min(force_array[:, 0]):.2f}, {np.max(force_array[:, 0]):.2f}] N")
+        rospy.loginfo(f"  Y: [{np.min(force_array[:, 1]):.2f}, {np.max(force_array[:, 1]):.2f}] N")
+        rospy.loginfo(f"  Z: [{np.min(force_array[:, 2]):.2f}, {np.max(force_array[:, 2]):.2f}] N")
+        
+        rospy.loginfo(f"Torque range:")
+        rospy.loginfo(f"  X: [{np.min(torque_array[:, 0]):.2f}, {np.max(torque_array[:, 0]):.2f}] Nm")
+        rospy.loginfo(f"  Y: [{np.min(torque_array[:, 1]):.2f}, {np.max(torque_array[:, 1]):.2f}] Nm")
+        rospy.loginfo(f"  Z: [{np.min(torque_array[:, 2]):.2f}, {np.max(torque_array[:, 2]):.2f}] Nm")
+        
+        # 检查姿态多样性
+        quat_array = np.array(self.quat_list)
+        min_dot = 1.0
+        for i in range(len(quat_array)):
+            for j in range(i+1, len(quat_array)):
+                dot = abs(np.dot(quat_array[i], quat_array[j]))
+                min_dot = min(min_dot, dot)
+        
+        max_rotation = np.arccos(min_dot) * 180 / np.pi
+        rospy.loginfo(f"Maximum rotation between any two poses: {max_rotation:.1f}°")
+        
+        if max_rotation < 30:
+            rospy.logwarn("Warning: Pose diversity might be insufficient. Try larger rotations.")
+        
+        rospy.loginfo("=" * 60)
 
     def save_yaml_results(self, data):
         """
@@ -252,8 +298,7 @@ class ToolGravityTare:
         """
         try:
             parent_dir = get_parent_dir()
-
-            file_name = "gravity_tare.yaml"
+            file_name = "capture_config.yaml"
             output_path = os.path.join(parent_dir, "config", file_name)
 
             with open(output_path, 'w') as file:
@@ -268,10 +313,18 @@ def format_list(lst, precision=4):
 
 if __name__ == "__main__":
     try:
-        ToolGravityTare()
+        # 可以从命令行参数或 rosparam 读取配置
+        required_samples = rospy.get_param('~required_samples', 30)
+        quat_dot_threshold = rospy.get_param('~quat_dot_threshold', 0.95)
+        
+        tare_node = ToolGravityTare(
+            required_samples=required_samples,
+            quat_dot_threshold=quat_dot_threshold
+        )
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
     except Exception as e:
         rospy.logerr(f"Unexpected error: {e}")
-    
+        import traceback
+        rospy.logerr(traceback.format_exc())

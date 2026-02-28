@@ -10,7 +10,7 @@ def tare_netft(force_list, torque_list, quat_list):
     重力补偿标定
     force_list: list of force readings from netft sensor
     torque_list: list of torque readings from netft sensor
-    quat_list: list of quaternions representing the orientation of the sensor, in (w, x, y, z) format
+    quat_list: list of quaternions representing the orientation of the sensor, in (x, y, z, w) format
     """
     mft = LinearMFTarer()
     # ft = LinearFTarer()
@@ -18,7 +18,7 @@ def tare_netft(force_list, torque_list, quat_list):
 
     # 1 计算质量
     for f, q in zip(force_list, quat_list):
-        R_mat = Rotation.from_quat([q[1], q[2], q[3], q[0]]).as_matrix()
+        R_mat = Rotation.from_quat([q[0], q[1], q[2], q[3]]).as_matrix()
         mft.add_data(f, R_mat)
     
     res_mft = mft.run()
@@ -28,7 +28,7 @@ def tare_netft(force_list, torque_list, quat_list):
     # 2 计算质心
     ct.set_m(m)
     for t, q in zip(torque_list, quat_list):
-        R_mat = Rotation.from_quat([q[1], q[2], q[3], q[0]]).as_matrix()
+        R_mat = Rotation.from_quat([q[0], q[1], q[2], q[3]]).as_matrix()
         ct.add_data(t, R_mat)
     res_ct = ct.run()
     c = res_ct['c']
