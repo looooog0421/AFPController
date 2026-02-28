@@ -20,7 +20,7 @@ class GravityCompensator:
         self.gravity = 9.81  # 重力加速度,单位:m/s^2
 
         # 工具到力传感器的变换矩阵
-        self.R_tool_sensor = tf_trans.rotation_matrix(np.pi/2, [0, 0, 1])[:3, :3]
+        self.R_tool_sensor = tf_trans.rotation_matrix(0, [0, 1, 0])[:3, :3]
 
         self.load_config(config_path)
 

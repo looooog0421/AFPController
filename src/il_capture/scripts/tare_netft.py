@@ -13,43 +13,28 @@ def tare_netft(force_list, torque_list, quat_list):
     quat_list: list of quaternions representing the orientation of the sensor, in (w, x, y, z) format
     """
     mft = LinearMFTarer()
-    ft = LinearFTarer()
+    # ft = LinearFTarer()
     ct = LinearCTTarer()
 
-    # 将姿态和力信息加入补偿标定器
-    for f_raw, t_raw, q_wxyz in zip(force_list, torque_list, quat_list):
-        R_mat = Rotation.from_quat([q_wxyz[1], q_wxyz[2], q_wxyz[3], q_wxyz[0]]).as_matrix()
-
-        mft.add_data(f_raw.reshape(3, 1), R_mat)
-
-    # 求解质量和静态力偏置
-    mf_result = mft.run()
-    m = mf_result['m']
-    f0 = mf_result['f0']
-    # print("Mass:", m)
-
-    ft.set_m(m)
-
-    for f_raw, q_wxyz in zip(force_list, quat_list):
-        R_mat = Rotation.from_quat([q_wxyz[1], q_wxyz[2], q_wxyz[3], q_wxyz[0]]).as_matrix()
-        ft.add_data(f_raw.reshape(3, 1), R_mat)
-
-    ft_result = ft.run()
-    f0 = ft_result['f0']
-    # print("Refined static force offset:", f0)
-
-    ct.set_m(m)
-
-    for t_raw, q_wxyz in zip(torque_list, quat_list):
-        R_mat = Rotation.from_quat([q_wxyz[1], q_wxyz[2], q_wxyz[3], q_wxyz[0]]).as_matrix()
-        ct.add_data(t_raw.reshape(3, 1), R_mat)
-
-    ct_result = ct.run()
-    c = ct_result['c']
-    t0 = ct_result['t0']
-    # print("COM position:", c)
-    # print("Static torque offset:", t0)
+    # 1 计算质量
+    for f, q in zip(force_list, quat_list):
+        R_mat = Rotation.from_quat([q[1], q[2], q[3], q[0]]).as_matrix()
+        mft.add_data(f, R_mat)
     
+    res_mft = mft.run()
+    m = res_mft['m']
+    f0 = res_mft['f0']
+
+    # 2 计算质心
+    ct.set_m(m)
+    for t, q in zip(torque_list, quat_list):
+        R_mat = Rotation.from_quat([q[1], q[2], q[3], q[0]]).as_matrix()
+        ct.add_data(t, R_mat)
+    res_ct = ct.run()
+    c = res_ct['c']
+    t0 = res_ct['t0']
+    
+
     return m, f0, c, t0
 
 if __name__ == "__main__":

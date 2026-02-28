@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>AFP_controller</name>
+  <name>afp_controller</name>
   <version>0.0.0</version>
-  <description>The AFP_controller package</description>
+  <description>The afp_controller package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/AFP_controller</url> -->
+  <!-- <url type="website">http://wiki.ros.org/afp_controller</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
@@ -62,8 +62,19 @@
   <exec_depend>rospy</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>pinocchio</exec_depend>
-
-
+  <build_depend>ur5e_control</build_depend>
+  <exec_depend>ur5e_control</exec_depend>
+  <build_export_depend>ur5e_control</build_export_depend>
+  <build_depend>motor_control</build_depend>
+  <exec_depend>motor_control</exec_depend>
+  <build_export_depend>motor_control</build_export_depend>
+  <build_depend>motor_msgs</build_depend>
+  <exec_depend>motor_msgs</exec_depend>
+  <build_export_depend>motor_msgs</build_export_depend>
+  <build_depend>sensor</build_depend>
+  <exec_depend>sensor</exec_depend>
+  <build_export_depend>sensor</build_export_depend>
+  
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->

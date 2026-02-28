@@ -1,0 +1,16 @@
+center_of_mass_m:
+- -0.00884
+- -0.00874
+- 0.04922
+coordinate_system_note: Rigid body pose was transformed by R_GF = R_Y(180) before
+  calibration.
+description: Tool gravity calibration results based on motion capture data.
+mass_kg: 0.18925
+static_force_offset_N:
+- -1.29633
+- -1.02356
+- 0.28167
+static_torque_offset_Nm:
+- 0.00663
+- -0.64494
+- -0.07114

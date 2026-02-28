@@ -1,0 +1,7 @@
+<launch>
+    <node pkg="netft_utils" type="netft_node" name="netft_node" 
+          args="--address 192.168.10.104 --rate 100" 
+          output="screen">
+    </node>
+
+</launch>

@@ -1,0 +1,29 @@
+<launch>
+    <arg name="server" default="localhost"/>
+    <arg name="bag_name" default="layup_task"/>
+    <arg name="data_root" default="$(find il_capture)/data/"/>
+
+    <include file="$(find vrpn_client_ros)/launch/sample.launch">
+        <arg name="server" value="$(arg server)"/>
+    </include>
+
+    <node pkg="netft_utils" type="netft_node" name="netft_node"
+        args="--address=192.168.10.104 --rate=500"/>
+
+    <node pkg="il_capture" type="rigidbodytracker.py" name="rigid_body_tracker"/>
+
+    <node pkg="il_capture" type="force_visualizer.py" name="force_visualizer">
+    </node>
+
+    <node name="data_recorder" pkg="il_capture" type="data_recorder.py"  output="screen"> 
+        <rosparam command="load" file="$(find il_capture)/config/data_collect_param.yaml"/>
+        <param name="data_directory" value="$(arg data_root)"/>
+        <param name="config_path" value="$(find il_capture)/config/data_collect_param.yaml" />
+    </node>
+
+    <node pkg="rosbag" type="record" name="rosbag_record_kinetic"
+       args="record -o $(arg data_root)/bag/$(arg bag_name) /mimic_tool/kinetic_state /netft_data /visualization/tool_force" />
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find il_capture)/config/capture.rviz" required="false" />
+
+</launch>

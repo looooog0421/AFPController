@@ -1,0 +1,16 @@
+
+tool:
+  name: mimic_tool
+  length: 0.1715
+
+data_directory: /home/lgx/Project/AFP/data
+
+record:
+  vel_static_threshold: 0.1                      # 静止速度阈值 (m/s)
+  force_trigger_threshold: 10.0                    # 力触发阈值 (N)
+  dwell_time_required: 1.0                        # 停留时间要求 (秒)
+  min_record_time: 2.0                            # 最小录制时间 (秒)
+
+gravity_tare_file_name: gravity_tare.yaml
+
+

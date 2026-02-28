@@ -2,6 +2,12 @@ from typing import Dict, Union
 import numpy as np
 
 
+def skew(v):
+    return np.array([[0, -v[2], v[1]],
+                     [v[2], 0, -v[0]],
+                     [-v[1], v[0], 0]])
+
+
 class LinearTarer(object):
     def __init__(self) -> None:
         self.A_list = []
@@ -14,14 +20,14 @@ class LinearTarer(object):
         self.b_list.append(b)
     
     def run(self) -> np.ndarray:
-        A = np.concatenate(self.A_list, axis=0)
-        B = np.concatenate(self.b_list, axis=0)
+        A = np.vstack(self.A_list)
+        B = np.vstack(self.b_list)
         X, residuals, rank, s = np.linalg.lstsq(A, B, rcond=None)
         return X
 
 
 class LinearMFTarer(LinearTarer):
-    G_VALUE:float = 9.8
+    G_VALUE:float = -9.8
     G_VECTOR:np.ndarray = np.array([[0], [0], [G_VALUE]])
 
     def __init__(self) -> None:
@@ -32,16 +38,22 @@ class LinearMFTarer(LinearTarer):
         f: raw force data
         pose: 3x3 rotation matrix from ftsensor to base
         '''
-        A = np.concatenate([self.G_VECTOR, pose], axis=1)
-        b = pose @ f
-        self.add_A(A)
-        self.add_b(b)
+        # A = np.concatenate([self.G_VECTOR, pose], axis=1)
+        # b = pose @ f
+        # self.add_A(A)
+        # self.add_b(b)
+        g_world = np.array([[0], [0], [-self.G_VALUE]])
+        g_sensor = pose.T @ g_world  # 重力在传感器坐标系下的表示
+        self.A_list.append(np.hstack([g_sensor, np.eye(3)]))
+        self.b_list.append(f.reshape(3, 1))
+
+
     
     def run(self) -> Dict[str, Union[float, np.ndarray]]:
         X = super().run()
         return {
             'm': X[0], 
-            'f0': X[1:4]
+            'f0': X[1:4].flatten()
         }
 
 class LinearFTarer(LinearTarer):
@@ -85,19 +97,17 @@ class LinearCTTarer(LinearTarer):
         t: raw torque data
         pose: 3x3 rotation matrix from ftsensor to base
         '''
-        Rmg = np.zeros_like(pose, dtype=pose.dtype)
-        Rmg[0] = pose[1] * self.m * (-1) * self.G_VALUE
-        Rmg[1] = pose[0] * self.m * self.G_VALUE
-        A = np.concatenate([Rmg, pose], axis=1)
-        b = pose @ t
-        self.add_A(A)
-        self.add_b(b)
+        g_world = np.array([[0], [0], [-self.G_VALUE]])
+        f_grav_sensor = self.m * (pose.T @ g_world).flatten()  # 重力在传感器坐标系下的表示
+
+        self.A_list.append(np.hstack([-skew(f_grav_sensor), np.eye(3)]))
+        self.b_list.append(t.reshape(3, 1))
     
     def run(self) -> Dict[str, np.ndarray]:
         X = super().run()
         return {
-            'c': X[0:3], 
-            't0': X[3:]
+            'c': X[0:3].flatten(), 
+            't0': X[3:].flatten()
         }
 
 

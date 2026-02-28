@@ -1,0 +1,264 @@
+<mujoco>
+  <asset>
+    <!-- <mesh name="flange_model_visual_mesh" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/flange_model.STL"/> -->
+    <!-- <mesh name="flange_model_visual_mesh_obj" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/flange_model.STL"/> -->
+    <mesh name="flange_model_col_0" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_0.STL"/>
+    <mesh name="flange_model_col_1" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_1.STL"/>
+    <mesh name="flange_model_col_2" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_2.STL"/>
+    <mesh name="flange_model_col_3" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_3.STL"/>
+    <mesh name="flange_model_col_4" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_4.STL"/>
+    <mesh name="flange_model_col_5" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_5.STL"/>
+    <mesh name="flange_model_col_6" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_6.STL"/>
+    <mesh name="flange_model_col_7" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_7.STL"/>
+    <mesh name="flange_model_col_8" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_8.STL"/>
+    <mesh name="flange_model_col_9" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_9.STL"/>
+    <mesh name="flange_model_col_10" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_10.STL"/>
+    <mesh name="flange_model_col_11" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_11.STL"/>
+    <mesh name="flange_model_col_12" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_12.STL"/>
+    <mesh name="flange_model_col_13" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_13.STL"/>
+    <mesh name="flange_model_col_14" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_14.STL"/>
+    <mesh name="flange_model_col_15" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_15.STL"/>
+    <mesh name="flange_model_col_16" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_16.STL"/>
+    <mesh name="flange_model_col_17" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_17.STL"/>
+    <mesh name="flange_model_col_18" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_18.STL"/>
+    <mesh name="flange_model_col_19" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_19.STL"/>
+    <mesh name="flange_model_col_20" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_20.STL"/>
+    <mesh name="flange_model_col_21" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_21.STL"/>
+    <mesh name="flange_model_col_22" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_22.STL"/>
+    <mesh name="flange_model_col_23" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_23.STL"/>
+    <mesh name="flange_model_col_24" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_24.STL"/>
+    <mesh name="flange_model_col_25" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_25.STL"/>
+    <mesh name="flange_model_col_26" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_26.STL"/>
+    <mesh name="flange_model_col_27" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_27.STL"/>
+    <mesh name="flange_model_col_28" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_28.STL"/>
+    <mesh name="flange_model_col_29" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_29.STL"/>
+    <mesh name="flange_model_col_30" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_30.STL"/>
+    <mesh name="flange_model_col_31" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_31.STL"/>
+    <mesh name="flange_model_col_32" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_32.STL"/>
+    <mesh name="flange_model_col_33" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_33.STL"/>
+    <mesh name="flange_model_col_34" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_34.STL"/>
+    <mesh name="flange_model_col_35" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_35.STL"/>
+    <mesh name="flange_model_col_36" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_36.STL"/>
+    <mesh name="flange_model_col_37" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_37.STL"/>
+    <mesh name="flange_model_col_38" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_38.STL"/>
+    <mesh name="flange_model_col_39" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_39.STL"/>
+    <mesh name="flange_model_col_40" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_40.STL"/>
+    <mesh name="flange_model_col_41" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_41.STL"/>
+    <mesh name="flange_model_col_42" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_42.STL"/>
+    <mesh name="flange_model_col_43" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_43.STL"/>
+    <mesh name="flange_model_col_44" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_44.STL"/>
+    <mesh name="flange_model_col_45" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_45.STL"/>
+    <mesh name="flange_model_col_46" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_46.STL"/>
+    <mesh name="flange_model_col_47" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_47.STL"/>
+    <mesh name="flange_model_col_48" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_48.STL"/>
+    <mesh name="flange_model_col_49" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_49.STL"/>
+    <mesh name="flange_model_col_50" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_50.STL"/>
+    <mesh name="flange_model_col_51" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_51.STL"/>
+    <mesh name="flange_model_col_52" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_52.STL"/>
+    <mesh name="flange_model_col_53" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_53.STL"/>
+    <mesh name="flange_model_col_54" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_54.STL"/>
+    <mesh name="flange_model_col_55" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_55.STL"/>
+    <mesh name="flange_model_col_56" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_56.STL"/>
+    <mesh name="flange_model_col_57" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_57.STL"/>
+    <mesh name="flange_model_col_58" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_58.STL"/>
+    <mesh name="flange_model_col_59" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_59.STL"/>
+    <mesh name="flange_model_col_60" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_60.STL"/>
+    <mesh name="flange_model_col_61" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_61.STL"/>
+    <mesh name="flange_model_col_62" file="/home/lgx/Project/AFP/src/afp_mjc/env/flange_model2/meshes/parts/flange_model_part_62.STL"/>
+  </asset>
+
+  <worldbody>
+    <body name="flange_model" pos="-0.6 -0.2 0.0" quat="0.707 0 0 0.707"> 
+      <!-- <geom type="mesh" mesh="flange_model_visual_mesh" group="1"/> -->
+        <body name="col_0">
+        <geom type="mesh" mesh="flange_model_col_0" group="2"/>
+        </body>
+        <body name="col_1">
+        <geom type="mesh" mesh="flange_model_col_1" group="2"/>
+        </body>
+        <body name="col_2">
+        <geom type="mesh" mesh="flange_model_col_2" group="2"/>
+        </body>
+        <body name="col_3">
+        <geom type="mesh" mesh="flange_model_col_3" group="2"/>
+        </body>
+        <body name="col_4">
+        <geom type="mesh" mesh="flange_model_col_4" group="2"/>
+        </body>
+        <body name="col_5">
+        <geom type="mesh" mesh="flange_model_col_5" group="2"/>
+        </body>
+        <body name="col_6">
+        <geom type="mesh" mesh="flange_model_col_6" group="2"/>
+        </body>
+        <body name="col_7">
+        <geom type="mesh" mesh="flange_model_col_7" group="2"/>
+        </body>
+        <body name="col_8">
+        <geom type="mesh" mesh="flange_model_col_8" group="2"/>
+        </body>
+        <body name="col_9">
+        <geom type="mesh" mesh="flange_model_col_9" group="2"/>
+        </body>
+        <body name="col_10">
+        <geom type="mesh" mesh="flange_model_col_10" group="2"/>
+        </body>
+        <body name="col_11">
+        <geom type="mesh" mesh="flange_model_col_11" group="2"/>
+        </body>
+        <body name="col_12">
+        <geom type="mesh" mesh="flange_model_col_12" group="2"/>
+        </body>
+        <body name="col_13">
+        <geom type="mesh" mesh="flange_model_col_13" group="2"/>
+        </body>
+        <body name="col_14">
+        <geom type="mesh" mesh="flange_model_col_14" group="2"/>
+        </body>
+        <body name="col_15">
+        <geom type="mesh" mesh="flange_model_col_15" group="2"/>
+        </body>
+        <body name="col_16">
+        <geom type="mesh" mesh="flange_model_col_16" group="2"/>
+        </body>
+        <body name="col_17">
+        <geom type="mesh" mesh="flange_model_col_17" group="2"/>
+        </body>
+        <body name="col_18">
+        <geom type="mesh" mesh="flange_model_col_18" group="2"/>
+        </body>
+        <body name="col_19">
+        <geom type="mesh" mesh="flange_model_col_19" group="2"/>
+        </body>
+        <body name="col_20">
+        <geom type="mesh" mesh="flange_model_col_20" group="2"/>
+        </body>
+        <body name="col_21">
+        <geom type="mesh" mesh="flange_model_col_21" group="2"/>
+        </body>
+        <body name="col_22">
+        <geom type="mesh" mesh="flange_model_col_22" group="2"/>
+        </body>
+        <body name="col_23">
+        <geom type="mesh" mesh="flange_model_col_23" group="2"/>
+        </body>
+        <body name="col_24">
+        <geom type="mesh" mesh="flange_model_col_24" group="2"/>
+        </body>
+        <body name="col_25">
+        <geom type="mesh" mesh="flange_model_col_25" group="2"/>
+        </body>
+        <body name="col_26">
+        <geom type="mesh" mesh="flange_model_col_26" group="2"/>
+        </body>
+        <body name="col_27">
+        <geom type="mesh" mesh="flange_model_col_27" group="2"/>
+        </body>
+        <body name="col_28">
+        <geom type="mesh" mesh="flange_model_col_28" group="2"/>
+        </body>
+        <body name="col_29">
+        <geom type="mesh" mesh="flange_model_col_29" group="2"/>
+        </body>
+        <body name="col_30">
+        <geom type="mesh" mesh="flange_model_col_30" group="2"/>
+        </body>
+        <body name="col_31">
+        <geom type="mesh" mesh="flange_model_col_31" group="2"/>
+        </body>
+        <body name="col_32">
+        <geom type="mesh" mesh="flange_model_col_32" group="2"/>
+        </body>
+        <body name="col_33">
+        <geom type="mesh" mesh="flange_model_col_33" group="2"/>
+        </body>
+        <body name="col_34">
+        <geom type="mesh" mesh="flange_model_col_34" group="2"/>
+        </body>
+        <body name="col_35">
+        <geom type="mesh" mesh="flange_model_col_35" group="2"/>
+        </body>
+        <body name="col_36">
+        <geom type="mesh" mesh="flange_model_col_36" group="2"/>
+        </body>
+        <body name="col_37">
+        <geom type="mesh" mesh="flange_model_col_37" group="2"/>
+        </body>
+        <body name="col_38">
+        <geom type="mesh" mesh="flange_model_col_38" group="2"/>
+        </body>
+        <body name="col_39">
+        <geom type="mesh" mesh="flange_model_col_39" group="2"/>
+        </body>
+        <body name="col_40">
+        <geom type="mesh" mesh="flange_model_col_40" group="2"/>
+        </body>
+        <body name="col_41">
+        <geom type="mesh" mesh="flange_model_col_41" group="2"/>
+        </body>
+        <body name="col_42">
+        <geom type="mesh" mesh="flange_model_col_42" group="2"/>
+        </body>
+        <body name="col_43">
+        <geom type="mesh" mesh="flange_model_col_43" group="2"/>
+        </body>
+        <body name="col_44">
+        <geom type="mesh" mesh="flange_model_col_44" group="2"/>
+        </body>
+        <body name="col_45">
+        <geom type="mesh" mesh="flange_model_col_45" group="2"/>
+        </body>
+        <body name="col_46">
+        <geom type="mesh" mesh="flange_model_col_46" group="2"/>
+        </body>
+        <body name="col_47">
+        <geom type="mesh" mesh="flange_model_col_47" group="2"/>
+        </body>
+        <body name="col_48">
+        <geom type="mesh" mesh="flange_model_col_48" group="2"/>
+        </body>
+        <body name="col_49">
+        <geom type="mesh" mesh="flange_model_col_49" group="2"/>
+        </body>
+        <body name="col_50">
+        <geom type="mesh" mesh="flange_model_col_50" group="2"/>
+        </body>
+        <body name="col_51">
+        <geom type="mesh" mesh="flange_model_col_51" group="2"/>
+        </body>
+        <body name="col_52">
+        <geom type="mesh" mesh="flange_model_col_52" group="2"/>
+        </body>
+        <body name="col_53">
+        <geom type="mesh" mesh="flange_model_col_53" group="2"/>
+        </body>
+        <body name="col_54">
+        <geom type="mesh" mesh="flange_model_col_54" group="2"/>
+        </body>
+        <body name="col_55">
+        <geom type="mesh" mesh="flange_model_col_55" group="2"/>
+        </body>
+        <body name="col_56">
+        <geom type="mesh" mesh="flange_model_col_56" group="2"/>
+        </body>
+        <body name="col_57">
+        <geom type="mesh" mesh="flange_model_col_57" group="2"/>
+        </body>
+        <body name="col_58">
+        <geom type="mesh" mesh="flange_model_col_58" group="2"/>
+        </body>
+        <body name="col_59">
+        <geom type="mesh" mesh="flange_model_col_59" group="2"/>
+        </body>
+        <body name="col_60">
+        <geom type="mesh" mesh="flange_model_col_60" group="2"/>
+        </body>
+        <body name="col_61">
+        <geom type="mesh" mesh="flange_model_col_61" group="2"/>
+        </body>
+        <body name="col_62">
+        <geom type="mesh" mesh="flange_model_col_62" group="2"/>
+        </body>
+    </body>
+  </worldbody>
+</mujoco>

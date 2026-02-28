@@ -1,9 +1,13 @@
 .vscode
 .catkin_workspace
 .catkin_tools/
+.env
+
 build/
 devel/
 logs/
+data/
+
 MUJOCO_LOG.TXT
 pcanview.log
 
@@ -13,4 +17,12 @@ src/afp_mjc/env/AFPhead/urdf/*.STL
 src/afp_mjc/env/flange_model/meshes/
 src/afp_mjc/env/flange_model/urdf/*.STL
 
+src/afp_mjc/env/flange_model2/meshes/
+src/afp_mjc/env/flange_model2/urdf/*.STL
+
+src/afp_mjc/env/90degree_model/meshes/
+src/afp_mjc/env/flange_model/urdf/*.STL
+
 src/afp_mjc/env/mujoco_ur5e/assets/
+
+src/il_capture/data/
