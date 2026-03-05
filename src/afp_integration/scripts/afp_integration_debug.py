@@ -69,7 +69,7 @@ class AFPIntegrationNode:
             
             # 这里的 Kp Ki Kd 是给电机底层驱动的，让它硬一点
             cmd.kp = 120.0   
-            cmd.ki = 80.0
+            cmd.ki = 0.0
             cmd.kd = 8.0     
             
             self.motor_pub.publish(cmd)
