@@ -13,8 +13,9 @@ class AFPIntegrationNode:
         self.motor_zero_pos = None
 
         # ================= [安全限幅参数] =================
-        self.pid_correction_limit = 300.0      # 张力补偿最大绝对值（度）
-        self.final_target_rel_limit = 1500.0   # 相对零点最大偏移（度）
+        self.pid_correction_limit = 800      # 张力补偿最大绝对值（度）
+        self.final_target_rel_limit = 2500.0  # 相对零点最大偏移（度）
+        self.control_rate = rospy.get_param("~control_rate", 200.0)
         # ================================================
 
         # 两个数据源，默认为 0
@@ -37,8 +38,8 @@ class AFPIntegrationNode:
         # 调试发布
         self.final_target_pub = rospy.Publisher('/afp/debug/final_target', Float32, queue_size=1)
 
-        self.rate = rospy.Rate(50)
-        rospy.loginfo(">>> 集成控制层启动: 正在等待电机和中间层数据... <<<")
+        self.rate = rospy.Rate(self.control_rate)
+        rospy.loginfo(f">>> 集成控制层启动: 正在等待电机和中间层数据... <<< (control_rate={self.control_rate:.1f}Hz)")
 
         self.control_loop()
 
@@ -57,40 +58,28 @@ class AFPIntegrationNode:
 
     def control_loop(self):
         while not rospy.is_shutdown():
-            # 1. 还没准备好，就等待
             if self.current_motor_pos is None or self.motor_zero_pos is None:
                 self.rate.sleep()
                 continue
 
-            # ================= [最终融合 + 限幅] =================
-            # 1) 先限幅张力补偿
             pid_corr_limited = max(-self.pid_correction_limit,
                                    min(self.pid_correction, self.pid_correction_limit))
 
-            # 2) 融合
             final_target = self.motor_zero_pos + self.smoother_angle + pid_corr_limited
 
-            # 3) 总目标再限幅（相对零点）
             final_min = self.motor_zero_pos - self.final_target_rel_limit
             final_max = self.motor_zero_pos + self.final_target_rel_limit
             final_target = max(final_min, min(final_target, final_max))
-            # ===================================================
 
-            # 3. 下发指令
             cmd = Motor()
             cmd.position = final_target
-
-            # 这里的 Kp Ki Kd 是给电机底层驱动的
-            cmd.kp = 120.0
-            cmd.ki = 0.0     # 避免双积分
+            cmd.kp = 800.0  
+            cmd.ki = 0.0
             cmd.kd = 8.0
 
             self.motor_pub.publish(cmd)
-
-            # 发布调试数据
             self.final_target_pub.publish(Float32(data=final_target))
 
-            # 调试显示
             if abs(self.smoother_angle) > 0.1 or abs(self.pid_correction) > 1.0:
                 rospy.loginfo_throttle(0.5,
                     f"前馈:{self.smoother_angle:.1f}° + 张力补偿:{self.pid_correction:.1f}° (限幅后:{pid_corr_limited:.1f}°) = 目标:{final_target:.1f}°")
