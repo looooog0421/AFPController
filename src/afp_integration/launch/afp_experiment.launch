@@ -1,0 +1,56 @@
+<launch>
+  <arg name="target_tension" default="0.05"/>
+  <arg name="speed_gain" default="1.0"/>
+  <arg name="accumulate_limit" default="800.0"/>
+  <arg name="leak" default="0.999"/>
+  <arg name="sensor_timeout" default="0.2"/>
+  <arg name="deadband" default="0.02"/>
+  <arg name="tension_control_rate" default="50.0"/>
+
+  <arg name="publish_rate" default="200.0"/>
+  <arg name="motion_mode" default="sine_positive"/>
+  <arg name="linear_speed" default="0.05"/>
+  <arg name="max_linear_speed" default="0.05"/>
+  <arg name="sine_period" default="6.0"/>
+  <arg name="roller_diameter" default="0.05"/>
+  <arg name="run_duration" default="18.0"/>
+  <arg name="start_angle" default="0.0"/>
+  <arg name="direction" default="1.0"/>
+  <arg name="time_mode" default="fixed"/>
+
+  <arg name="logger_sample_rate" default="200.0"/>
+  <arg name="logger_output_dir" default="/home/hzk/AFPController/afp_logs"/>
+  <arg name="logger_file_prefix" default="paper_periodic"/>
+  <arg name="logger_file_name" default=""/>
+
+  <node pkg="afp_smoother" type="tension_pid_node.py" name="tension_pid_node" output="screen">
+    <param name="target_tension" value="$(arg target_tension)"/>
+    <param name="speed_gain" value="$(arg speed_gain)"/>
+    <param name="accumulate_limit" value="$(arg accumulate_limit)"/>
+    <param name="leak" value="$(arg leak)"/>
+    <param name="sensor_timeout" value="$(arg sensor_timeout)"/>
+    <param name="deadband" value="$(arg deadband)"/>
+    <param name="control_rate" value="$(arg tension_control_rate)"/>
+  </node>
+
+  <node pkg="afp_integration" type="afp_feedforward_demo.py" name="afp_feedforward_demo" output="screen">
+    <param name="publish_rate" value="$(arg publish_rate)"/>
+    <param name="motion_mode" value="$(arg motion_mode)"/>
+    <param name="linear_speed" value="$(arg linear_speed)"/>
+    <param name="max_linear_speed" value="$(arg max_linear_speed)"/>
+    <param name="sine_period" value="$(arg sine_period)"/>
+    <param name="roller_diameter" value="$(arg roller_diameter)"/>
+    <param name="run_duration" value="$(arg run_duration)"/>
+    <param name="start_angle" value="$(arg start_angle)"/>
+    <param name="direction" value="$(arg direction)"/>
+    <param name="time_mode" value="$(arg time_mode)"/>
+  </node>
+
+  <node pkg="afp_integration" type="afp_experiment_logger.py" name="afp_experiment_logger" output="screen">
+    <param name="sample_rate" value="$(arg logger_sample_rate)"/>
+    <param name="run_duration" value="$(arg run_duration)"/>
+    <param name="output_dir" value="$(arg logger_output_dir)"/>
+    <param name="file_prefix" value="$(arg logger_file_prefix)"/>
+    <param name="file_name" value="$(arg logger_file_name)"/>
+  </node>
+</launch>

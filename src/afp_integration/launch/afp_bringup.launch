@@ -1,0 +1,15 @@
+<launch>
+  <arg name="tension_port" default="/dev/ttyUSB0"/>
+  <arg name="tension_baudrate" default="9600"/>
+  <arg name="tension_timeout" default="0.02"/>
+  <arg name="tension_read_interval" default="0.02"/>
+
+  <node pkg="sensor" type="tension_rs485.py" name="tension_sensor_node" output="screen">
+    <param name="port" value="$(arg tension_port)"/>
+    <param name="baudrate" value="$(arg tension_baudrate)"/>
+    <param name="timeout" value="$(arg tension_timeout)"/>
+    <param name="read_interval" value="$(arg tension_read_interval)"/>
+  </node>
+
+  <node pkg="motor_control" type="motor_can.py" name="servo_motor_ros_interface" output="screen"/>
+</launch>
