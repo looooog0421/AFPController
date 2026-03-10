@@ -16,8 +16,9 @@
     </include>
 
 
-    <node pkg="netft_utils" type="netft_node" name="netft_node"
-        args="--address=192.168.10.104 --rate=500"/>
+    <!-- roslaunch netft_utils netft_node.launch address:=192.168.10.104 rate=500 -->
+    <!-- roslaunch nbit_driver nbit_sensor.launch -->
+    <node pkg="nbit_driver" type="nbit_node" name="nbit_node" output="screen" />
 
     <node pkg="il_capture" type="rigidbodytracker.py" name="rigid_body_tracker"/>
 

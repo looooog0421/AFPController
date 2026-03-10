@@ -6,8 +6,8 @@
   <!-- <include file="ur5e_old.xml"/> -->
   <include file="ur5e.xml"/>
   <!-- <include file="../flange_model/mjcf/flange_model.xml"/> -->
-  <include file="../flange_model2/mjcf/flange_model.xml"/>
-  <!-- <include file="../90degree_model/mjcf/90degree_model.xml"/> -->
+  <!-- <include file="../flange_model2/mjcf/flange_model.xml"/> -->
+  <include file="../90degree_model/mjcf/90degree_model.xml"/>
   <statistic center="0.3 0 0.4" extent="0.8"/>
 
   <visual>
@@ -28,7 +28,7 @@
 
   <worldbody>
     <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
-    <geom name="floor" size="0.5 0.5 0.00001" type="plane" material="groundplane" pos="-0.4 -0.35 0" solimp="0.9 0.95 0.001" solref="0.02 1"/>
+    <geom name="floor" size="0.5 0.5 0.00001" type="plane" material="groundplane" pos="-0.4 -0.35 0.0" solimp="0.9 0.95 0.001" solref="0.02 1"/>
     <!-- <body name="flange_model_body" pos="-0.6 -0.2 0.0" quat="0.5 0.5 0.5 0.5">
       <geom type="mesh" mesh="flange_model" rgba="0.5 0.5 0.5 1"/>
     </body> -->
@@ -46,5 +46,6 @@
         fovy="49.03"
       />
     </body>
+
   </worldbody>
 </mujoco>

@@ -44,18 +44,18 @@ class RigidBodyTracker:
         sqrt_3 = np.sqrt(3)
 
         self.local_markers = np.array([
-            [0.0, 0.0, -0.1175],               # Marker 1
-            [0.04, -0.04 * sqrt_3, -0.000003],    # Marker 2
-            [0.03, 0.03 * sqrt_3, -0.000003], # Marker 3
-            [-0.035, 0.035 * sqrt_3, -0.000003],  # Marker 4
-            [-0.03, -0.03 * sqrt_3, -0.000003]    # Marker 5
+            [0.0, 0.0, -0.153],               # Marker 1
+            [0.04, -0.04 * sqrt_3, -0.02],    # Marker 2
+            [0.03, 0.03 * sqrt_3, -0.02], # Marker 3
+            [-0.035, 0.035 * sqrt_3, -0.02],  # Marker 4
+            [-0.03, -0.03 * sqrt_3, -0.02]    # Marker 5
         ])
         # 3. 创建订阅者列表
         # ROS 1 中 message_filters.Subscriber 不需要传 node 对象，也没有 QoS 参数
         self.subs = []
 
         client_node_name = "vrpn_client_node"
-        self.rigid_name = "mimic_tool"
+        self.rigid_name = "tool"
         topoc_base = f"/{client_node_name}/{self.rigid_name}_Marker"
 
         # 订阅 Pose
@@ -111,7 +111,7 @@ class RigidBodyTracker:
         current_point_pos = []
         for i in range(5):
             position = msgs[i].pose.position
-            current_point_pos.append([(position.x)/1000, (position.y)/1000, (position.z)/1000])  # 转换为米
+            current_point_pos.append([(position.x), (position.y), (position.z)])  # 转换为米
 
         # 验证是否为5个点   
         if len(current_point_pos) != 5:
@@ -121,7 +121,7 @@ class RigidBodyTracker:
         current_point_accel = []
         for i in range(5, 10):
             acc = msgs[i].twist.linear
-            current_point_accel.append([(acc.x)/1000, (acc.y)/1000, (acc.z)/1000])  # 转换为米/s²
+            current_point_accel.append([(acc.x), (acc.y), (acc.z)])  # 转换为米/s²
 
 
         current_point_pos = np.array(current_point_pos)
@@ -205,11 +205,11 @@ class RigidBodyTracker:
         """
         if local_points is None:
             local_points = np.array([
-            [0.0, 0.0, -0.1175],               # Marker 1
-            [0.04, -0.04 * np.sqrt(3), -0.000003],    # Marker 2
-            [0.03, 0.03 * np.sqrt(3), -0.000003], # Marker 3
-            [-0.035, 0.035 * np.sqrt(3), -0.000003],  # Marker 4
-            [-0.03, -0.03 * np.sqrt(3), -0.000003]    # Marker 5
+            [0.0, 0.0, -0.153],               # Marker 1
+            [0.04, -0.04 * np.sqrt(3), -0.02],    # Marker 2
+            [0.03, 0.03 * np.sqrt(3), -0.02], # Marker 3
+            [-0.035, 0.035 * np.sqrt(3), -0.02],  # Marker 4
+            [-0.03, -0.03 * np.sqrt(3), -0.02]    # Marker 5
         ])
         
         A = np.array(local_points)

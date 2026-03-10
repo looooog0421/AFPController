@@ -48,7 +48,7 @@ class UR5eAdmittanceController(UR5eController):
                  ):
         super().__init__(
             node_name="ur5e_admittance_controller",
-            servo_kp=8.0,
+            servo_kp=4.0,
             servo_kd=0.5,
             **kwargs
         )
@@ -155,6 +155,8 @@ class UR5eAdmittanceController(UR5eController):
             delta_pos_base = delta_x_base[:3]
             delta_rot_base = delta_x_base[3:]
 
+        print(f"Force Error: [{self._last_force_error[0]:.2f}, {self._last_force_error[1]:.2f}, {self._last_force_error[2]:.2f}] N | "
+              f"Delta Pos (base): [{delta_pos_base[0]:.3f}, {delta_pos_base[1]:.3f}, {delta_pos_base[2]:.3f}] m | ")
         self._last_delta_pos_base = delta_pos_base
         self._last_force_error = self.target_wrench - self.current_wrench
 
@@ -186,6 +188,7 @@ class UR5eAdmittanceController(UR5eController):
                     p = self.reference_pose.pose.position
                     o = self.reference_pose.pose.orientation
                     ref_pos = np.array([p.x, p.y, p.z])
+                    ref_pos[2] += 0.055  # 强制修正 Z 轴位置，保持在模具中心线 --- 可选，根据实际情况调整
 
                     quat_norm = np.linalg.norm([o.x, o.y, o.z, o.w])
 
@@ -235,12 +238,12 @@ if __name__ == "__main__":
         coordinate_frame='ee',
     )
 
-    target_wrench = np.array([0.0, 0.0, 5.0, 0.0, 0.0, 0.0])  # 期望末端力：沿Z轴向下5N
+    target_wrench = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])  # 期望末端力：沿Z轴向下2N
 
     controller = UR5eAdmittanceController(
         control_freq=200.0,
         admittance_params=params,
-        max_pos_correction=0.05,
+        max_pos_correction=0.15,
         contact_threshold=3.0,
         release_decay=0.95
     )
@@ -255,11 +258,11 @@ if __name__ == "__main__":
     rospy.sleep(1.0)
 
     # quat = np.array([-0.0098799, 0.98947, 0.015474, -0.14354]) # xyzw
-    target_rot = R.from_quat([-0.0098799, 0.98947, 0.015474, -0.14354]).as_matrix()
+    target_rot = R.from_quat([-0.0092104, -0.999530, 0.00088203, 0.029188]).as_matrix()
 
     rospy.loginfo("Moving to above the mold...")
     controller.move_to_cartesian(
-        target_pos=np.array([-0.5322, -0.1385, 0.004237]),
+        target_pos=np.array([-0.55674, -0.15408, 0.04356]),  # 根据实际情况调整初始位置，保持在模具上方
         # target_pos=np.array([-0.3, -0.3, 0.4]),        
         target_rot=target_rot,
         wait4complete=True
