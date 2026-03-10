@@ -12,8 +12,8 @@ T_old = np.loadtxt(HAND_EYE_FILE)
 HAND_EYE_FILE = '/home/lgx/Project/AFP/src/il_capture/calibrate/result_hand_eye.txt'
 T_new = np.loadtxt(HAND_EYE_FILE)
 
-raw_file_path = '/home/lgx/Project/AFP/src/il_capture/data/120_all_raw_cleaned.hdf5'
-corrected_file_path = '/home/lgx/Project/AFP/src/il_capture/data/120_all_corrected_cleaned.hdf5'
+raw_file_path = '/home/lgx/Project/AFP/src/il_capture/data/120_single_raw.hdf5'
+corrected_file_path = '/home/lgx/Project/AFP/src/il_capture/data/120_single_corrected.hdf5'
 TARGET_POINTS = 2048
 
 

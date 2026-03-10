@@ -52,8 +52,8 @@ def merge_trajectory_hdf5(file1_path, file2_path, output_path):
 
 # --- 运行示例 ---
 # 请将下面的文件名替换为你实际的文件路径
-file1 = '/home/lgx/Project/AFP/src/il_capture/data/120_single_1.hdf5'
-file2 = '/home/lgx/Project/AFP/src/il_capture/data/120_single_2.hdf5' # 假设你的第二个文件叫这个
-output = '/home/lgx/Project/AFP/src/il_capture/data/merged_dataset.hdf5'
+file1 = '/home/lgx/Project/AFP/src/il_capture/data/120_all_corrected_cleaned_smoothed.hdf5'
+file2 = '/home/lgx/Project/AFP/src/il_capture/data/120_single_corrected_cleaned_smoothed.hdf5' # 假设你的第二个文件叫这个
+output = '/home/lgx/Project/AFP/src/il_capture/data/120_mixed_corrected_cleaned_smoothed.hdf5'
 
 merge_trajectory_hdf5(file1, file2, output)

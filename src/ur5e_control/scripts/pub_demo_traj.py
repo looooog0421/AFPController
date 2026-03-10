@@ -19,7 +19,7 @@ class DemoTrajectoryPublisher:
         rospy.init_node("demo_traj_publisher_200hz")
 
         # 2. 参数获取
-        default_path = "/home/lgx/Project/AFP/src/il_capture/data/90_all_corrected_cleaned_smoothed.hdf5"
+        default_path = "/home/lgx/Project/AFP/src/il_capture/data/120_mixed_corrected_cleaned_smoothed.hdf5"
         self.file_path = rospy.get_param("~file_path", default_path)
         self.frame_id = rospy.get_param("~frame_id", "base_link")
 
@@ -51,7 +51,7 @@ class DemoTrajectoryPublisher:
             demo_names = list(data_group.keys())
             if len(demo_names) == 0:
                 raise RuntimeError("No demo found in hdf5 file.")
-            demo_name = demo_names[20]
+            demo_name = demo_names[47]
             action_20hz = data_group[demo_name]["action_without_wrench"][:]
 
         raw_traj_200hz = self.upsample_20_to_200(action_20hz)

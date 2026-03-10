@@ -188,7 +188,7 @@ class UR5eAdmittanceController(UR5eController):
                     p = self.reference_pose.pose.position
                     o = self.reference_pose.pose.orientation
                     ref_pos = np.array([p.x, p.y, p.z])
-                    ref_pos[2] += 0.055  # 强制修正 Z 轴位置，保持在模具中心线 --- 可选，根据实际情况调整
+                    # ref_pos[2] += 0.055  # 强制修正 Z 轴位置，保持在模具中心线 --- 可选，根据实际情况调整
 
                     quat_norm = np.linalg.norm([o.x, o.y, o.z, o.w])
 
@@ -262,7 +262,7 @@ if __name__ == "__main__":
 
     rospy.loginfo("Moving to above the mold...")
     controller.move_to_cartesian(
-        target_pos=np.array([-0.55674, -0.15408, 0.04356]),  # 根据实际情况调整初始位置，保持在模具上方
+        target_pos=np.array([-0.58674, -0.15408, 0.11856]),  # 根据实际情况调整初始位置，保持在模具上方
         # target_pos=np.array([-0.3, -0.3, 0.4]),        
         target_rot=target_rot,
         wait4complete=True

@@ -179,7 +179,7 @@ def process_entire_dataset(input_file, output_file, window_length=31):
 
 if __name__ == "__main__":
     # 1. 配置文件路径
-    input_hdf5 = '/home/lgx/Project/AFP/src/il_capture/data/120_all_corrected_cleaned.hdf5'
+    input_hdf5 = '/home/lgx/Project/AFP/src/il_capture/data/120_single_corrected_cleaned.hdf5'
     
     base_name, ext = os.path.splitext(input_hdf5)
     output_hdf5 = f"{base_name}_smoothed{ext}"
@@ -189,7 +189,7 @@ if __name__ == "__main__":
     
     # 3. 预览单条轨迹
     try:
-        preview_single_demo_3d(input_hdf5, demo_name='demo_10', window_length=WINDOW_LENGTH)
+        preview_single_demo_3d(input_hdf5, demo_name='demo_0', window_length=WINDOW_LENGTH)
     except Exception as e:
         print(f"预览出错: {e}")
         sys.exit(1)
