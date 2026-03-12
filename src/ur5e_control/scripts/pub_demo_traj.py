@@ -35,6 +35,11 @@ class DemoTrajectoryPublisher:
         self.is_executing = False  # 标志位：是否开始顺着轨迹往下走
         self.is_finished = False   # 标志位：是否执行结束
 
+        # === 新增：用于控制周期性停顿的状态变量 ===
+        self.last_paused_index = 0
+        self.pause_end_time = rospy.Time(0)
+        # ======================================
+
         # 4. 初始化发布者
         self.pub = rospy.Publisher("/reference_trajectory",
                                    PoseStamped,
@@ -231,6 +236,18 @@ class DemoTrajectoryPublisher:
 
         # 如果通过了安全确认，开始推进轨迹
         if self.is_executing:
+            current_time = rospy.Time.now()
+
+            if current_time < self.pause_end_time:
+                return
+            
+            if self.index > 0 and self.index % 100 == 0 and self.index != self.last_paused_index:
+                # 设定停顿结束的时间（当前时间 + 0.05秒）
+                self.pause_end_time = current_time + rospy.Duration(0.05)
+                self.last_paused_index = self.index
+                # rospy.loginfo(f"Pausing for 0.05s at index {self.index}...")
+                return  # 本回合不增加 self.index
+
             self.index += 1
             if self.index >= self.total_steps:
                 self.is_finished = True

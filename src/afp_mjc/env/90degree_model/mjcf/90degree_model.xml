@@ -10,17 +10,11 @@
     <mesh name="90degree_model_col_6" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_6.STL"/>
     <mesh name="90degree_model_col_7" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_7.STL"/>
     <mesh name="90degree_model_col_8" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_8.STL"/>
-    <mesh name="90degree_model_col_9" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_9.STL"/>
-    <mesh name="90degree_model_col_10" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_10.STL"/>
-    <mesh name="90degree_model_col_11" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_11.STL"/>
-    <mesh name="90degree_model_col_12" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_12.STL"/>
-    <mesh name="90degree_model_col_13" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_13.STL"/>
-    <mesh name="90degree_model_col_14" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_14.STL"/>
   </asset>
 
   <worldbody>
     <!-- <body name="90degree_model" pos="-0.63788575 -0.10203986 0.10228407  " quat="0.70166206 -0.0043159 -0.00123646 0.71249575"> -->
-    <body name="90degree_model" pos="-0.63358575 -0.18203986 0.03328407" quat="-0.5046848866421307 0.5029362681373345 -0.4930981995473135 0.4992018038732521">
+    <body name="90degree_model" pos="-0.63058575 -0.18203986 -0.02128407" quat="-0.712495818983 -0.001236459978 0.004315905151 0.701662174367">
         <body name="col_0">
             <geom type="mesh" mesh="90degree_model_col_0" group="2"/>
         </body>
@@ -47,21 +41,6 @@
         </body>
         <body name="col_8">
             <geom type="mesh" mesh="90degree_model_col_8" group="2"/>
-        </body>
-        <body name="col_9">
-            <geom type="mesh" mesh="90degree_model_col_9" group="2"/>
-        </body>
-        <body name="col_10">
-            <geom type="mesh" mesh="90degree_model_col_10" group="2"/>
-        </body>
-        <body name="col_11">
-            <geom type="mesh" mesh="90degree_model_col_11" group="2"/>
-        </body>
-        <body name="col_12">
-            <geom type="mesh" mesh="90degree_model_col_12" group="2"/>
-        </body>
-        <body name="col_13">
-            <geom type="mesh" mesh="90degree_model_col_13" group="2"/>
         </body>
     </body>
   </worldbody>

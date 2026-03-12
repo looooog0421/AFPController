@@ -830,8 +830,8 @@
 
   <body name="afp_roll_link" pos="0 0 0.161">
     <inertial pos="0 -0.000136865 0" mass="0.00221391" diaginertia="8.7214e-08 8.7214e-08 4.26069e-08"/>
-    <site name="ee_site" type="cylinder" size="0.0076 0.020" pos="0 0.0 0.0005" euler="1.5708 0 0" rgba="1 0 0 1" />
-    <geom name="ee_collision" type="cylinder" size="0.0076 0.020" pos="0 0.0 0.0005" euler="1.5708 0 0" rgba="1 0 0 1" contype="1" conaffinity="1"/>
+    <site name="ee_site" type="cylinder" size="0.0076 0.020" pos="0 0.0 0.0005" euler="1.5708 0 0" />
+    <geom name="ee_collision" type="cylinder" size="0.0076 0.020" pos="0 0.0 0.0005" euler="1.5708 0 0" contype="1" conaffinity="1"/>
     <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="afp_roll_link"/>
   </body>
 

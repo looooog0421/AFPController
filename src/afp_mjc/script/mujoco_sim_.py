@@ -15,6 +15,7 @@ from scipy.spatial.transform import Rotation as R
 from sensor_msgs import point_cloud2
 import threading
 from typing import Literal
+import cv2
 
 # === 新增：适配真实控制器接口所需的 ROS 依赖 ===
 import actionlib
@@ -143,6 +144,11 @@ class MujocoSim:
         rospy.Timer(rospy.Duration(1.0 / self.pointcloud_freq), lambda event: self.pointcloud_publisher())
 
         self._precompute_camera_params()
+
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        save_path = '/home/lgx/Project/AFP/video/mujoco_simulation.mp4'
+        self.video_writer = cv2.VideoWriter(save_path, fourcc, self.pointcloud_freq, (1920, 1080))
+
         self.run_simulation()
 
     # ============ 新增的接口模拟回调函数 ============
@@ -248,8 +254,8 @@ class MujocoSim:
 
         with viewer.launch_passive(self.model, self.data) as sim:
             while sim.is_running() and not rospy.is_shutdown():
-                sim.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTPOINT] = True
-                sim.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTFORCE] = True
+                # sim.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTPOINT] = True
+                # sim.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTFORCE] = True
 
                 wall_time = time.time() - start_time
                 
@@ -283,6 +289,10 @@ class MujocoSim:
                     with self.data_lock:
                         mujoco.mj_forward(self.model, self.data)
                         rgb, depth = self.render_rgbd()
+
+                        # bgr_frame = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
+                        # self.video_writer.write(bgr_frame)
+
                         cam_pos = self.data.cam_xpos[self.camera_id].copy()
                         cam_rot = self.data.cam_xmat[self.camera_id].reshape(3, 3).copy()
                     
@@ -294,6 +304,9 @@ class MujocoSim:
 
                 sim.sync()
                 time.sleep(0.001)
+        if hasattr(self, 'video_writer'):
+            self.video_writer.release()
+            print("Simulation video saved successfully.")
 
     def pointcloud_publisher(self):
         with self.pc_buffer_lock:
