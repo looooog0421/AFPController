@@ -4,17 +4,20 @@
 ========================================================
 relay_control.py
 作者: hzk
-功能: 使用 RS485（Modbus RTU）控制继电器第二路开关
-节点名: relay2_controller
+功能: 使用 RS485（Modbus RTU）控制双路继电器开关
+节点名: relay2_controller（兼容旧配置）
 
 说明:
-    该节点通过订阅 "/relay2/cmd" 主题来控制继电器的开关。
+    该节点默认订阅 "/relay2/cmd" 主题来控制两个继电器输出。
     收到消息:
-        1 → 打开继电器第二路
-        0 → 关闭继电器第二路
+        11 → 打开继电器第一路（output1）
+        10 → 关闭继电器第一路（output1）
+        21 → 打开继电器第二路（output2）
+        20 → 关闭继电器第二路（output2）
 
+    编码规则：十位表示输出编号，个位表示状态（1=通，0=断）。
     继电器通讯协议为 Modbus RTU，所有指令均包含 CRC16 校验。
-    串口参数、端口号、波特率均可通过 ROS 参数传入。
+    串口参数、端口号、波特率、订阅话题均可通过 ROS 参数传入。
 ========================================================
 """
 
@@ -60,14 +63,24 @@ class RelayController:
     def __init__(self):
         # 初始化 ROS 节点
         rospy.init_node("relay2_controller", anonymous=True)
-        rospy.loginfo("===== Relay2 Controller Node Started =====")
+        rospy.loginfo("===== Dual Relay Controller Node Started =====")
 
         # ------------------------------------------------------------------
         # 1. 读取 ROS 参数（可在 launch 中配置）
         # ------------------------------------------------------------------
-        self.port = rospy.get_param("~port", "/dev/ttyACM0")     # 串口设备
-        self.baudrate = rospy.get_param("~baudrate", 9600)       # 波特率
-        self.timeout = rospy.get_param("~timeout", 0.02)         # 接收超时时间(s)
+        self.port = rospy.get_param("~port", "/dev/ttyACM0")      # 串口设备
+        self.baudrate = rospy.get_param("~baudrate", 9600)         # 波特率
+        self.timeout = rospy.get_param("~timeout", 0.02)           # 接收超时时间(s)
+        self.cmd_topic = rospy.get_param("~cmd_topic", "/relay2/cmd")
+        self.relay_address = 0xFE
+
+        # 常见双路继电器地址映射：第一路 0x0000，第二路 0x0001
+        self.coil_map = {
+            1: 0x0000,
+            2: 0x0001,
+        }
+
+        self.ser = None
 
         # ------------------------------------------------------------------
         # 2. 打开串口
@@ -87,24 +100,14 @@ class RelayController:
             rospy.signal_shutdown("Serial port error")
             return
 
-        # ------------------------------------------------------------------
-        # 3. 准备 Modbus 指令（来自设备说明书）
-        # ------------------------------------------------------------------
-
-        # FE（地址） 05（功能码：写单线圈） 00 01（第二路寄存器地址）
-        # FF 00（写1）C9 F5（CRC）
-        self.cmd_open = bytearray([0xFE, 0x05, 0x00, 0x01, 0xFF, 0x00, 0xC9, 0xF5])
-
-        # FE 05 00 01 00 00 88 05
-        self.cmd_close = bytearray([0xFE, 0x05, 0x00, 0x01, 0x00, 0x00, 0x88, 0x05])
-
-        rospy.loginfo("加载完成：继电器第二路开/关指令")
+        rospy.loginfo("加载完成：双路继电器控制指令生成器")
+        rospy.loginfo("支持指令：11/10 控制 output1，21/20 控制 output2")
 
         # ------------------------------------------------------------------
-        # 4. 订阅 ROS Topic
+        # 3. 订阅 ROS Topic
         # ------------------------------------------------------------------
-        rospy.Subscriber("/relay2/cmd", Int32, self.command_callback)
-        rospy.loginfo("订阅 Topic: /relay2/cmd (Int32)")
+        rospy.Subscriber(self.cmd_topic, Int32, self.command_callback)
+        rospy.loginfo(f"订阅 Topic: {self.cmd_topic} (Int32)")
 
         # 清理动作
         rospy.on_shutdown(self.cleanup)
@@ -121,25 +124,58 @@ class RelayController:
         rospy.loginfo("串口已关闭，节点退出。")
 
     # ------------------------------------------------------------
+    # 解析收到的 ROS 消息
+    # ------------------------------------------------------------
+    def parse_command(self, value: int):
+        output_id = value // 10
+        state = value % 10
+
+        if output_id not in self.coil_map or state not in (0, 1):
+            return None, None
+
+        return output_id, state
+
+    # ------------------------------------------------------------
+    # 生成 Modbus RTU 写单线圈指令
+    # ------------------------------------------------------------
+    def build_cmd(self, output_id: int, state: int):
+        coil_addr = self.coil_map[output_id]
+        frame = bytearray([
+            self.relay_address,
+            0x05,
+            (coil_addr >> 8) & 0xFF,
+            coil_addr & 0xFF,
+            0xFF if state == 1 else 0x00,
+            0x00,
+        ])
+
+        crc = crc16(frame)
+        frame.append(crc & 0xFF)
+        frame.append((crc >> 8) & 0xFF)
+        return frame
+
+    # ------------------------------------------------------------
     # 处理收到的 ROS 消息
     # ------------------------------------------------------------
     def command_callback(self, msg: Int32):
         """
-        当收到 /relay2/cmd 的消息时触发
+        当收到命令时触发。
         msg.data:
-            1 → 打开第二路继电器
-            0 → 关闭第二路继电器
+            11 → 打开第一路继电器
+            10 → 关闭第一路继电器
+            21 → 打开第二路继电器
+            20 → 关闭第二路继电器
         """
-        if msg.data == 1:
-            rospy.loginfo("收到指令：打开继电器第二路")
-            self.send_cmd(self.cmd_open)
+        output_id, state = self.parse_command(msg.data)
 
-        elif msg.data == 0:
-            rospy.loginfo("收到指令：关闭继电器第二路")
-            self.send_cmd(self.cmd_close)
+        if output_id is None:
+            rospy.logwarn(f"收到无效指令: {msg.data}，请发送 11/10/21/20")
+            return
 
-        else:
-            rospy.logwarn("收到无效指令！请发送 0 或 1")
+        action = "打开" if state == 1 else "关闭"
+        rospy.loginfo(f"收到指令：{action}继电器第{output_id}路")
+        cmd = self.build_cmd(output_id, state)
+        self.send_cmd(cmd)
 
     # ------------------------------------------------------------
     # 串口发送 Modbus 指令
@@ -150,6 +186,7 @@ class RelayController:
         """
         try:
             self.ser.write(cmd)
+            self.ser.flush()
             rospy.loginfo(f"已发送指令: {cmd.hex(' ').upper()}")
         except Exception as e:
             rospy.logerr(f"[ERROR] 指令发送失败: {e}")

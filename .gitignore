@@ -6,6 +6,7 @@
 build/
 devel/
 logs/
+afp_logs/
 data/
 
 MUJOCO_LOG.TXT
@@ -20,3 +21,7 @@ src/afp_mjc/env/flange_model/urdf/*.STL
 src/afp_mjc/env/mujoco_ur5e/assets/
 
 src/il_capture/data/
+
+
+src/sensor/script/__pycache__
+src/sensor/src/sensor/__pycache__
