@@ -1,0 +1,47 @@
+# 笛卡尔空间阻抗控制器 - 默认配置
+
+# 机器人配置
+urdf_path: "/home/lgx/Project/AFP/src/afp_mjc/env/mujoco_ur5e/ur5e.urdf"
+end_effector_frame: "flange"
+
+# 控制参数
+control_frequency: 200.0  # Hz
+debug_enabled: true
+
+# 任务策略选择: 'standard', 'afp', 'hybrid'
+task_type: "standard"
+
+# 默认阻抗参数
+# 刚度 [Kx, Ky, Kz, Krx, Kry, Krz] (N/m 和 Nm/rad)
+default_stiffness: [500.0, 500.0, 500.0, 10.0, 10.0, 10.0]
+
+# 阻尼 [Dx, Dy, Dz, Drx, Dry, Drz] (Ns/m 和 Nms/rad)
+default_damping: [50.0, 50.0, 50.0, 1.0, 1.0, 1.0]
+
+# 质量 [Mx, My, Mz, Mrx, Mry, Mrz] (kg 和 kgm^2)
+default_mass: [1.0, 1.0, 1.0, 0.1, 0.1, 0.1]
+
+# 是否使用质量项
+use_mass: false
+
+# 传感器配置
+sensor:
+  rotation_axis: "z"          # 传感器到末端的旋转轴 ('x', 'y', 'z')
+  rotation_angle: 0.0         # 旋转角度 (度)
+  enable_bias_calibration: true  # 启用零点标定
+
+# 标准策略参数
+standard:
+  # 目标力/力矩 [fx, fy, fz, tx, ty, tz]
+  target_wrench: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+# AFP策略参数
+afp:
+  target_contact_force: 20.0  # 目标接触力 (N)
+  y_target_force: 0.0         # y方向目标力 (N)
+  target_torque: [0.0, 0.0, 0.0]  # 目标力矩 (Nm)
+
+# 混合策略参数
+hybrid:
+  force_controlled_dofs: [2]  # 力控制自由度 [0-5]: 0-2为xyz平移, 3-5为xyz转动
+  target_wrench: [0.0, 0.0, 10.0, 0.0, 0.0, 0.0]  # 目标力/力矩

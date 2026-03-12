@@ -1,30 +1,29 @@
 
 <body name="afp_base" childclass="afphead">
-  <inertial pos="0.0428762 -0.0285344 0.0550524" mass="0.796857" 
+  <inertial pos="0.0428762 -0.0285344 0.0550524" 
+            mass="0.1" 
             diaginertia="0.00118905 0.000915620 0.000567181"/>
   <geom type="mesh" rgba="1 1 1 1" mesh="afp_base_link"/>
 
   <body name="afp_shoujuan_link" pos="0.09 0.00765 -0.11247" quat="0.707105 -0.707108 0 0">
-    <inertial pos="0 0 -0.0091764" mass="0.0370388" diaginertia="1.43996e-05 8.04874e-06 8.04874e-06"/>
-    <joint name="afp_shoujuan_joint" pos="0 0 0" axis="0 0 1"/>
+    <inertial pos="0 0 -0.0091764" mass="0.01" diaginertia="1.43996e-05 8.04874e-06 8.04874e-06"/>
     <geom type="mesh" rgba="0.752941 0.752941 0.752941 1" mesh="afp_shoujuan_link"/>
   </body>
 
   <body name="afp_fangjuan_link" pos="0.09 0.00615 -0.0244735" quat="0.707107 -0.707107 0 0">
-    <inertial pos="0 0 -0.0125449" mass="0.0759149" diaginertia="4.89304e-05 2.70071e-05 2.70071e-05"/>
-    <joint name="afp_fangjuan_joint" pos="0 0 0" axis="0 0 -1"/>
+    <inertial pos="0 0 -0.0125449" mass="0.01" diaginertia="4.89304e-05 2.70071e-05 2.70071e-05"/>
     <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="afp_fangjuan_link"/>
   </body>
 
   <body name="afp_roll_link" pos="0 0 0.161">
     <inertial pos="0 -0.000136865 0" mass="0.00221391" diaginertia="8.7214e-08 8.7214e-08 4.26069e-08"/>
-    <joint name="afp_roll_joint" pos="0 0 0" axis="0 1 0"/>
+    <site name="ee_site" type="cylinder" size="0.006 0.009" pos="0 0.0 0.0" euler="0 0 0" rgba="1 0 0 1" />
+
     <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="afp_roll_link"/>
   </body>
 
   <body name="afp_chongsong_link" pos="0.086028 0 0.089591" quat="0.707105 -0.707108 0 0">
     <inertial pos="-3.06003e-06 4.60329e-06 -0.00273291" mass="0.00486684" diaginertia="2.96121e-07 2.94001e-07 2.54651e-07"/>
-    <joint name="afp_chongsong_joint" pos="0 0 0" axis="0 0 -1"/>
     <geom type="mesh" rgba="1 1 1 1" mesh="afp_chongsong_link"/>
   </body>
 </body>

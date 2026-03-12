@@ -172,7 +172,7 @@ class DataRecorder:
             self.FORCE_TRIGGER_THRESHOLD = config['record']['force_trigger_threshold']
             self.DWELL_TIME_REQUIRED = config['record']['dwell_time_required']
             self.MIN_RECORD_TIME = config['record']['min_record_time']
-            self.gravity_tare_file_name = config.get('gravity_tare_file_name', 'gravity_tare.yaml')
+            self.gravity_tare_file_name = config.get('gravity_tare_file_name', 'capture_config.yaml')
 
             self.tool_length = config['tool']['length']
             if 'transform' in config['tool']:

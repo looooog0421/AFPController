@@ -1,0 +1,26 @@
+<launch>
+    <arg name="server" default="192.168.10.101"/>
+    <arg name="bag_name" default="layup_task"/>
+    <arg name="data_root" default="$(find il_capture)/data/"/>
+
+    <include file="$(find vrpn_client_ros)/launch/sample.launch">
+        <arg name="server" value="$(arg server)"/>
+    </include>
+
+    <!-- <include file="$(find astra_camera)/launch/astra.launch">
+        <arg name="color_depth_synchronization" value="true"/>
+    </include> -->
+
+<!-- roslaunch realsense2_camera rs_camera.launch -->
+    <include file="$(find realsense2_camera)/launch/demo_pointcloud.launch">
+    </include>
+
+
+    <node pkg="netft_utils" type="netft_node" name="netft_node"
+        args="--address=192.168.10.104 --rate=500"/>
+
+    <node pkg="il_capture" type="rigidbodytracker.py" name="rigid_body_tracker"/>
+
+    <node pkg="il_capture" type="force_visualizer.py" name="force_visualizer">
+    </node>
+</launch>

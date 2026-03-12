@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- 配置文件选择 -->
+    <arg name="config_file" default="$(find afp_robot_control)/config/impedance_controller_default.yaml" />
+    
+    <!-- 笛卡尔空间阻抗控制器节点 -->
+    <node name="cartesian_impedance_controller" 
+          pkg="afp_robot_control" 
+          type="cartesian_impedance_controller_node.py" 
+          output="screen">
+        
+        <!-- 加载配置参数 -->
+        <rosparam command="load" file="$(arg config_file)" />
+        
+    </node>
+    
+    <!-- RViz可视化（可选） -->
+    <arg name="use_rviz" default="false" />
+    <node if="$(arg use_rviz)" 
+          name="rviz" 
+          pkg="rviz" 
+          type="rviz" 
+          args="-d $(find afp_robot_control)/config/impedance_control.rviz" />
+    
+</launch>

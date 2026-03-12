@@ -1,0 +1,68 @@
+<mujoco>
+  <asset>
+    <mesh name="90degree_model_visual_mesh" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/90degree_model.STL"/>
+    <mesh name="90degree_model_col_0" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_0.STL"/>
+    <mesh name="90degree_model_col_1" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_1.STL"/>
+    <mesh name="90degree_model_col_2" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_2.STL"/>
+    <mesh name="90degree_model_col_3" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_3.STL"/>
+    <mesh name="90degree_model_col_4" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_4.STL"/>
+    <mesh name="90degree_model_col_5" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_5.STL"/>
+    <mesh name="90degree_model_col_6" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_6.STL"/>
+    <mesh name="90degree_model_col_7" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_7.STL"/>
+    <mesh name="90degree_model_col_8" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_8.STL"/>
+    <mesh name="90degree_model_col_9" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_9.STL"/>
+    <mesh name="90degree_model_col_10" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_10.STL"/>
+    <mesh name="90degree_model_col_11" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_11.STL"/>
+    <mesh name="90degree_model_col_12" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_12.STL"/>
+    <mesh name="90degree_model_col_13" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_13.STL"/>
+    <mesh name="90degree_model_col_14" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_14.STL"/>
+  </asset>
+
+  <worldbody>
+    <!-- <body name="90degree_model" pos="-0.59788575 -0.18203986 -0.01228407" quat="0.70166206 -0.0043159 -0.00123646 0.71249575"> -->
+    <body name="90degree_model" pos="-0.59788575 -0.18203986 0.06228407" quat="0.70166206 -0.0043159 -0.00123646 0.71249575">
+        <body name="col_0">
+            <geom type="mesh" mesh="90degree_model_col_0" group="2"/>
+        </body>
+        <body name="col_1">
+            <geom type="mesh" mesh="90degree_model_col_1" group="2"/>
+        </body>
+        <body name="col_2">
+            <geom type="mesh" mesh="90degree_model_col_2" group="2"/>
+        </body>
+        <body name="col_3">
+            <geom type="mesh" mesh="90degree_model_col_3" group="2"/>
+        </body>
+        <body name="col_4">
+            <geom type="mesh" mesh="90degree_model_col_4" group="2"/>
+        </body>
+        <body name="col_5">
+            <geom type="mesh" mesh="90degree_model_col_5" group="2"/>
+        </body>
+        <body name="col_6">
+            <geom type="mesh" mesh="90degree_model_col_6" group="2"/>
+        </body>
+        <body name="col_7">
+            <geom type="mesh" mesh="90degree_model_col_7" group="2"/>
+        </body>
+        <body name="col_8">
+            <geom type="mesh" mesh="90degree_model_col_8" group="2"/>
+        </body>
+        <body name="col_9">
+            <geom type="mesh" mesh="90degree_model_col_9" group="2"/>
+        </body>
+        <body name="col_10">
+            <geom type="mesh" mesh="90degree_model_col_10" group="2"/>
+        </body>
+        <body name="col_11">
+            <geom type="mesh" mesh="90degree_model_col_11" group="2"/>
+        </body>
+        <body name="col_12">
+            <geom type="mesh" mesh="90degree_model_col_12" group="2"/>
+        </body>
+        <body name="col_13">
+            <geom type="mesh" mesh="90degree_model_col_13" group="2"/>
+        </body>
+    </body>
+  </worldbody>
+</mujoco>
