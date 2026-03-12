@@ -248,8 +248,8 @@ class MujocoSim:
 
         with viewer.launch_passive(self.model, self.data) as sim:
             while sim.is_running() and not rospy.is_shutdown():
-                sim.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTPOINT] = True
-                sim.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTFORCE] = True
+                # sim.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTPOINT] = True
+                # sim.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTFORCE] = True
 
                 wall_time = time.time() - start_time
                 
