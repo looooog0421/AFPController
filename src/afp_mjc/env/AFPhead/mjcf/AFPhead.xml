@@ -3,6 +3,277 @@
 
   <asset>
     <mesh name="AFP_base_link" file="base_link.STL"/>
+    <mesh name="AFPhead_part_0" file="parts/AFPhead_part_0.STL"/>
+    <mesh name="AFPhead_part_1" file="parts/AFPhead_part_1.STL"/>
+    <mesh name="AFPhead_part_2" file="parts/AFPhead_part_2.STL"/>
+    <mesh name="AFPhead_part_3" file="parts/AFPhead_part_3.STL"/>
+    <mesh name="AFPhead_part_4" file="parts/AFPhead_part_4.STL"/>
+    <mesh name="AFPhead_part_5" file="parts/AFPhead_part_5.STL"/>
+    <mesh name="AFPhead_part_6" file="parts/AFPhead_part_6.STL"/>
+    <mesh name="AFPhead_part_7" file="parts/AFPhead_part_7.STL"/>
+    <mesh name="AFPhead_part_8" file="parts/AFPhead_part_8.STL"/>
+    <mesh name="AFPhead_part_9" file="parts/AFPhead_part_9.STL"/>
+    <mesh name="AFPhead_part_10" file="parts/AFPhead_part_10.STL"/>
+    <mesh name="AFPhead_part_11" file="parts/AFPhead_part_11.STL"/>
+    <mesh name="AFPhead_part_12" file="parts/AFPhead_part_12.STL"/>
+    <mesh name="AFPhead_part_13" file="parts/AFPhead_part_13.STL"/>
+    <mesh name="AFPhead_part_14" file="parts/AFPhead_part_14.STL"/>
+    <mesh name="AFPhead_part_15" file="parts/AFPhead_part_15.STL"/>
+    <mesh name="AFPhead_part_16" file="parts/AFPhead_part_16.STL"/>
+    <mesh name="AFPhead_part_17" file="parts/AFPhead_part_17.STL"/>
+    <mesh name="AFPhead_part_18" file="parts/AFPhead_part_18.STL"/>
+    <mesh name="AFPhead_part_19" file="parts/AFPhead_part_19.STL"/>
+    <mesh name="AFPhead_part_20" file="parts/AFPhead_part_20.STL"/>
+    <mesh name="AFPhead_part_21" file="parts/AFPhead_part_21.STL"/>
+    <mesh name="AFPhead_part_22" file="parts/AFPhead_part_22.STL"/>
+    <mesh name="AFPhead_part_23" file="parts/AFPhead_part_23.STL"/>
+    <mesh name="AFPhead_part_24" file="parts/AFPhead_part_24.STL"/>
+    <mesh name="AFPhead_part_25" file="parts/AFPhead_part_25.STL"/>
+    <mesh name="AFPhead_part_26" file="parts/AFPhead_part_26.STL"/>
+    <mesh name="AFPhead_part_27" file="parts/AFPhead_part_27.STL"/>
+    <mesh name="AFPhead_part_28" file="parts/AFPhead_part_28.STL"/>
+    <mesh name="AFPhead_part_29" file="parts/AFPhead_part_29.STL"/>
+    <mesh name="AFPhead_part_30" file="parts/AFPhead_part_30.STL"/>
+    <mesh name="AFPhead_part_31" file="parts/AFPhead_part_31.STL"/>
+    <mesh name="AFPhead_part_32" file="parts/AFPhead_part_32.STL"/>
+    <mesh name="AFPhead_part_33" file="parts/AFPhead_part_33.STL"/>
+    <mesh name="AFPhead_part_34" file="parts/AFPhead_part_34.STL"/>
+    <mesh name="AFPhead_part_35" file="parts/AFPhead_part_35.STL"/>
+    <mesh name="AFPhead_part_36" file="parts/AFPhead_part_36.STL"/>
+    <mesh name="AFPhead_part_37" file="parts/AFPhead_part_37.STL"/>
+    <mesh name="AFPhead_part_38" file="parts/AFPhead_part_38.STL"/>
+    <mesh name="AFPhead_part_39" file="parts/AFPhead_part_39.STL"/>
+    <mesh name="AFPhead_part_40" file="parts/AFPhead_part_40.STL"/>
+    <mesh name="AFPhead_part_41" file="parts/AFPhead_part_41.STL"/>
+    <mesh name="AFPhead_part_42" file="parts/AFPhead_part_42.STL"/>
+    <mesh name="AFPhead_part_43" file="parts/AFPhead_part_43.STL"/>
+    <mesh name="AFPhead_part_44" file="parts/AFPhead_part_44.STL"/>
+    <mesh name="AFPhead_part_45" file="parts/AFPhead_part_45.STL"/>
+    <mesh name="AFPhead_part_46" file="parts/AFPhead_part_46.STL"/>
+    <mesh name="AFPhead_part_47" file="parts/AFPhead_part_47.STL"/>
+    <mesh name="AFPhead_part_48" file="parts/AFPhead_part_48.STL"/>
+    <mesh name="AFPhead_part_49" file="parts/AFPhead_part_49.STL"/>
+    <mesh name="AFPhead_part_50" file="parts/AFPhead_part_50.STL"/>
+    <mesh name="AFPhead_part_51" file="parts/AFPhead_part_51.STL"/>
+    <mesh name="AFPhead_part_52" file="parts/AFPhead_part_52.STL"/>
+    <mesh name="AFPhead_part_53" file="parts/AFPhead_part_53.STL"/>
+    <mesh name="AFPhead_part_54" file="parts/AFPhead_part_54.STL"/>
+    <mesh name="AFPhead_part_55" file="parts/AFPhead_part_55.STL"/>
+    <mesh name="AFPhead_part_56" file="parts/AFPhead_part_56.STL"/>
+    <mesh name="AFPhead_part_57" file="parts/AFPhead_part_57.STL"/>
+    <mesh name="AFPhead_part_58" file="parts/AFPhead_part_58.STL"/>
+    <mesh name="AFPhead_part_59" file="parts/AFPhead_part_59.STL"/>
+    <mesh name="AFPhead_part_60" file="parts/AFPhead_part_60.STL"/>
+    <mesh name="AFPhead_part_61" file="parts/AFPhead_part_61.STL"/>
+    <mesh name="AFPhead_part_62" file="parts/AFPhead_part_62.STL"/>
+    <mesh name="AFPhead_part_63" file="parts/AFPhead_part_63.STL"/>
+    <mesh name="AFPhead_part_64" file="parts/AFPhead_part_64.STL"/>
+    <mesh name="AFPhead_part_65" file="parts/AFPhead_part_65.STL"/>
+    <mesh name="AFPhead_part_66" file="parts/AFPhead_part_66.STL"/>
+    <mesh name="AFPhead_part_67" file="parts/AFPhead_part_67.STL"/>
+    <mesh name="AFPhead_part_68" file="parts/AFPhead_part_68.STL"/>
+    <mesh name="AFPhead_part_69" file="parts/AFPhead_part_69.STL"/>
+    <mesh name="AFPhead_part_70" file="parts/AFPhead_part_70.STL"/>
+    <mesh name="AFPhead_part_71" file="parts/AFPhead_part_71.STL"/>
+    <mesh name="AFPhead_part_72" file="parts/AFPhead_part_72.STL"/>
+    <mesh name="AFPhead_part_73" file="parts/AFPhead_part_73.STL"/>
+    <mesh name="AFPhead_part_74" file="parts/AFPhead_part_74.STL"/>
+    <mesh name="AFPhead_part_75" file="parts/AFPhead_part_75.STL"/>
+    <mesh name="AFPhead_part_76" file="parts/AFPhead_part_76.STL"/>
+    <mesh name="AFPhead_part_77" file="parts/AFPhead_part_77.STL"/>
+    <mesh name="AFPhead_part_78" file="parts/AFPhead_part_78.STL"/>
+    <mesh name="AFPhead_part_79" file="parts/AFPhead_part_79.STL"/>
+    <mesh name="AFPhead_part_80" file="parts/AFPhead_part_80.STL"/>
+    <mesh name="AFPhead_part_81" file="parts/AFPhead_part_81.STL"/>
+    <mesh name="AFPhead_part_82" file="parts/AFPhead_part_82.STL"/>
+    <mesh name="AFPhead_part_83" file="parts/AFPhead_part_83.STL"/>
+    <mesh name="AFPhead_part_84" file="parts/AFPhead_part_84.STL"/>
+    <mesh name="AFPhead_part_85" file="parts/AFPhead_part_85.STL"/>
+    <mesh name="AFPhead_part_86" file="parts/AFPhead_part_86.STL"/>
+    <mesh name="AFPhead_part_87" file="parts/AFPhead_part_87.STL"/>
+    <mesh name="AFPhead_part_88" file="parts/AFPhead_part_88.STL"/>
+    <mesh name="AFPhead_part_89" file="parts/AFPhead_part_89.STL"/>
+    <mesh name="AFPhead_part_90" file="parts/AFPhead_part_90.STL"/>
+    <mesh name="AFPhead_part_91" file="parts/AFPhead_part_91.STL"/>
+    <mesh name="AFPhead_part_92" file="parts/AFPhead_part_92.STL"/>
+    <mesh name="AFPhead_part_93" file="parts/AFPhead_part_93.STL"/>
+    <mesh name="AFPhead_part_94" file="parts/AFPhead_part_94.STL"/>
+    <mesh name="AFPhead_part_95" file="parts/AFPhead_part_95.STL"/>
+    <mesh name="AFPhead_part_96" file="parts/AFPhead_part_96.STL"/>
+    <mesh name="AFPhead_part_97" file="parts/AFPhead_part_97.STL"/>
+    <mesh name="AFPhead_part_98" file="parts/AFPhead_part_98.STL"/>
+    <mesh name="AFPhead_part_99" file="parts/AFPhead_part_99.STL"/>
+    <mesh name="AFPhead_part_100" file="parts/AFPhead_part_100.STL"/>
+    <mesh name="AFPhead_part_101" file="parts/AFPhead_part_101.STL"/>
+    <mesh name="AFPhead_part_102" file="parts/AFPhead_part_102.STL"/>
+    <mesh name="AFPhead_part_103" file="parts/AFPhead_part_103.STL"/>
+    <mesh name="AFPhead_part_104" file="parts/AFPhead_part_104.STL"/>
+    <mesh name="AFPhead_part_105" file="parts/AFPhead_part_105.STL"/>
+    <mesh name="AFPhead_part_106" file="parts/AFPhead_part_106.STL"/>
+    <mesh name="AFPhead_part_107" file="parts/AFPhead_part_107.STL"/>
+    <mesh name="AFPhead_part_108" file="parts/AFPhead_part_108.STL"/>
+    <mesh name="AFPhead_part_109" file="parts/AFPhead_part_109.STL"/>
+    <mesh name="AFPhead_part_110" file="parts/AFPhead_part_110.STL"/>
+    <mesh name="AFPhead_part_111" file="parts/AFPhead_part_111.STL"/>
+    <mesh name="AFPhead_part_112" file="parts/AFPhead_part_112.STL"/>
+    <mesh name="AFPhead_part_113" file="parts/AFPhead_part_113.STL"/>
+    <mesh name="AFPhead_part_114" file="parts/AFPhead_part_114.STL"/>
+    <mesh name="AFPhead_part_115" file="parts/AFPhead_part_115.STL"/>
+    <mesh name="AFPhead_part_116" file="parts/AFPhead_part_116.STL"/>
+    <mesh name="AFPhead_part_117" file="parts/AFPhead_part_117.STL"/>
+    <mesh name="AFPhead_part_118" file="parts/AFPhead_part_118.STL"/>
+    <mesh name="AFPhead_part_119" file="parts/AFPhead_part_119.STL"/>
+    <mesh name="AFPhead_part_120" file="parts/AFPhead_part_120.STL"/>
+    <mesh name="AFPhead_part_121" file="parts/AFPhead_part_121.STL"/>
+    <mesh name="AFPhead_part_122" file="parts/AFPhead_part_122.STL"/>
+    <mesh name="AFPhead_part_123" file="parts/AFPhead_part_123.STL"/>
+    <mesh name="AFPhead_part_124" file="parts/AFPhead_part_124.STL"/>
+    <mesh name="AFPhead_part_125" file="parts/AFPhead_part_125.STL"/>
+    <mesh name="AFPhead_part_126" file="parts/AFPhead_part_126.STL"/>
+    <mesh name="AFPhead_part_127" file="parts/AFPhead_part_127.STL"/>
+    <mesh name="AFPhead_part_128" file="parts/AFPhead_part_128.STL"/>
+    <mesh name="AFPhead_part_129" file="parts/AFPhead_part_129.STL"/>
+    <mesh name="AFPhead_part_130" file="parts/AFPhead_part_130.STL"/>
+    <mesh name="AFPhead_part_131" file="parts/AFPhead_part_131.STL"/>
+    <mesh name="AFPhead_part_132" file="parts/AFPhead_part_132.STL"/>
+    <mesh name="AFPhead_part_133" file="parts/AFPhead_part_133.STL"/>
+    <mesh name="AFPhead_part_134" file="parts/AFPhead_part_134.STL"/>
+    <mesh name="AFPhead_part_135" file="parts/AFPhead_part_135.STL"/>
+    <mesh name="AFPhead_part_136" file="parts/AFPhead_part_136.STL"/>
+    <mesh name="AFPhead_part_137" file="parts/AFPhead_part_137.STL"/>
+    <mesh name="AFPhead_part_138" file="parts/AFPhead_part_138.STL"/>
+    <mesh name="AFPhead_part_139" file="parts/AFPhead_part_139.STL"/>
+    <mesh name="AFPhead_part_140" file="parts/AFPhead_part_140.STL"/>
+    <mesh name="AFPhead_part_141" file="parts/AFPhead_part_141.STL"/>
+    <mesh name="AFPhead_part_142" file="parts/AFPhead_part_142.STL"/>
+    <mesh name="AFPhead_part_143" file="parts/AFPhead_part_143.STL"/>
+    <mesh name="AFPhead_part_144" file="parts/AFPhead_part_144.STL"/>
+    <mesh name="AFPhead_part_145" file="parts/AFPhead_part_145.STL"/>
+    <mesh name="AFPhead_part_146" file="parts/AFPhead_part_146.STL"/>
+    <mesh name="AFPhead_part_147" file="parts/AFPhead_part_147.STL"/>
+    <mesh name="AFPhead_part_148" file="parts/AFPhead_part_148.STL"/>
+    <mesh name="AFPhead_part_149" file="parts/AFPhead_part_149.STL"/>
+    <mesh name="AFPhead_part_150" file="parts/AFPhead_part_150.STL"/>
+    <mesh name="AFPhead_part_151" file="parts/AFPhead_part_151.STL"/>
+    <mesh name="AFPhead_part_152" file="parts/AFPhead_part_152.STL"/>
+    <mesh name="AFPhead_part_153" file="parts/AFPhead_part_153.STL"/>
+    <mesh name="AFPhead_part_154" file="parts/AFPhead_part_154.STL"/>
+    <mesh name="AFPhead_part_155" file="parts/AFPhead_part_155.STL"/>
+    <mesh name="AFPhead_part_156" file="parts/AFPhead_part_156.STL"/>
+    <mesh name="AFPhead_part_157" file="parts/AFPhead_part_157.STL"/>
+    <mesh name="AFPhead_part_158" file="parts/AFPhead_part_158.STL"/>
+    <mesh name="AFPhead_part_159" file="parts/AFPhead_part_159.STL"/>
+    <mesh name="AFPhead_part_160" file="parts/AFPhead_part_160.STL"/>
+    <mesh name="AFPhead_part_161" file="parts/AFPhead_part_161.STL"/>
+    <mesh name="AFPhead_part_162" file="parts/AFPhead_part_162.STL"/>
+    <mesh name="AFPhead_part_163" file="parts/AFPhead_part_163.STL"/>
+    <mesh name="AFPhead_part_164" file="parts/AFPhead_part_164.STL"/>
+    <mesh name="AFPhead_part_165" file="parts/AFPhead_part_165.STL"/>
+    <mesh name="AFPhead_part_166" file="parts/AFPhead_part_166.STL"/>
+    <mesh name="AFPhead_part_167" file="parts/AFPhead_part_167.STL"/>
+    <mesh name="AFPhead_part_168" file="parts/AFPhead_part_168.STL"/>
+    <mesh name="AFPhead_part_169" file="parts/AFPhead_part_169.STL"/>
+    <mesh name="AFPhead_part_170" file="parts/AFPhead_part_170.STL"/>
+    <mesh name="AFPhead_part_171" file="parts/AFPhead_part_171.STL"/>
+    <mesh name="AFPhead_part_172" file="parts/AFPhead_part_172.STL"/>
+    <mesh name="AFPhead_part_173" file="parts/AFPhead_part_173.STL"/>
+    <mesh name="AFPhead_part_174" file="parts/AFPhead_part_174.STL"/>
+    <mesh name="AFPhead_part_175" file="parts/AFPhead_part_175.STL"/>
+    <mesh name="AFPhead_part_176" file="parts/AFPhead_part_176.STL"/>
+    <mesh name="AFPhead_part_177" file="parts/AFPhead_part_177.STL"/>
+    <mesh name="AFPhead_part_178" file="parts/AFPhead_part_178.STL"/>
+    <mesh name="AFPhead_part_179" file="parts/AFPhead_part_179.STL"/>
+    <mesh name="AFPhead_part_180" file="parts/AFPhead_part_180.STL"/>
+    <mesh name="AFPhead_part_181" file="parts/AFPhead_part_181.STL"/>
+    <mesh name="AFPhead_part_182" file="parts/AFPhead_part_182.STL"/>
+    <mesh name="AFPhead_part_183" file="parts/AFPhead_part_183.STL"/>
+    <mesh name="AFPhead_part_184" file="parts/AFPhead_part_184.STL"/>
+    <mesh name="AFPhead_part_185" file="parts/AFPhead_part_185.STL"/>
+    <mesh name="AFPhead_part_186" file="parts/AFPhead_part_186.STL"/>
+    <mesh name="AFPhead_part_187" file="parts/AFPhead_part_187.STL"/>
+    <mesh name="AFPhead_part_188" file="parts/AFPhead_part_188.STL"/>
+    <mesh name="AFPhead_part_189" file="parts/AFPhead_part_189.STL"/>
+    <mesh name="AFPhead_part_190" file="parts/AFPhead_part_190.STL"/>
+    <mesh name="AFPhead_part_191" file="parts/AFPhead_part_191.STL"/>
+    <mesh name="AFPhead_part_192" file="parts/AFPhead_part_192.STL"/>
+    <mesh name="AFPhead_part_193" file="parts/AFPhead_part_193.STL"/>
+    <mesh name="AFPhead_part_194" file="parts/AFPhead_part_194.STL"/>
+    <mesh name="AFPhead_part_195" file="parts/AFPhead_part_195.STL"/>
+    <mesh name="AFPhead_part_196" file="parts/AFPhead_part_196.STL"/>
+    <mesh name="AFPhead_part_197" file="parts/AFPhead_part_197.STL"/>
+    <mesh name="AFPhead_part_198" file="parts/AFPhead_part_198.STL"/>
+    <mesh name="AFPhead_part_199" file="parts/AFPhead_part_199.STL"/>
+    <mesh name="AFPhead_part_200" file="parts/AFPhead_part_200.STL"/>
+    <mesh name="AFPhead_part_201" file="parts/AFPhead_part_201.STL"/>
+    <mesh name="AFPhead_part_202" file="parts/AFPhead_part_202.STL"/>
+    <mesh name="AFPhead_part_203" file="parts/AFPhead_part_203.STL"/>
+    <mesh name="AFPhead_part_204" file="parts/AFPhead_part_204.STL"/>
+    <mesh name="AFPhead_part_205" file="parts/AFPhead_part_205.STL"/>
+    <mesh name="AFPhead_part_206" file="parts/AFPhead_part_206.STL"/>
+    <mesh name="AFPhead_part_207" file="parts/AFPhead_part_207.STL"/>
+    <mesh name="AFPhead_part_208" file="parts/AFPhead_part_208.STL"/>
+    <mesh name="AFPhead_part_209" file="parts/AFPhead_part_209.STL"/>
+    <mesh name="AFPhead_part_210" file="parts/AFPhead_part_210.STL"/>
+    <mesh name="AFPhead_part_211" file="parts/AFPhead_part_211.STL"/>
+    <mesh name="AFPhead_part_212" file="parts/AFPhead_part_212.STL"/>
+    <mesh name="AFPhead_part_213" file="parts/AFPhead_part_213.STL"/>
+    <mesh name="AFPhead_part_214" file="parts/AFPhead_part_214.STL"/>
+    <mesh name="AFPhead_part_215" file="parts/AFPhead_part_215.STL"/>
+    <mesh name="AFPhead_part_216" file="parts/AFPhead_part_216.STL"/>
+    <mesh name="AFPhead_part_217" file="parts/AFPhead_part_217.STL"/>
+    <mesh name="AFPhead_part_218" file="parts/AFPhead_part_218.STL"/>
+    <mesh name="AFPhead_part_219" file="parts/AFPhead_part_219.STL"/>
+    <mesh name="AFPhead_part_220" file="parts/AFPhead_part_220.STL"/>
+    <mesh name="AFPhead_part_221" file="parts/AFPhead_part_221.STL"/>
+    <mesh name="AFPhead_part_222" file="parts/AFPhead_part_222.STL"/>
+    <mesh name="AFPhead_part_223" file="parts/AFPhead_part_223.STL"/>
+    <mesh name="AFPhead_part_224" file="parts/AFPhead_part_224.STL"/>
+    <mesh name="AFPhead_part_225" file="parts/AFPhead_part_225.STL"/>
+    <mesh name="AFPhead_part_226" file="parts/AFPhead_part_226.STL"/>
+    <mesh name="AFPhead_part_227" file="parts/AFPhead_part_227.STL"/>
+    <mesh name="AFPhead_part_228" file="parts/AFPhead_part_228.STL"/>
+    <mesh name="AFPhead_part_229" file="parts/AFPhead_part_229.STL"/>
+    <mesh name="AFPhead_part_230" file="parts/AFPhead_part_230.STL"/>
+    <mesh name="AFPhead_part_231" file="parts/AFPhead_part_231.STL"/>
+    <mesh name="AFPhead_part_232" file="parts/AFPhead_part_232.STL"/>
+    <mesh name="AFPhead_part_233" file="parts/AFPhead_part_233.STL"/>
+    <mesh name="AFPhead_part_234" file="parts/AFPhead_part_234.STL"/>
+    <mesh name="AFPhead_part_235" file="parts/AFPhead_part_235.STL"/>
+    <mesh name="AFPhead_part_236" file="parts/AFPhead_part_236.STL"/>
+    <mesh name="AFPhead_part_237" file="parts/AFPhead_part_237.STL"/>
+    <mesh name="AFPhead_part_238" file="parts/AFPhead_part_238.STL"/>
+    <mesh name="AFPhead_part_239" file="parts/AFPhead_part_239.STL"/>
+    <mesh name="AFPhead_part_240" file="parts/AFPhead_part_240.STL"/>
+    <mesh name="AFPhead_part_241" file="parts/AFPhead_part_241.STL"/>
+    <mesh name="AFPhead_part_242" file="parts/AFPhead_part_242.STL"/>
+    <mesh name="AFPhead_part_243" file="parts/AFPhead_part_243.STL"/>
+    <mesh name="AFPhead_part_244" file="parts/AFPhead_part_244.STL"/>
+    <mesh name="AFPhead_part_245" file="parts/AFPhead_part_245.STL"/>
+    <mesh name="AFPhead_part_246" file="parts/AFPhead_part_246.STL"/>
+    <mesh name="AFPhead_part_247" file="parts/AFPhead_part_247.STL"/>
+    <mesh name="AFPhead_part_248" file="parts/AFPhead_part_248.STL"/>
+    <mesh name="AFPhead_part_249" file="parts/AFPhead_part_249.STL"/>
+    <mesh name="AFPhead_part_250" file="parts/AFPhead_part_250.STL"/>
+    <mesh name="AFPhead_part_251" file="parts/AFPhead_part_251.STL"/>
+    <mesh name="AFPhead_part_252" file="parts/AFPhead_part_252.STL"/>
+    <mesh name="AFPhead_part_253" file="parts/AFPhead_part_253.STL"/>
+    <mesh name="AFPhead_part_254" file="parts/AFPhead_part_254.STL"/>
+    <mesh name="AFPhead_part_255" file="parts/AFPhead_part_255.STL"/>
+    <mesh name="AFPhead_part_256" file="parts/AFPhead_part_256.STL"/>
+    <mesh name="AFPhead_part_257" file="parts/AFPhead_part_257.STL"/>
+    <mesh name="AFPhead_part_258" file="parts/AFPhead_part_258.STL"/>
+    <mesh name="AFPhead_part_259" file="parts/AFPhead_part_259.STL"/>
+    <mesh name="AFPhead_part_260" file="parts/AFPhead_part_260.STL"/>
+    <mesh name="AFPhead_part_261" file="parts/AFPhead_part_261.STL"/>
+    <mesh name="AFPhead_part_262" file="parts/AFPhead_part_262.STL"/>
+    <mesh name="AFPhead_part_263" file="parts/AFPhead_part_263.STL"/>
+    <mesh name="AFPhead_part_264" file="parts/AFPhead_part_264.STL"/>
+    <mesh name="AFPhead_part_265" file="parts/AFPhead_part_265.STL"/>
+    <mesh name="AFPhead_part_266" file="parts/AFPhead_part_266.STL"/>
+    <mesh name="AFPhead_part_267" file="parts/AFPhead_part_267.STL"/>
+    <mesh name="AFPhead_part_268" file="parts/AFPhead_part_268.STL"/>
+    <mesh name="AFPhead_part_269" file="parts/AFPhead_part_269.STL"/>
+    <mesh name="AFPhead_part_270" file="parts/AFPhead_part_270.STL"/>
     <mesh name="shoujuan_link" file="shoujuan_link.STL"/>
     <mesh name="fangjuan_link" file="fangjuan_link.STL"/>
     <mesh name="roll_link" file="roll_link.STL"/>
@@ -18,7 +289,823 @@
   <body name="AFP_base" childclass="AFPhead">
     <inertial pos="0.0428762 -0.0285344 0.0550524" mass="0.796857" 
               diaginertia="0.00118905 0.000915620 0.000567181"/>
-    <geom type="mesh" rgba="1 1 1 1" mesh="afp_base_link"/>
+    <!-- <geom type="mesh" rgba="1 1 1 1" mesh="afp_base_link"/> -->
+    <body name="AFPhead_part_0" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_0"/>
+    </body>
+    <body name="AFPhead_part_1" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_1"/>
+    </body>
+    <body name="AFPhead_part_2" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_2"/>
+    </body>
+    <body name="AFPhead_part_3" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_3"/>
+    </body>
+    <body name="AFPhead_part_4" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_4"/>
+    </body>
+    <body name="AFPhead_part_5" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_5"/>
+    </body>
+    <body name="AFPhead_part_6" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_6"/>
+    </body>
+    <body name="AFPhead_part_7" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_7"/>
+    </body>
+    <body name="AFPhead_part_8" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_8"/>
+    </body>
+    <body name="AFPhead_part_9" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_9"/>
+    </body>
+    <body name="AFPhead_part_10" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_10"/>
+    </body>
+    <body name="AFPhead_part_11" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_11"/>
+    </body>
+    <body name="AFPhead_part_12" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_12"/>
+    </body>
+    <body name="AFPhead_part_13" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_13"/>
+    </body>
+    <body name="AFPhead_part_14" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_14"/>
+    </body>
+    <body name="AFPhead_part_15" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_15"/>
+    </body>
+    <body name="AFPhead_part_16" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_16"/>
+    </body>
+    <body name="AFPhead_part_17" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_17"/>
+    </body>
+    <body name="AFPhead_part_18" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_18"/>
+    </body>
+    <body name="AFPhead_part_19" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_19"/>
+    </body>
+    <body name="AFPhead_part_20" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_20"/>
+    </body>
+    <body name="AFPhead_part_21" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_21"/>
+    </body>
+    <body name="AFPhead_part_22" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_22"/>
+    </body>
+    <body name="AFPhead_part_23" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_23"/>
+    </body>
+    <body name="AFPhead_part_24" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_24"/>
+    </body>
+    <body name="AFPhead_part_25" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_25"/>
+    </body>
+    <body name="AFPhead_part_26" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_26"/>
+    </body>
+    <body name="AFPhead_part_27" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_27"/>
+    </body>
+    <body name="AFPhead_part_28" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_28"/>
+    </body>
+    <body name="AFPhead_part_29" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_29"/>
+    </body>
+    <body name="AFPhead_part_30" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_30"/>
+    </body>
+    <body name="AFPhead_part_31" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_31"/>
+    </body>
+    <body name="AFPhead_part_32" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_32"/>
+    </body>
+    <body name="AFPhead_part_33" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_33"/>
+    </body>
+    <body name="AFPhead_part_34" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_34"/>
+    </body>
+    <body name="AFPhead_part_35" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_35"/>
+    </body>
+    <body name="AFPhead_part_36" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_36"/>
+    </body>
+    <body name="AFPhead_part_37" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_37"/>
+    </body>
+    <body name="AFPhead_part_38" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_38"/>
+    </body>
+    <body name="AFPhead_part_39" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_39"/>
+    </body>
+    <body name="AFPhead_part_40" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_40"/>
+    </body>
+    <body name="AFPhead_part_41" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_41"/>
+    </body>
+    <body name="AFPhead_part_42" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_42"/>
+    </body>
+    <body name="AFPhead_part_43" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_43"/>
+    </body>
+    <body name="AFPhead_part_44" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_44"/>
+    </body>
+    <body name="AFPhead_part_45" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_45"/>
+    </body>
+    <body name="AFPhead_part_46" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_46"/>
+    </body>
+    <body name="AFPhead_part_47" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_47"/>
+    </body>
+    <body name="AFPhead_part_48" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_48"/>
+    </body>
+    <body name="AFPhead_part_49" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_49"/>
+    </body>
+    <body name="AFPhead_part_50" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_50"/>
+    </body>
+    <body name="AFPhead_part_51" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_51"/>
+    </body>
+    <body name="AFPhead_part_52" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_52"/>
+    </body>
+    <body name="AFPhead_part_53" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_53"/>
+    </body>
+    <body name="AFPhead_part_54" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_54"/>
+    </body>
+    <body name="AFPhead_part_55" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_55"/>
+    </body>
+    <body name="AFPhead_part_56" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_56"/>
+    </body>
+    <body name="AFPhead_part_57" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_57"/>
+    </body>
+    <body name="AFPhead_part_58" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_58"/>
+    </body>
+    <body name="AFPhead_part_59" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_59"/>
+    </body>
+    <body name="AFPhead_part_60" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_60"/>
+    </body>
+    <body name="AFPhead_part_61" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_61"/>
+    </body>
+    <body name="AFPhead_part_62" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_62"/>
+    </body>
+    <body name="AFPhead_part_63" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_63"/>
+    </body>
+    <body name="AFPhead_part_64" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_64"/>
+    </body>
+    <body name="AFPhead_part_65" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_65"/>
+    </body>
+    <body name="AFPhead_part_66" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_66"/>
+    </body>
+    <body name="AFPhead_part_67" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_67"/>
+    </body>
+    <body name="AFPhead_part_68" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_68"/>
+    </body>
+    <body name="AFPhead_part_69" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_69"/>
+    </body>
+    <body name="AFPhead_part_70" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_70"/>
+    </body>
+    <body name="AFPhead_part_71" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_71"/>
+    </body>
+    <body name="AFPhead_part_72" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_72"/>
+    </body>
+    <body name="AFPhead_part_73" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_73"/>
+    </body>
+    <body name="AFPhead_part_74" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_74"/>
+    </body>
+    <body name="AFPhead_part_75" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_75"/>
+    </body>
+    <body name="AFPhead_part_76" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_76"/>
+    </body>
+    <body name="AFPhead_part_77" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_77"/>
+    </body>
+    <body name="AFPhead_part_78" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_78"/>
+    </body>
+    <body name="AFPhead_part_79" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_79"/>
+    </body>
+    <body name="AFPhead_part_80" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_80"/>
+    </body>
+    <body name="AFPhead_part_81" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_81"/>
+    </body>
+    <body name="AFPhead_part_82" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_82"/>
+    </body>
+    <body name="AFPhead_part_83" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_83"/>
+    </body>
+    <body name="AFPhead_part_84" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_84"/>
+    </body>
+    <body name="AFPhead_part_85" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_85"/>
+    </body>
+    <body name="AFPhead_part_86" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_86"/>
+    </body>
+    <body name="AFPhead_part_87" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_87"/>
+    </body>
+    <body name="AFPhead_part_88" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_88"/>
+    </body>
+    <body name="AFPhead_part_89" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_89"/>
+    </body>
+    <body name="AFPhead_part_90" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_90"/>
+    </body>
+    <body name="AFPhead_part_91" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_91"/>
+    </body>
+    <body name="AFPhead_part_92" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_92"/>
+    </body>
+    <body name="AFPhead_part_93" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_93"/>
+    </body>
+    <body name="AFPhead_part_94" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_94"/>
+    </body>
+    <body name="AFPhead_part_95" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_95"/>
+    </body>
+    <body name="AFPhead_part_96" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_96"/>
+    </body>
+    <body name="AFPhead_part_97" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_97"/>
+    </body>
+    <body name="AFPhead_part_98" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_98"/>
+    </body>
+    <body name="AFPhead_part_99" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_99"/>
+    </body>
+    <body name="AFPhead_part_100" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_100"/>
+    </body>
+    <body name="AFPhead_part_101" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_101"/>
+    </body>
+    <body name="AFPhead_part_102" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_102"/>
+    </body>
+    <body name="AFPhead_part_103" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_103"/>
+    </body>
+    <body name="AFPhead_part_104" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_104"/>
+    </body>
+    <body name="AFPhead_part_105" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_105"/>
+    </body>
+    <body name="AFPhead_part_106" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_106"/>
+    </body>
+    <body name="AFPhead_part_107" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_107"/>
+    </body>
+    <body name="AFPhead_part_108" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_108"/>
+    </body>
+    <body name="AFPhead_part_109" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_109"/>
+    </body>
+    <body name="AFPhead_part_110" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_110"/>
+    </body>
+    <body name="AFPhead_part_111" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_111"/>
+    </body>
+    <body name="AFPhead_part_112" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_112"/>
+    </body>
+    <body name="AFPhead_part_113" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_113"/>
+    </body>
+    <body name="AFPhead_part_114" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_114"/>
+    </body>
+    <body name="AFPhead_part_115" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_115"/>
+    </body>
+    <body name="AFPhead_part_116" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_116"/>
+    </body>
+    <body name="AFPhead_part_117" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_117"/>
+    </body>
+    <body name="AFPhead_part_118" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_118"/>
+    </body>
+    <body name="AFPhead_part_119" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_119"/>
+    </body>
+    <body name="AFPhead_part_120" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_120"/>
+    </body>
+    <body name="AFPhead_part_121" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_121"/>
+    </body>
+    <body name="AFPhead_part_122" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_122"/>
+    </body>
+    <body name="AFPhead_part_123" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_123"/>
+    </body>
+    <body name="AFPhead_part_124" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_124"/>
+    </body>
+    <body name="AFPhead_part_125" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_125"/>
+    </body>
+    <body name="AFPhead_part_126" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_126"/>
+    </body>
+    <body name="AFPhead_part_127" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_127"/>
+    </body>
+    <body name="AFPhead_part_128" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_128"/>
+    </body>
+    <body name="AFPhead_part_129" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_129"/>
+    </body>
+    <body name="AFPhead_part_130" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_130"/>
+    </body>
+    <body name="AFPhead_part_131" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_131"/>
+    </body>
+    <body name="AFPhead_part_132" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_132"/>
+    </body>
+    <body name="AFPhead_part_133" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_133"/>
+    </body>
+    <body name="AFPhead_part_134" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_134"/>
+    </body>
+    <body name="AFPhead_part_135" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_135"/>
+    </body>
+    <body name="AFPhead_part_136" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_136"/>
+    </body>
+    <body name="AFPhead_part_137" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_137"/>
+    </body>
+    <body name="AFPhead_part_138" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_138"/>
+    </body>
+    <body name="AFPhead_part_139" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_139"/>
+    </body>
+    <body name="AFPhead_part_140" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_140"/>
+    </body>
+    <body name="AFPhead_part_141" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_141"/>
+    </body>
+    <body name="AFPhead_part_142" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_142"/>
+    </body>
+    <body name="AFPhead_part_143" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_143"/>
+    </body>
+    <body name="AFPhead_part_144" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_144"/>
+    </body>
+    <body name="AFPhead_part_145" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_145"/>
+    </body>
+    <body name="AFPhead_part_146" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_146"/>
+    </body>
+    <body name="AFPhead_part_147" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_147"/>
+    </body>
+    <body name="AFPhead_part_148" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_148"/>
+    </body>
+    <body name="AFPhead_part_149" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_149"/>
+    </body>
+    <body name="AFPhead_part_150" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_150"/>
+    </body>
+    <body name="AFPhead_part_151" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_151"/>
+    </body>
+    <body name="AFPhead_part_152" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_152"/>
+    </body>
+    <body name="AFPhead_part_153" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_153"/>
+    </body>
+    <body name="AFPhead_part_154" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_154"/>
+    </body>
+    <body name="AFPhead_part_155" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_155"/>
+    </body>
+    <body name="AFPhead_part_156" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_156"/>
+    </body>
+    <body name="AFPhead_part_157" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_157"/>
+    </body>
+    <body name="AFPhead_part_158" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_158"/>
+    </body>
+    <body name="AFPhead_part_159" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_159"/>
+    </body>
+    <body name="AFPhead_part_160" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_160"/>
+    </body>
+    <body name="AFPhead_part_161" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_161"/>
+    </body>
+    <body name="AFPhead_part_162" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_162"/>
+    </body>
+    <body name="AFPhead_part_163" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_163"/>
+    </body>
+    <body name="AFPhead_part_164" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_164"/>
+    </body>
+    <body name="AFPhead_part_165" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_165"/>
+    </body>
+    <body name="AFPhead_part_166" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_166"/>
+    </body>
+    <body name="AFPhead_part_167" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_167"/>
+    </body>
+    <body name="AFPhead_part_168" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_168"/>
+    </body>
+    <body name="AFPhead_part_169" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_169"/>
+    </body>
+    <body name="AFPhead_part_170" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_170"/>
+    </body>
+    <body name="AFPhead_part_171" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_171"/>
+    </body>
+    <body name="AFPhead_part_172" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_172"/>
+    </body>
+    <body name="AFPhead_part_173" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_173"/>
+    </body>
+    <body name="AFPhead_part_174" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_174"/>
+    </body>
+    <body name="AFPhead_part_175" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_175"/>
+    </body>
+    <body name="AFPhead_part_176" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_176"/>
+    </body>
+    <body name="AFPhead_part_177" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_177"/>
+    </body>
+    <body name="AFPhead_part_178" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_178"/>
+    </body>
+    <body name="AFPhead_part_179" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_179"/>
+    </body>
+    <body name="AFPhead_part_180" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_180"/>
+    </body>
+    <body name="AFPhead_part_181" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_181"/>
+    </body>
+    <body name="AFPhead_part_182" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_182"/>
+    </body>
+    <body name="AFPhead_part_183" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_183"/>
+    </body>
+    <body name="AFPhead_part_184" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_184"/>
+    </body>
+    <body name="AFPhead_part_185" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_185"/>
+    </body>
+    <body name="AFPhead_part_186" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_186"/>
+    </body>
+    <body name="AFPhead_part_187" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_187"/>
+    </body>
+    <body name="AFPhead_part_188" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_188"/>
+    </body>
+    <body name="AFPhead_part_189" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_189"/>
+    </body>
+    <body name="AFPhead_part_190" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_190"/>
+    </body>
+    <body name="AFPhead_part_191" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_191"/>
+    </body>
+    <body name="AFPhead_part_192" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_192"/>
+    </body>
+    <body name="AFPhead_part_193" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_193"/>
+    </body>
+    <body name="AFPhead_part_194" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_194"/>
+    </body>
+    <body name="AFPhead_part_195" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_195"/>
+    </body>
+    <body name="AFPhead_part_196" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_196"/>
+    </body>
+    <body name="AFPhead_part_197" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_197"/>
+    </body>
+    <body name="AFPhead_part_198" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_198"/>
+    </body>
+    <body name="AFPhead_part_199" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_199"/>
+    </body>
+    <body name="AFPhead_part_200" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_200"/>
+    </body>
+    <body name="AFPhead_part_201" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_201"/>
+    </body>
+    <body name="AFPhead_part_202" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_202"/>
+    </body>
+    <body name="AFPhead_part_203" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_203"/>
+    </body>
+    <body name="AFPhead_part_204" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_204"/>
+    </body>
+    <body name="AFPhead_part_205" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_205"/>
+    </body>
+    <body name="AFPhead_part_206" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_206"/>
+    </body>
+    <body name="AFPhead_part_207" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_207"/>
+    </body>
+    <body name="AFPhead_part_208" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_208"/>
+    </body>
+    <body name="AFPhead_part_209" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_209"/>
+    </body>
+    <body name="AFPhead_part_210" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_210"/>
+    </body>
+    <body name="AFPhead_part_211" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_211"/>
+    </body>
+    <body name="AFPhead_part_212" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_212"/>
+    </body>
+    <body name="AFPhead_part_213" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_213"/>
+    </body>
+    <body name="AFPhead_part_214" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_214"/>
+    </body>
+    <body name="AFPhead_part_215" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_215"/>
+    </body>
+    <body name="AFPhead_part_216" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_216"/>
+    </body>
+    <body name="AFPhead_part_217" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_217"/>
+    </body>
+    <body name="AFPhead_part_218" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_218"/>
+    </body>
+    <body name="AFPhead_part_219" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_219"/>
+    </body>
+    <body name="AFPhead_part_220" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_220"/>
+    </body>
+    <body name="AFPhead_part_221" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_221"/>
+    </body>
+    <body name="AFPhead_part_222" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_222"/>
+    </body>
+    <body name="AFPhead_part_223" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_223"/>
+    </body>
+    <body name="AFPhead_part_224" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_224"/>
+    </body>
+    <body name="AFPhead_part_225" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_225"/>
+    </body>
+    <body name="AFPhead_part_226" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_226"/>
+    </body>
+    <body name="AFPhead_part_227" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_227"/>
+    </body>
+    <body name="AFPhead_part_228" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_228"/>
+    </body>
+    <body name="AFPhead_part_229" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_229"/>
+    </body>
+    <body name="AFPhead_part_230" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_230"/>
+    </body>
+    <body name="AFPhead_part_231" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_231"/>
+    </body>
+    <body name="AFPhead_part_232" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_232"/>
+    </body>
+    <body name="AFPhead_part_233" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_233"/>
+    </body>
+    <body name="AFPhead_part_234" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_234"/>
+    </body>
+    <body name="AFPhead_part_235" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_235"/>
+    </body>
+    <body name="AFPhead_part_236" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_236"/>
+    </body>
+    <body name="AFPhead_part_237" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_237"/>
+    </body>
+    <body name="AFPhead_part_238" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_238"/>
+    </body>
+    <body name="AFPhead_part_239" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_239"/>
+    </body>
+    <body name="AFPhead_part_240" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_240"/>
+    </body>
+    <body name="AFPhead_part_241" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_241"/>
+    </body>
+    <body name="AFPhead_part_242" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_242"/>
+    </body>
+    <body name="AFPhead_part_243" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_243"/>
+    </body>
+    <body name="AFPhead_part_244" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_244"/>
+    </body>
+    <body name="AFPhead_part_245" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_245"/>
+    </body>
+    <body name="AFPhead_part_246" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_246"/>
+    </body>
+    <body name="AFPhead_part_247" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_247"/>
+    </body>
+    <body name="AFPhead_part_248" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_248"/>
+    </body>
+    <body name="AFPhead_part_249" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_249"/>
+    </body>
+    <body name="AFPhead_part_250" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_250"/>
+    </body>
+    <body name="AFPhead_part_251" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_251"/>
+    </body>
+    <body name="AFPhead_part_252" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_252"/>
+    </body>
+    <body name="AFPhead_part_253" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_253"/>
+    </body>
+    <body name="AFPhead_part_254" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_254"/>
+    </body>
+    <body name="AFPhead_part_255" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_255"/>
+    </body>
+    <body name="AFPhead_part_256" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_256"/>
+    </body>
+    <body name="AFPhead_part_257" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_257"/>
+    </body>
+    <body name="AFPhead_part_258" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_258"/>
+    </body>
+    <body name="AFPhead_part_259" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_259"/>
+    </body>
+    <body name="AFPhead_part_260" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_260"/>
+    </body>
+    <body name="AFPhead_part_261" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_261"/>
+    </body>
+    <body name="AFPhead_part_262" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_262"/>
+    </body>
+    <body name="AFPhead_part_263" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_263"/>
+    </body>
+    <body name="AFPhead_part_264" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_264"/>
+    </body>
+    <body name="AFPhead_part_265" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_265"/>
+    </body>
+    <body name="AFPhead_part_266" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_266"/>
+    </body>
+    <body name="AFPhead_part_267" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_267"/>
+    </body>
+    <body name="AFPhead_part_268" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_268"/>
+    </body>
+    <body name="AFPhead_part_269" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_269"/>
+    </body>
+    <body name="AFPhead_part_270" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_270"/>
+    </body>
+    <body name="AFPhead_part_271" pos="0 0 0" quat="1 0 0 0">
+      <geom type="mesh" rgba="1 1 1 1" mesh="AFPhead_part_271"/>
+    </body>
   <!-- <geom type="mesh" rgba="1 1 1 1" mesh="AFP_base_link"/> -->
     <body name="shoujuan_link" pos="0.09 0.00765 -0.11247" quat="0.707105 -0.707108 0 0">
       <inertial pos="0 0 -0.0091764" quat="0.5 0.5 -0.5 0.5" mass="0.0370388" diaginertia="1.43996e-05 8.04874e-06 8.04874e-06"/>

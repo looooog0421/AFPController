@@ -11,6 +11,6 @@ record:
   dwell_time_required: 1.0                        # 停留时间要求 (秒)
   min_record_time: 2.0                            # 最小录制时间 (秒)
 
-gravity_tare_file_name: gravity_tare.yaml
+gravity_tare_file_name: capture_config.yaml
 
 

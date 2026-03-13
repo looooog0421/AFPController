@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="120degree_model">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-1.66558744151121E-17 -0.0104159414126801 0.0200047656957359"
+        rpy="0 0 0" />
+      <mass
+        value="0.58117137694643" />
+      <inertia
+        ixx="0.00187979355618849"
+        ixy="2.92938722267831E-18"
+        ixz="-8.66486024079702E-19"
+        iyy="0.00235801610989525"
+        iyz="0.000548852531474529"
+        izz="0.00339625329260278" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://120degree_model/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://120degree_model/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

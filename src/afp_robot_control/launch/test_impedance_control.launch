@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- 测试模式选择 -->
+    <!-- 可选: fixed_position, circular, xy_motion, approach_contact -->
+    <arg name="test_mode" default="fixed_position" />
+    
+    <!-- 控制频率 -->
+    <arg name="control_frequency" default="100.0" />
+    
+    <!-- 固定位置模式参数 -->
+    <arg name="target_x" default="0.5" />
+    <arg name="target_y" default="0.0" />
+    <arg name="target_z" default="0.4" />
+    
+    <!-- 圆形轨迹参数 -->
+    <arg name="circle_radius" default="0.05" />
+    <arg name="circle_angular_vel" default="0.5" />
+    
+    <!-- XY运动参数 -->
+    <arg name="xy_start_y" default="-0.1" />
+    <arg name="xy_end_y" default="0.1" />
+    <arg name="xy_duration" default="5.0" />
+    
+    <!-- 接近接触参数 -->
+    <arg name="approach_start_z" default="0.5" />
+    <arg name="approach_end_z" default="0.41" />
+    <arg name="approach_duration" default="3.0" />
+    
+    
+    <!-- ROS测试节点 -->
+    <node name="impedance_controller_tester" 
+          pkg="afp_robot_control" 
+          type="test_ros_impedance_control.py" 
+          output="screen">
+        
+        <!-- 测试模式 -->
+        <param name="test_mode" value="$(arg test_mode)" />
+        <param name="control_frequency" value="$(arg control_frequency)" />
+        
+        <!-- 固定位置参数 -->
+        <rosparam param="target_position" subst_value="true">[$(arg target_x), $(arg target_y), $(arg target_z)]</rosparam>
+        <rosparam param="target_orientation">[1.0, 0.0, 0.0, 0.0]</rosparam>
+        
+        <!-- 圆形轨迹参数 -->
+        <rosparam param="circle_center" subst_value="true">[$(arg target_x), $(arg target_y), $(arg target_z)]</rosparam>
+        <param name="circle_radius" value="$(arg circle_radius)" />
+        <param name="circle_angular_vel" value="$(arg circle_angular_vel)" />
+        
+        <!-- XY运动参数 -->
+        <rosparam param="xy_start" subst_value="true">[$(arg target_x), $(arg xy_start_y), $(arg target_z)]</rosparam>
+        <rosparam param="xy_end" subst_value="true">[$(arg target_x), $(arg xy_end_y), $(arg target_z)]</rosparam>
+        <param name="xy_duration" value="$(arg xy_duration)" />
+        
+        <!-- 接近接触参数 -->
+        <param name="approach_start_z" value="$(arg approach_start_z)" />
+        <param name="approach_end_z" value="$(arg approach_end_z)" />
+        <param name="approach_duration" value="$(arg approach_duration)" />
+        
+    </node>
+    
+</launch>
