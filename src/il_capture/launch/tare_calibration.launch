@@ -8,8 +8,11 @@
 
     <!-- 2. 启动 NetFT Node (力传感器驱动) -->
     <!-- address 参数设置为您的传感器IP: 192.168.10.104 -->
-    <node pkg="netft_utils" type="netft_node" name="netft_node" output="screen"
-        args="--address=192.168.10.104 --rate=100"/>
+
+    
+    <node pkg="nbit_driver" type="nbit_sensor" name="nbit_sensor" output="screen" />
+
+
 
     <!-- 3. 启动 Rigid Body Tracker (刚体追踪计算) -->
     <!-- 假设 rigidbodytracker.py 在 il_capture/script 目录下 -->

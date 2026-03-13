@@ -67,5 +67,8 @@ class GravityCompensator:
         comp_force = raw_force - g_vec_sensor - self.f_bias
         # T_contact = T_raw - T_gravity - T_bias
         comp_torque = raw_torque - t_gravity_sensor - self.t_bias
-
+        # print("raw_f:       ", raw_force,    "raw_t:           ", raw_torque)
+        # print("g_vec_sensor:", g_vec_sensor, "t_gravity_sensor:", t_gravity_sensor)
+        # print("bias_f:      ", self.f_bias,  "bias_t:          ", self.t_bias)
+        # print("comp_force:  ", comp_force,   "comp_torque:     ", comp_torque)
         return comp_force, comp_torque

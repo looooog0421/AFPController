@@ -351,7 +351,7 @@
   <!-- ROS-Industrial 'tool0' frame: all-zeros tool frame -->
   <link name="tool0"/>
   <joint name="flange-tool0" type="fixed">
-    <origin rpy="0 0 0" xyz="0 0 0.237"/>
+    <origin rpy="0 0 0" xyz="0 0 0.161"/>
     <parent link="flange"/>
     <child link="tool0"/>
   </joint>

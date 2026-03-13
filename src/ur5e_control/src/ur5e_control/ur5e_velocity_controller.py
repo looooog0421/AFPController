@@ -125,6 +125,9 @@ class UR5eController:
         # ── 机器人状态 ──
         self.robot_state = RobotState()
         self.joint_idx_mapping = None  
+        self.last_vel_cmd = np.zeros(6)
+        self.alpha_filter = 0.15    
+
         self.kinematics_lock = threading.Lock()
 
         # —— 力传感器 ——
@@ -347,7 +350,8 @@ class UR5eController:
         target_pos_joint, success = self.IK(self.pin_model, 
                                    pin.SE3(target_rot, target_pos_cartesian), 
                                    "tool0", 
-                                   np.concatenate((self.robot_state.joint_state.position, np.zeros(self.pin_model.nq - 6)))
+                                   np.concatenate((self.robot_state.joint_state.position, np.zeros(self.pin_model.nq - 6))),
+                                   damp=1e-4
                                    )
         if success:
             self.move_to(target_pos_joint[:6], duration=duration, velocity=velocity, wait4complete=wait4complete)
@@ -385,6 +389,14 @@ class UR5eController:
             vel_cmd = scale_factor * target_joint_vel
         else:
             vel_cmd = target_joint_vel
+
+        vel_cmd_filtered = self.alpha_filter * vel_cmd + (1 - self.alpha_filter) * self.last_vel_cmd
+
+        max_acc = 1.0
+        max_delta_v = max_acc * self.dt
+        delta_v = np.clip(vel_cmd_filtered - self.last_vel_cmd, -max_delta_v, max_delta_v)
+        vel_cmd_filtered = self.last_vel_cmd + delta_v
+
 
         # print(f"max_joint_vel: {self.max_joint_vel}")
         # print(f"Servo Command: {vel_cmd}")
@@ -430,7 +442,7 @@ class UR5eController:
         v_cartesian[:3] = np.clip(v_cartesian[:3], -max_linear_vel, max_linear_vel)
         v_cartesian[3:] = np.clip(v_cartesian[3:], -max_angular_vel, max_angular_vel)
 
-        damp = 1e-4
+        damp = 5e-3
         JTT = J.T @ J + damp * np.eye(self.pin_model.nv)
         vel_cmd = np.linalg.solve(JTT, J.T @ v_cartesian)
 
@@ -624,12 +636,13 @@ if __name__ == "__main__":
     rospy.sleep(1.0)
 
 
+    target_rot = R.from_quat([-0.0092104, -0.999530, 0.00088203, 0.029188]).as_matrix()
+
     rospy.loginfo("Moving to above the mold...")
     controller.move_to_cartesian(
-        # target_pos=np.array([-0.54936, -0.20258, 0.00463]),
-        target_pos=np.array([-0.3, -0.3, 0.4]),
-        
-        target_rot=R.from_euler('xyz', [0, 180, 0], degrees=True).as_matrix(),
+        target_pos=np.array([-0.55674, -0.15408, 0.09856]),  # 根据实际情况调整初始位置，保持在模具上方
+        # target_pos=np.array([-0.3, -0.3, 0.4]),        
+        target_rot=target_rot,
         wait4complete=True
     )
 

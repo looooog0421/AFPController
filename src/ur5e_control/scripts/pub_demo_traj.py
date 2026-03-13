@@ -19,7 +19,7 @@ class DemoTrajectoryPublisher:
         rospy.init_node("demo_traj_publisher_200hz")
 
         # 2. 参数获取
-        default_path = "/home/lgx/Project/AFP/src/il_capture/data/layup_1768983281_20260121_161441_90_selected_selected_corrected.hdf5"
+        default_path = "/home/lgx/Project/AFP/src/il_capture/data/90_all_corrected_cleaned_smoothed.hdf5"
         self.file_path = rospy.get_param("~file_path", default_path)
         self.frame_id = rospy.get_param("~frame_id", "base_link")
 
@@ -34,6 +34,11 @@ class DemoTrajectoryPublisher:
         self.index = 0
         self.is_executing = False  # 标志位：是否开始顺着轨迹往下走
         self.is_finished = False   # 标志位：是否执行结束
+
+        # === 新增：用于控制周期性停顿的状态变量 ===
+        self.last_paused_index = 0
+        self.pause_end_time = rospy.Time(0)
+        # ======================================
 
         # 4. 初始化发布者
         self.pub = rospy.Publisher("/reference_trajectory",
@@ -51,7 +56,7 @@ class DemoTrajectoryPublisher:
             demo_names = list(data_group.keys())
             if len(demo_names) == 0:
                 raise RuntimeError("No demo found in hdf5 file.")
-            demo_name = demo_names[0]
+            demo_name = demo_names[20]
             action_20hz = data_group[demo_name]["action_without_wrench"][:]
 
         raw_traj_200hz = self.upsample_20_to_200(action_20hz)
@@ -231,6 +236,18 @@ class DemoTrajectoryPublisher:
 
         # 如果通过了安全确认，开始推进轨迹
         if self.is_executing:
+            current_time = rospy.Time.now()
+
+            if current_time < self.pause_end_time:
+                return
+            
+            if self.index > 0 and self.index % 100 == 0 and self.index != self.last_paused_index:
+                # 设定停顿结束的时间（当前时间 + 0.05秒）
+                self.pause_end_time = current_time + rospy.Duration(0.05)
+                self.last_paused_index = self.index
+                # rospy.loginfo(f"Pausing for 0.05s at index {self.index}...")
+                return  # 本回合不增加 self.index
+
             self.index += 1
             if self.index >= self.total_steps:
                 self.is_finished = True
