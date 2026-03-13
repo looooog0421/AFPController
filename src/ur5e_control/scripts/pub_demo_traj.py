@@ -55,6 +55,18 @@ class DemoTrajectoryPublisher:
             action_20hz = data_group[demo_name]["action_without_wrench"][:]
 
         raw_traj_200hz = self.upsample_20_to_200(action_20hz)
+
+        raw_quat = raw_traj_200hz[:, 3:7]
+
+        raw_euler = R.from_quat(raw_quat).as_euler('xyz', degrees=True)
+        
+        # 处理可能的万向锁跳变（为了画图好看，展开跳变）
+        raw_euler = np.unwrap(raw_euler, period=180, axis=0)
+
+        raw_euler[:600, :] = np.ones((600, 3)) * raw_euler[600, :]
+
+        raw_quat = R.from_euler('xyz', raw_euler, degrees=True).as_quat()
+        raw_traj_200hz[:, 3:7] = raw_quat
         
         # 这里使用了加大平滑力度的参数 (window=151)，你可以根据实际效果调整
         smooth_traj_200hz = self.smooth_trajectory(raw_traj_200hz, window_length=151, polyorder=3)
@@ -186,8 +198,12 @@ class DemoTrajectoryPublisher:
         smooth_euler = R.from_quat(smooth_quat).as_euler('xyz', degrees=True)
         
         # 处理可能的万向锁跳变（为了画图好看，展开跳变）
-        raw_euler = np.unwrap(raw_euler, period=360, axis=0)
-        smooth_euler = np.unwrap(smooth_euler, period=360, axis=0)
+        raw_euler = np.unwrap(raw_euler, period=180, axis=0)
+        smooth_euler = np.unwrap(smooth_euler, period=180, axis=0)
+
+        raw_euler[:600, :] = np.ones((600, 3)) * raw_euler[600, :]
+        smooth_euler[:600, :] = np.ones((600, 3)) * smooth_euler[600, :]
+        print(type(raw_euler))
 
         ax3.plot(time_axis, raw_euler[:, 0], color='r', linestyle=':', alpha=0.4)
         ax3.plot(time_axis, smooth_euler[:, 0], color='r', label='Roll (X)')

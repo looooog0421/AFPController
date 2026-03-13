@@ -68,7 +68,7 @@ JOINT_NAMES = [
 # /joint_states 中关节顺序到标准顺序的映射
 # JOINT_ORDER = [2, 1, 0, 3, 4, 5]
 
-DEFAULT_JOINT_POS = [np.pi/4, -np.pi/2, np.pi/2, -np.pi/2, -np.pi/2, -np.pi/4]
+DEFAULT_JOINT_POS = [0, -np.pi/2, np.pi/2, -np.pi/2, -np.pi/2, 3*np.pi/2]
 
 POS_CTRL_ACTION  = "/scaled_pos_joint_traj_controller/follow_joint_trajectory"
 VEL_CTRL_TOPIC   = "/joint_group_vel_controller/command"
@@ -632,7 +632,7 @@ if __name__ == "__main__":
 
     # 1. 切换到位置控制，移动到初始位置
     controller.switch_to_position_control()
-    controller.move2default(velocity=0.5, wait4complete=True)
+    controller.move2default(velocity=0.1, wait4complete=True)
     rospy.sleep(1.0)
 
 
