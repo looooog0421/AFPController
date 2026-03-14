@@ -5,18 +5,18 @@ import os
 from scipy.spatial.transform import Rotation as R
 
 # ================= 1. 参数配置 =================
-IMAGE_PATH = "/home/lgx/Project/hand_eye_calib/src/calibrate/raw_data/valid/frame_0000.png"
-CAMERA_MATRIX_PATH = '/home/lgx/.ros/camera_info/rgb_camera.yaml'
+IMAGE_PATH = "/home/lgx/Project/AFP/src/il_capture/calibrate/raw_data/valid/frame_0000.png"
+CAMERA_MATRIX_PATH = '/home/lgx/.ros/camera_info/realsense_rgb_camera.yaml'
 
 # 棋盘格参数 (必须与你打印的标定板完全一致)
-CHESSBOARD_SIZE = (11, 8)       # (列, 行) 内部角点数
-CHESSBOARD_SQUARE_SIZE = 0.01   # 每个格子的物理边长 (米)
+CHESSBOARD_SIZE = (8, 5)       # (列, 行) 内部角点数
+CHESSBOARD_SQUARE_SIZE = 0.02   # 每个格子的物理边长 (米)
 
 # 你提供的标定结果：相机到基坐标系的齐次变换矩阵 (Base_T_Cam)
 BASE_T_CAM = np.array([
-    [0.99784269, -0.01867954, 0.06293680, -0.48922722],
-    [-0.05087262, -0.82596274, 0.56142456, -0.61241286],
-    [0.04149630, -0.56341515, -0.82513116, 0.50541867],
+    [0.99903629, -0.03679041, 0.02393657, -0.50050414],
+    [-0.04203040, -0.64475045, 0.76323673, -0.62928837],
+    [-0.01264668, -0.76350725, -0.64567541, 0.47945488],
     [0.00000000, 0.00000000, 0.00000000, 1.00000000]
 
 ])

@@ -28,7 +28,7 @@ from gravity_compensator import GravityCompensator
 # 有效空间范围 以机械臂基座为参考系的立方体区域
 ROI_X = [-0.8, -0.4]  # 米
 ROI_Y = [-0.45, 0.0]
-ROI_Z = [0.0, 0.5]
+ROI_Z = [0.0, 0.4]
 
 TARGET_POINT_NUM = 10000  # 目标点云采样点数
 
@@ -99,7 +99,7 @@ class OnlineDataRecorder:
         rospy.Subscriber('/camera/depth/color/points', PointCloud2, self.pcd_callback, queue_size=1, buff_size=2**24)
 
         # 【调试】 发布处理后的点云数据
-        self.pcd_pub = rospy.Publisher('/debug/roi_pointcloud', PointCloud2, queue_size=1)
+        # self.pcd_pub = rospy.Publisher('/debug/roi_pointcloud', PointCloud2, queue_size=1)
 
         rospy.loginfo(f"ROI Settings: X{ROI_X}, Y{ROI_Y}, Z{ROI_Z}")
         rospy.loginfo("Recorder 节点初始化完成。等待指令...")
@@ -166,6 +166,7 @@ class OnlineDataRecorder:
     def pcd_callback(self, pcd_msg: PointCloud2):
         """点云回调"""
         if not self.is_recording:
+            # print("未在记录状态，跳过点云处理")
             return 
         
         with self.lock:
@@ -275,7 +276,7 @@ class OnlineDataRecorder:
             self.buffer['ee_wrench'].append(comp_wrench)
             self.buffer['pointclouds'].append(pointclouds)
 
-            # 【调试】 发布裁剪后的点云
+            # # 【调试】 发布裁剪后的点云
             # debug_pcd_msg = ros_numpy.point_cloud2.array_to_pointcloud2(
             #     np.hstack([roi_points, roi_colors]),
             #     frame_id=pcd_msg.header.frame_id,

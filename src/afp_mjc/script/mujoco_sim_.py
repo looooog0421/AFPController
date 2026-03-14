@@ -23,6 +23,10 @@ from std_msgs.msg import Float64MultiArray
 from controller_manager_msgs.srv import SwitchController, SwitchControllerResponse
 # ===============================================
 
+from scipy.spatial.transform import Rotation
+def mat2quat(R):
+    return Rotation.from_matrix(R).as_quat()  # 返回 [x, y, z, w]
+
 ROI_X = [-0.8, -0.4]
 ROI_Y = [-0.45, 0.0]
 ROI_Z = [0.01, 0.5]
@@ -84,7 +88,7 @@ class MujocoSim:
 
         self.ctrl_q = np.zeros(self.model.nu)
         
-        self.ee_body_name = "flange"
+        self.ee_body_name = "afp_roll_link" # 根据你的模型修改末端执行器的 body 名称 eg: flange
         self.force_sensor_name = "ee_force_sensor"
         self.torque_sensor_name = "ee_torque_sensor"
         self.joint_names = [
@@ -244,6 +248,9 @@ class MujocoSim:
 
         with viewer.launch_passive(self.model, self.data) as sim:
             while sim.is_running() and not rospy.is_shutdown():
+                sim.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTPOINT] = True
+                sim.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTFORCE] = True
+
                 wall_time = time.time() - start_time
                 
                 # === 物理步进核心修改：融合速度积分 ===
@@ -375,18 +382,51 @@ class MujocoSim:
         xyzrgb = np.hstack([xyz_world[:, :3], color])
         return xyzrgb
 
+    # def publish_state(self):
+    #     try:
+    #         body_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, self.ee_body_name)
+    #         pos = self.data.xpos[body_id]
+    #         quat_mjc = self.data.xquat[body_id]
+    #         pose_msg = PoseStamped()
+    #         pose_msg.header.stamp = rospy.Time.now()
+    #         pose_msg.header.frame_id = "world"
+    #         pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.position.z = pos
+    #         pose_msg.pose.orientation.w, pose_msg.pose.orientation.x, pose_msg.pose.orientation.y, pose_msg.pose.orientation.z = quat_mjc
+    #         self.ee_pose_pub.publish(pose_msg)
+    #     except Exception: pass
+
     def publish_state(self):
         try:
-            body_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, self.ee_body_name)
-            pos = self.data.xpos[body_id]
-            quat_mjc = self.data.xquat[body_id]
+            # 获取末端执行器在世界系下的位置和旋转矩阵
+            ee_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, self.ee_body_name)
+            pos_ee_world = self.data.xpos[ee_id]        # 末端在世界系下的位置
+            R_world_to_ee = self.data.xmat[ee_id].reshape(3, 3)  # 末端在世界系下的旋转矩阵
+
+            # 获取基座在世界系下的位置和旋转矩阵
+            base_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, 'base')
+            pos_base_world = self.data.xpos[base_id]    # 基座在世界系下的位置
+            R_world_to_base = self.data.xmat[base_id].reshape(3, 3)  # 基座在世界系下的旋转矩阵
+
+            # 计算末端相对于基座的位置
+            pos_in_base = R_world_to_base.T @ (pos_ee_world - pos_base_world)
+
+            # 计算末端相对于基座的旋转矩阵，再转为四元数
+            R_ee_in_base = R_world_to_base.T @ R_world_to_ee
+            quat_xyzw = mat2quat(R_ee_in_base)  # scipy: [x, y, z, w]
+
             pose_msg = PoseStamped()
             pose_msg.header.stamp = rospy.Time.now()
-            pose_msg.header.frame_id = "world"
-            pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.position.z = pos
-            pose_msg.pose.orientation.w, pose_msg.pose.orientation.x, pose_msg.pose.orientation.y, pose_msg.pose.orientation.z = quat_mjc
+            pose_msg.header.frame_id = 'base'  # 改为基座frame
+            pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.position.z = pos_in_base
+            # ROS四元数顺序是 x,y,z,w；MuJoCo原来是 w,x,y,z
+            pose_msg.pose.orientation.x = quat_xyzw[0]
+            pose_msg.pose.orientation.y = quat_xyzw[1]
+            pose_msg.pose.orientation.z = quat_xyzw[2]
+            pose_msg.pose.orientation.w = quat_xyzw[3]
+
             self.ee_pose_pub.publish(pose_msg)
-        except Exception: pass
+        except Exception as e:
+            rospy.logerr(f"publish_state error: {e}")
 
     def publish_wrench(self):
         try:
