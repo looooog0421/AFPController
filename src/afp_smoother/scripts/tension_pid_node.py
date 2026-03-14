@@ -10,7 +10,7 @@ class TensionPIDNode:
         rospy.init_node("tension_pid_node")
 
         # ================= [参数配置] =================
-        self.target_tension = rospy.get_param("~target_tension", 0.05)
+        self.target_tension = rospy.get_param("~target_tension", 0.1)
 
         # 速度系数 (Gain)
         # 含义：误差每相差 1.0，每一帧增加多少度

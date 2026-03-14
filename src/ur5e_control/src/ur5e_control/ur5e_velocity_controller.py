@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 UR5e 速度控制器基类
@@ -37,7 +37,7 @@ from pinocchio_kinematic import Kinematics
 # ------------------------------------ 数据类 ------------------------------------
 @dataclass
 class JointStates:
-    position: np.ndarray = field(default_factory=lambda: np.zeros(6))
+    position:np.ndarray = field(default_factory=lambda: np.zeros(6))
     velocity: np.ndarray = field(default_factory=lambda: np.zeros(6))
     effort:   np.ndarray = field(default_factory=lambda: np.zeros(6))
 
@@ -650,7 +650,7 @@ if __name__ == "__main__":
         wait4complete=True
     )
 
-    # # 2. 切换到速度控制，启用轨迹跟踪
-    # controller.switch_to_velocity_control()
-    # controller.enable_trajectory_tracking("/reference_trajectory")
-    # controller.run_tracking_loop()
+    # 2. 切换到速度控制，启用轨迹跟踪
+    controller.switch_to_velocity_control()
+    controller.enable_trajectory_tracking("/reference_trajectory")
+    controller.run_tracking_loop()

@@ -1,0 +1,64 @@
+<launch>
+  <!-- AFP bringup: start 5 nodes -->
+
+  <!-- tension sensor (RS485) -->
+  <arg name="tension_port" default="/dev/ttyUSB0"/>
+  <arg name="tension_baudrate" default="9600"/>
+  <arg name="tension_timeout" default="0.02"/>
+  <arg name="tension_read_interval" default="0.02"/>
+
+  <!-- tension PID -->
+  <arg name="target_tension" default="0.05"/>
+  <arg name="speed_gain" default="1.0"/>
+  <arg name="accumulate_limit" default="800.0"/>
+  <arg name="leak" default="0.999"/>
+  <arg name="sensor_timeout" default="0.2"/>
+  <arg name="deadband" default="0.02"/>
+  <arg name="tension_control_rate" default="50.0"/>
+
+  <!-- integration node -->
+  <arg name="integration_rate" default="200.0"/>
+
+  <!-- UR to AFP TF bridge -->
+  <arg name="base_frame" default="base"/>
+  <arg name="tcp_frame" default="tool0_controller"/>
+  <arg name="bridge_rate" default="200.0"/>
+  <arg name="roller_diameter" default="0.057"/>
+  <arg name="reduction_ratio" default="36.0"/>
+  <arg name="feedforward_gain" default="1.0"/>
+
+  <!-- 1) sensor + 2) motor CAN -->
+  <include file="$(find afp_integration)/launch/afp_bringup.launch">
+    <arg name="tension_port" value="$(arg tension_port)"/>
+    <arg name="tension_baudrate" value="$(arg tension_baudrate)"/>
+    <arg name="tension_timeout" value="$(arg tension_timeout)"/>
+    <arg name="tension_read_interval" value="$(arg tension_read_interval)"/>
+  </include>
+
+  <!-- 3) tension PID -->
+  <node pkg="afp_smoother" type="tension_pid_node.py" name="tension_pid_node" output="screen">
+    <param name="target_tension" value="$(arg target_tension)"/>
+    <param name="speed_gain" value="$(arg speed_gain)"/>
+    <param name="accumulate_limit" value="$(arg accumulate_limit)"/>
+    <param name="leak" value="$(arg leak)"/>
+    <param name="sensor_timeout" value="$(arg sensor_timeout)"/>
+    <param name="deadband" value="$(arg deadband)"/>
+    <param name="control_rate" value="$(arg tension_control_rate)"/>
+  </node>
+
+  <!-- 4) integration layer -->
+  <node pkg="afp_integration" type="afp_integration_node.py" name="afp_integration_node" output="screen">
+    <param name="control_rate" value="$(arg integration_rate)"/>
+  </node>
+
+  <!-- 5) UR TCP displacement to motor target angle -->
+  <node pkg="afp_integration" type="ur5e2afphead_bridge.py" name="afp_motor_sync_node" output="screen">
+    <param name="base_frame" value="$(arg base_frame)"/>
+    <param name="tcp_frame" value="$(arg tcp_frame)"/>
+    <param name="update_rate" value="$(arg bridge_rate)"/>
+
+    <param name="roller_diameter" value="$(arg roller_diameter)"/>
+    <param name="reduction_ratio" value="$(arg reduction_ratio)"/>
+    <param name="feedforward_gain" value="$(arg feedforward_gain)"/>
+  </node>
+</launch>
