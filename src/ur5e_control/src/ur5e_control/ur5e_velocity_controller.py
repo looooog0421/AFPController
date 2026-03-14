@@ -57,7 +57,7 @@ class RobotState:
 
 MODEL_PATH = os.path.join(
     os.path.expanduser("~"),
-    "Project/AFP/src/afp_mjc/env/mujoco_ur5e/ur5e.urdf"
+    "/home/hzk/AFPController/src/afp_mjc/env/mujoco_ur5e/ur5e.urdf"
 )
 
 JOINT_NAMES = [
@@ -87,7 +87,7 @@ class UR5eController:
                  control_freq   = 200.0,
                  servo_kp       = 8.0,
                  servo_kd       = 0.5,
-                 max_joint_vel  = [0.1, 0.1, 0.1, 0.2, 0.2, 0.2],
+                 max_joint_vel  = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
                  tracking_topic = "/reference_trajectory",
                  wrench_topic   = "/mujoco/ee_wrench",
                  filter_tau     = 0.05):
@@ -353,6 +353,7 @@ class UR5eController:
                                    np.concatenate((self.robot_state.joint_state.position, np.zeros(self.pin_model.nq - 6))),
                                    damp=1e-4
                                    )
+        print("target_pos: ", target_pos_joint)
         if success:
             self.move_to(target_pos_joint[:6], duration=duration, velocity=velocity, wait4complete=wait4complete)
         else:
@@ -640,6 +641,7 @@ if __name__ == "__main__":
     target_rot = R.from_quat([0, 1, 0, 0]).as_matrix()
 
     rospy.loginfo("Moving to above the mold...")
+    target_rot = R.from_quat([0, 1, 0, 0]).as_matrix()
     controller.move_to_cartesian(
         target_pos=np.array([-0.560, -0.140, 0.010]),  # 根据实际情况调整初始位置，保持在模具上方
         # target_pos=np.array([-0.3, -0.3, 0.4]),        
@@ -648,7 +650,7 @@ if __name__ == "__main__":
         wait4complete=True
     )
 
-    # 2. 切换到速度控制，启用轨迹跟踪
-    controller.switch_to_velocity_control()
-    controller.enable_trajectory_tracking("/reference_trajectory")
-    controller.run_tracking_loop()
+    # # 2. 切换到速度控制，启用轨迹跟踪
+    # controller.switch_to_velocity_control()
+    # controller.enable_trajectory_tracking("/reference_trajectory")
+    # controller.run_tracking_loop()
