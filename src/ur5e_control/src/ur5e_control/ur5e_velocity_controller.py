@@ -632,7 +632,7 @@ if __name__ == "__main__":
 
     # 1. 切换到位置控制，移动到初始位置
     controller.switch_to_position_control()
-    controller.move2default(velocity=0.1, wait4complete=True)
+    controller.move2default(velocity=0.3, wait4complete=True)
     rospy.sleep(1.0)
 
 
@@ -641,7 +641,7 @@ if __name__ == "__main__":
 
     rospy.loginfo("Moving to above the mold...")
     controller.move_to_cartesian(
-        target_pos=np.array([-0.560, -0.140, 0.017]),  # 根据实际情况调整初始位置，保持在模具上方
+        target_pos=np.array([-0.560, -0.140, 0.010]),  # 根据实际情况调整初始位置，保持在模具上方
         # target_pos=np.array([-0.3, -0.3, 0.4]),        
         target_rot=target_rot,
         velocity=0.1,
