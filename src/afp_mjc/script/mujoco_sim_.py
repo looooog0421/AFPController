@@ -29,7 +29,7 @@ def mat2quat(R):
 
 ROI_X = [-0.8, -0.4]
 ROI_Y = [-0.45, 0.0]
-ROI_Z = [0.01, 0.5]
+ROI_Z = [-0.01, 0.5]
 
 def resample_pointcloud(points: np.ndarray, target_num: int = 2048, method: Literal['random', 'farthest'] = 'farthest') -> np.ndarray:
     # [保留原有的点云处理函数，此处省略详细实现以保持整洁，请保留你原文件中的实现]
@@ -80,6 +80,20 @@ class MujocoSim:
         full_path = os.path.abspath(model_path)
         self.model = mujoco.MjModel.from_xml_path(full_path)
         self.data = mujoco.MjData(self.model)
+        # --- 新增：加载 XML 中定义的关键帧 ---
+        # try:
+        #     # 查找名为 "home" 的关键帧 ID
+        #     key_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_KEY, "home")
+        #     if key_id != -1:
+        #         # 将 data 重置到该关键帧的状态
+        #         mujoco.mj_resetDataKeyframe(self.model, self.data, key_id)
+        #         # 重要：同步控制器的初始目标，防止启动时瞬间弹回 0 位
+        #         self.ctrl_q[:6] = self.data.qpos[:6]
+        #         rospy.loginfo("Successfully loaded 'home' keyframe.")
+        # except Exception as e:
+        #     rospy.logwarn(f"Could not load keyframe: {e}")
+        self.data.qpos[:6] = np.array([0, -np.pi/2, np.pi/2, -np.pi/2, -np.pi/2, 3*np.pi/2])  # UR5e home pose
+        self.ctrl_q = self.data.qpos.copy()  # 控制目标初始与当前状态一致，防止跳变
 
         self.height = 480
         self.width = 640
