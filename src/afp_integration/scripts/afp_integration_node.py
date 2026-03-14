@@ -14,7 +14,7 @@ class AFPIntegrationNode:
 
         # ================= [安全限幅参数] =================
         self.pid_correction_limit = 800      # 张力补偿最大绝对值（度）
-        self.final_target_rel_limit = 2500.0  # 相对零点最大偏移（度）
+        self.final_target_rel_limit = 2000.0  # 相对零点最大偏移（度）- 提高到10000以支持长距离运动
         self.control_rate = rospy.get_param("~control_rate", 200.0)
         # ================================================
 
