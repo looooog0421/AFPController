@@ -2,7 +2,7 @@ import coacd
 import trimesh
 import numpy as np
 
-filename = "/home/lgx/Project/AFP/src/afp_mjc/env/120degree_model/meshes/120degree_model.STL"
+filename = "/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/90degree_model.STL"
 mesh = trimesh.load(filename)
 print(f"原始模型加载完成: {filename}")
 
@@ -40,7 +40,7 @@ save_confirm = input("是否保存分解后的模型？(y/n): ")
 if save_confirm.lower() == 'y':
     for i, (verts, faces) in enumerate(parts):
         sub_mesh = trimesh.Trimesh(verts, faces)
-        sub_mesh.export(f"/home/lgx/Project/AFP/src/afp_mjc/env/120degree_model/meshes/parts/120degree_model_part_{i}.STL")
+        sub_mesh.export(f"/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_{i}.STL")
     print("保存完成。")
 
 # ==========================================

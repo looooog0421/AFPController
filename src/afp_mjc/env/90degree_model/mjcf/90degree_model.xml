@@ -16,6 +16,10 @@
     <mesh name="90degree_model_col_12" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_12.STL"/>
     <mesh name="90degree_model_col_13" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_13.STL"/>
     <mesh name="90degree_model_col_14" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_14.STL"/>
+    <mesh name="90degree_model_col_15" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_15.STL"/>
+    <mesh name="90degree_model_col_16" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_16.STL"/>
+    <mesh name="90degree_model_col_17" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_17.STL"/>
+    <mesh name="90degree_model_col_18" file="/home/lgx/Project/AFP/src/afp_mjc/env/90degree_model/meshes/parts/90degree_model_part_18.STL"/>
   </asset>
 
   <worldbody>
@@ -62,6 +66,21 @@
         </body>
         <body name="col_13">
             <geom type="mesh" mesh="90degree_model_col_13" group="2"/>
+        </body>
+        <body name="col_14">
+            <geom type="mesh" mesh="90degree_model_col_14" group="2"/>
+        </body>
+        <body name="col_15">
+            <geom type="mesh" mesh="90degree_model_col_15" group="2"/>
+        </body>
+        <body name="col_16">
+            <geom type="mesh" mesh="90degree_model_col_16" group="2"/>
+        </body>
+        <body name="col_17">
+            <geom type="mesh" mesh="90degree_model_col_17" group="2"/>
+        </body>
+        <body name="col_18">
+            <geom type="mesh" mesh="90degree_model_col_18" group="2"/>
         </body>
     </body>
   </worldbody>
