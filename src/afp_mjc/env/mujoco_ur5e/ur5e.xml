@@ -2,9 +2,7 @@
   <compiler angle="radian" meshdir="assets" autolimits="true"/>
   <!-- <include file="../AFPhead/mjcf/AFPhead.xml"/> -->
   <option integrator="implicitfast" gravity="0 0 -9.81"/>
-  <!-- <keypoint>
-    <key name="home" qpos="0 -1.57 1.57 -1.57 -1.57 0"/>
-  </keypoint> -->
+
   <default>
     <default class="ur5e">
       <material specular="0.5" shininess="0.25"/>

@@ -11,19 +11,6 @@ data/
 MUJOCO_LOG.TXT
 pcanview.log
 
-src/afp_mjc/env/AFPhead/meshes/
-src/afp_mjc/env/AFPhead/urdf/*.STL
-
-src/afp_mjc/env/flange_model/meshes/
-src/afp_mjc/env/flange_model/urdf/*.STL
-
-src/afp_mjc/env/flange_model2/meshes/
-src/afp_mjc/env/flange_model2/urdf/*.STL
-
-src/afp_mjc/env/90degree_model/meshes/
-src/afp_mjc/env/flange_model/urdf/*.STL
-
-src/afp_mjc/env/mujoco_ur5e/assets/
 
 src/il_capture/data/
 
@@ -31,3 +18,6 @@ src/il_capture/calibrate/raw_data
 
 
 src/ur5e_control/src/ur5e_control/_pycache__
+
+__pycache__/
+*.pyc
