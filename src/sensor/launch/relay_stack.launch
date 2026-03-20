@@ -1,0 +1,40 @@
+<launch>
+  <!-- 串口参数 -->
+  <arg name="relay_port"          default="/dev/ttyACM0"/>
+  <arg name="relay_baudrate"      default="9600"/>
+  <arg name="relay_timeout"       default="0.02"/>
+  <arg name="relay_address"       default="254"/>
+  <arg name="output1_coil_addr"   default="0"/>
+  <arg name="output2_coil_addr"   default="1"/>
+
+  <!-- 是否启用旧版 Int32 魔法数接口（过渡期可设为 true） -->
+  <arg name="enable_legacy_cmd"   default="false"/>
+  <arg name="legacy_cmd_topic"    default="/relay2/cmd"/>
+
+  <!-- 继电器驱动节点（唯一占用串口） -->
+  <node pkg="sensor" type="relay_control.py" name="relay_driver" output="screen">
+    <param name="port"              value="$(arg relay_port)"/>
+    <param name="baudrate"          value="$(arg relay_baudrate)"/>
+    <param name="timeout"           value="$(arg relay_timeout)"/>
+    <param name="relay_address"     value="$(arg relay_address)"/>
+    <param name="output1_coil_addr" value="$(arg output1_coil_addr)"/>
+    <param name="output2_coil_addr" value="$(arg output2_coil_addr)"/>
+    <param name="enable_legacy_cmd" value="$(arg enable_legacy_cmd)"/>
+    <param name="legacy_cmd_topic"  value="$(arg legacy_cmd_topic)"/>
+  </node>
+
+  <!-- 剪刀语义控制节点：/scissor/enable (Bool) -> /relay_driver/output1/set -->
+  <node pkg="sensor" type="scissor_controller.py" name="scissor_controller" output="screen">
+    <param name="enable_topic"  value="/scissor/enable"/>
+    <param name="service_name"  value="/relay_driver/output1/set"/>
+    <param name="label"         value="scissor"/>
+  </node>
+
+  <!-- 压紧语义控制节点：/clamp/enable (Bool) -> /relay_driver/output2/set -->
+  <node pkg="sensor" type="clamp_controller.py" name="clamp_controller" output="screen">
+    <param name="enable_topic"  value="/clamp/enable"/>
+    <param name="service_name"  value="/relay_driver/output2/set"/>
+    <param name="label"         value="clamp"/>
+  </node>
+
+</launch>

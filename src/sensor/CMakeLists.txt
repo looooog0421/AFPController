@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   std_msgs
+  std_srvs
   trajectory_msgs
 )
 
@@ -109,7 +110,7 @@ catkin_python_setup()
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES sensor
- CATKIN_DEPENDS control_msgs geometry_msgs roscpp rospy sensor_msgs std_msgs trajectory_msgs 
+ CATKIN_DEPENDS control_msgs geometry_msgs roscpp rospy sensor_msgs std_msgs std_srvs trajectory_msgs
 #  DEPENDS system_lib
 )
 
@@ -166,6 +167,8 @@ include_directories(
 catkin_install_python(PROGRAMS
   src/sensor/tension_rs485.py
   script/relay_control.py
+  script/scissor_controller.py
+  script/clamp_controller.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

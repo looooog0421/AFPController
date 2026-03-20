@@ -1,5 +1,5 @@
 <launch>
-  <!-- AFP bringup: start 5 nodes -->
+  <!-- AFP bringup: start 6 nodes -->
 
   <!-- tension sensor (RS485) -->
   <arg name="tension_port" default="/dev/ttyUSB0"/>
@@ -26,6 +26,17 @@
   <arg name="roller_diameter" default="0.057"/>
   <arg name="reduction_ratio" default="36.0"/>
   <arg name="feedforward_gain" default="1.0"/>
+
+  <!-- motor2 resend -->
+  <arg name="motor2_resend_length_m" default="0.09"/>
+  <arg name="motor2_roller_diameter_m" default="0.02"/>
+  <arg name="motor2_direction_sign" default="1.0"/>
+  <arg name="motor2_command_rate_hz" default="20.0"/>
+  <arg name="motor2_ramp_speed_deg_s" default="90.0"/>
+  <arg name="motor2_hold_after_done" default="false"/>
+  <arg name="motor2_kp" default="800.0"/>
+  <arg name="motor2_ki" default="0.0"/>
+  <arg name="motor2_kd" default="8.0"/>
 
   <!-- 1) sensor + 2) motor CAN -->
   <include file="$(find afp_integration)/launch/afp_bringup.launch">
@@ -60,5 +71,18 @@
     <param name="roller_diameter" value="$(arg roller_diameter)"/>
     <param name="reduction_ratio" value="$(arg reduction_ratio)"/>
     <param name="feedforward_gain" value="$(arg feedforward_gain)"/>
+  </node>
+
+  <!-- 6) motor2 resend standby node -->
+  <node pkg="afp_integration" type="afp_motor2_resend_node.py" name="afp_motor2_resend_node" output="screen">
+    <param name="resend_length_m" value="$(arg motor2_resend_length_m)"/>
+    <param name="roller_diameter_m" value="$(arg motor2_roller_diameter_m)"/>
+    <param name="direction_sign" value="$(arg motor2_direction_sign)"/>
+    <param name="command_rate_hz" value="$(arg motor2_command_rate_hz)"/>
+    <param name="ramp_speed_deg_s" value="$(arg motor2_ramp_speed_deg_s)"/>
+    <param name="hold_after_done" value="$(arg motor2_hold_after_done)"/>
+    <param name="kp" value="$(arg motor2_kp)"/>
+    <param name="ki" value="$(arg motor2_ki)"/>
+    <param name="kd" value="$(arg motor2_kd)"/>
   </node>
 </launch>

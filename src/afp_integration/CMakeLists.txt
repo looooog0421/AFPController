@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   motor_msgs
   rospy
   std_msgs
+  std_srvs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -161,6 +162,7 @@ include_directories(
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
   scripts/afp_integration_node.py
+  scripts/afp_motor2_resend_node.py
   scripts/afp_feedforward_demo.py
   scripts/afp_experiment_logger.py
   scripts/afp_plot_experiment.py
@@ -191,6 +193,7 @@ catkin_install_python(PROGRAMS
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 install(FILES
   launch/afp_bringup.launch
+  launch/afp_five_nodes.launch
   launch/afp_experiment.launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 )

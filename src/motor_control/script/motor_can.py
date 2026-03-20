@@ -30,8 +30,8 @@ class PIDcontroller:
         self.iout = 0
         self.dout = 0
         # 安全电流限制
-        self.output_max = 3000.0 
-        self.output_min = -3000.0 
+        self.output_max = 3000.0
+        self.output_min = -3000.0
 
     def pid_reset(self, kp, ki, kd):
         self.kp = kp
@@ -42,11 +42,11 @@ class PIDcontroller:
     def pid_update(self, pos, vel):
         self.pos = pos
         self.vel = vel
-        
+
     def pid_calculate(self, target):
         self.target = target
         err = self.target - self.pos
-        
+
         # ===【新增安全保护】===
         # 如果误差超过 180 度，说明失控了，直接返回 0 并报警
         if abs(err) > 900.0:
@@ -55,62 +55,130 @@ class PIDcontroller:
         # ======================
 
         self.pout = self.kp * err
-        
+
         # 积分分离
         if abs(err) < 30.0:
             self.iout += self.ki * err * 0.005
         else:
-            self.iout = 0 
-            
+            self.iout = 0
+
         # 积分限幅
-        if self.iout > 1000: self.iout = 1000
-        if self.iout < -1000: self.iout = -1000
-        
+        if self.iout > 1000:
+            self.iout = 1000
+        if self.iout < -1000:
+            self.iout = -1000
+
         self.dout = self.kd * (0 - self.vel)
 
         output = self.pout + self.iout + self.dout
 
         # 总输出限幅
-        if output > self.output_max: output = self.output_max
-        if output < self.output_min: output = self.output_min
-        
+        if output > self.output_max:
+            output = self.output_max
+        if output < self.output_min:
+            output = self.output_min
+
         return output
 
+class CanCurrentMux0x200:
+    def __init__(self, channel='can0', tx_rate_hz=200.0, arbitration_id=512):
+        self.channel = channel
+        self.tx_period = 1.0 / tx_rate_hz if tx_rate_hz > 0 else 0.005
+        self.arbitration_id = arbitration_id
+        self.lock = threading.Lock()
+        self.currents = {513: 0, 514: 0}
+        self.running = True
+
+        try:
+            self.bus = can.interface.Bus(
+                channel=self.channel,
+                bustype='socketcan',
+                bitrate=1000000,
+            )
+        except Exception as e:
+            rospy.logerr(f"CAN TX Init Error: {e}")
+            raise
+
+        self.tx_thread = threading.Thread(target=self._tx_loop)
+        self.tx_thread.daemon = True
+        self.tx_thread.start()
+
+    def register_motor(self, motor_id):
+        with self.lock:
+            self.currents.setdefault(motor_id, 0)
+
+    def set_current(self, motor_id, curr):
+        with self.lock:
+            self.currents[motor_id] = int(curr)
+
+    def _build_data(self):
+        data = [0x00] * 8
+        for motor_id, slot in ((513, 0), (514, 2)):
+            curr = self.currents.get(motor_id, 0)
+            _, hexh, hexl = Dec2Hex16(curr)
+            data[slot] = int(hexh, 16)
+            data[slot + 1] = int(hexl, 16)
+        return data
+
+    def _send_once(self):
+        with self.lock:
+            data = self._build_data()
+        try:
+            msg = can.Message(arbitration_id=self.arbitration_id, is_extended_id=False, data=data)
+            self.bus.send(msg)
+        except can.CanError:
+            pass
+
+    def _tx_loop(self):
+        while self.running:
+            loop_start_time = time.time()
+            self._send_once()
+            elapsed = time.time() - loop_start_time
+            if self.tx_period > elapsed:
+                time.sleep(self.tx_period - elapsed)
+
+    def stop(self):
+        self.running = False
+        with self.lock:
+            for motor_id in self.currents:
+                self.currents[motor_id] = 0
+        self._send_once()
+
 class MotorControl:
-    def __init__(self, id):
+    def __init__(self, id, mux, channel='can0', reduction_ratio=36.0):
         self.id = id
+        self.mux = mux
         # ==========================================
         # 【关键修改 1】设置减速比
         # M2006 (C610) 通常是 36.0
         # M3508 (C620) 通常是 19.2
         # 你先填 36.0，如果动得太大了就改 19.2
-        self.reduction_ratio = 36.0 
+        self.reduction_ratio = reduction_ratio
         # ==========================================
-        mid, h, l = Dec2Hex16(id)
+        mid, _, _ = Dec2Hex16(id)
         filters = [{"can_id": int(mid, 16), "can_mask": 0xFFFF, "extended": False}]
-        
+
         try:
-            self.bus = can.interface.Bus(channel='can0', bustype='socketcan', bitrate=1000000, can_filters=filters)
+            self.bus = can.interface.Bus(channel=channel, bustype='socketcan', bitrate=1000000, can_filters=filters)
         except Exception as e:
             rospy.logerr(f"CAN Init Error: {e}")
-            return
+            raise
 
+        self.mux.register_motor(self.id)
         self.pid_controller = PIDcontroller(0, 0, 0)
         self.lock = threading.Lock()
-        
+
         self.raw_angle_last = -1
         self.circle_count = 0
         self.total_angle = 0.0
         self.last_speed = 0
         self.last_torque = 0
-        
+
         self.debug_current_cmd = 0.0
         self.current_target = 0
-        self.enable_control = False 
+        self.enable_control = False
         self.last_cmd_time = time.time()
         self.running = True
-        
-        # 删除滤波器相关变量
 
         self.recv_thread = threading.Thread(target=self._can_receiver_thread)
         self.recv_thread.daemon = True
@@ -125,20 +193,14 @@ class MotorControl:
             self.raw_angle_last = current_raw
             return 0
         diff = current_raw - self.raw_angle_last
-        
-        # 多圈计数逻辑不变
-        if diff < -4000: self.circle_count += 1
-        elif diff > 4000: self.circle_count -= 1
-        
+
+        if diff < -4000:
+            self.circle_count += 1
+        elif diff > 4000:
+            self.circle_count -= 1
+
         self.raw_angle_last = current_raw
-        
-        # ==========================================
-        # 【关键修改 2】引入减速比计算
-        # 原始公式: (circles * 8192 + raw) / 8192 * 360
-        # 修正公式: 除以 self.reduction_ratio
-        # ==========================================
         total_rotor_angle = (self.circle_count * 8192.0 + current_raw) / 8192.0 * 360.0
-        
         return total_rotor_angle / self.reduction_ratio
 
     def _can_receiver_thread(self):
@@ -149,7 +211,7 @@ class MotorControl:
                     raw_angle = msg.data[0] * 256 + msg.data[1]
                     speed = GetS16(msg.data[2] * 256 + msg.data[3])
                     torque = GetS16(msg.data[4] * 256 + msg.data[5])
-                    
+
                     with self.lock:
                         self.total_angle = self._check_multiturn(raw_angle)
                         self.last_speed = speed
@@ -160,72 +222,53 @@ class MotorControl:
 
     def _control_loop_thread(self):
         target_period = 0.005 # 200Hz
-        loop_counter = 0
         last_print_time = time.time()
-        
+
         while self.running:
             loop_start_time = time.time()
-            
-            # 看门狗
+
             if time.time() - self.last_cmd_time > 0.2:
                 self.enable_control = False
-            
+
             output = 0
             if self.enable_control:
                 with self.lock:
-                    # ===【修正】直接计算，不滤波 output ===
                     output = self.pid_controller.pid_calculate(self.current_target)
                 self.send_msg(output)
             else:
                 self.send_msg(0)
-                output = 0
-            
+
             self.debug_current_cmd = output
-            
-            # 频率控制
+
             elapsed = time.time() - loop_start_time
             if target_period > elapsed:
                 time.sleep(target_period - elapsed)
-            
-            # ===【修正】频率打印逻辑 ===
-            # 每 1 秒强制打印一次，不依赖 loop count，防止因为循环卡顿而不打印
+
             if time.time() - last_print_time > 1.0:
                 actual_loop_time = time.time() - loop_start_time
                 if actual_loop_time > 0:
                     freq = 1.0 / actual_loop_time
-                    # 只有频率异常才报警告，否则是 Info
                     if freq < 180:
-                        rospy.logwarn(f"[Motor Thread] LOW FREQ: {freq:.1f}Hz")
+                        rospy.logwarn(f"[Motor Thread {self.id}] LOW FREQ: {freq:.1f}Hz")
                     else:
-                        rospy.loginfo(f"[Motor Thread] Stable: {freq:.1f}Hz")
+                        rospy.loginfo(f"[Motor Thread {self.id}] Stable: {freq:.1f}Hz")
                 last_print_time = time.time()
 
     def set_target(self, target, kp, ki, kd):
         with self.lock:
             self.current_target = target
-            # 只有当参数变化很大时才 reset，防止频繁清空积分
-            if kp != self.pid_controller.kp: 
+            if kp != self.pid_controller.kp or ki != self.pid_controller.ki or kd != self.pid_controller.kd:
                 self.pid_controller.pid_reset(kp, ki, kd)
             self.enable_control = True
             self.last_cmd_time = time.time()
 
     def send_msg(self, curr):
-        _, hexh, hexl = Dec2Hex16(int(curr))
-        data = [0x00] * 8
-        if self.id == 513:
-            data[0] = int(hexh, 16); data[1] = int(hexl, 16)
-        elif self.id == 514:
-            data[2] = int(hexh, 16); data[3] = int(hexl, 16)
-        try:
-            msg = can.Message(arbitration_id=512, is_extended_id=False, data=data)
-            self.bus.send(msg)
-        except can.CanError:
-            pass
+        self.mux.set_current(self.id, curr)
 
     def measure(self):
         with self.lock:
             return self.total_angle, self.last_speed, self.last_torque
-            
+
     def get_debug_info(self):
         return self.debug_current_cmd, self.current_target, self.total_angle
 
@@ -233,33 +276,58 @@ class MotorControl:
         self.running = False
         self.send_msg(0)
 
-# ... [Class ServoMotorLowLevelControl 保持不变] ...
 class ServoMotorLowLevelControl:
     def __init__(self):
         rospy.init_node("servo_motor_ros_interface", anonymous=True)
+        can_channel = rospy.get_param('~can_channel', 'can0')
+        tx_rate_hz = rospy.get_param('~tx_rate_hz', 200.0)
+        motor1_id = rospy.get_param('~motor1_id', 513)
+        motor2_id = rospy.get_param('~motor2_id', 514)
+        motor1_ratio = rospy.get_param('~motor1_reduction_ratio', 36.0)
+        motor2_ratio = rospy.get_param('~motor2_reduction_ratio', 36.0)
+
         self.motor_status_pub1 = rospy.Publisher('motor1_status', Motor, queue_size=1)
         self.motor_cmd_sub1 = rospy.Subscriber('/motor1_cmd', Motor, self.motor_cmd_cb1)
+        self.motor_status_pub2 = rospy.Publisher('motor2_status', Motor, queue_size=1)
+        self.motor_cmd_sub2 = rospy.Subscriber('/motor2_cmd', Motor, self.motor_cmd_cb2)
         self.debug_pub = rospy.Publisher('/afp/debug/current_cmd', Float32, queue_size=1)
-        
-        self.m1ctrl = MotorControl(513)
-        rospy.loginfo("底层驱动已启动 (无滤波器版本)")
-        
+
+        self.mux = CanCurrentMux0x200(channel=can_channel, tx_rate_hz=tx_rate_hz)
+        self.m1ctrl = MotorControl(motor1_id, self.mux, channel=can_channel, reduction_ratio=motor1_ratio)
+        self.m2ctrl = MotorControl(motor2_id, self.mux, channel=can_channel, reduction_ratio=motor2_ratio)
+        rospy.loginfo("底层驱动已启动 (双电机共享0x200发送版本)")
+
     def __del__(self):
+        self.shutdown()
+
+    def shutdown(self):
         self.m1ctrl.stop()
+        self.m2ctrl.stop()
+        self.mux.stop()
 
     def motor_cmd_cb1(self, data):
         self.m1ctrl.set_target(data.position, data.kp, data.ki, data.kd)
 
+    def motor_cmd_cb2(self, data):
+        self.m2ctrl.set_target(data.position, data.kp, data.ki, data.kd)
+
     def publish_status(self):
-        angle, speed, torque = self.m1ctrl.measure()
-        calc_current, target, _ = self.m1ctrl.get_debug_info()
-        
-        motor_msg = Motor()
-        motor_msg.position = float(angle)
-        motor_msg.velocity = float(speed)
-        motor_msg.torque = float(torque)
-        self.motor_status_pub1.publish(motor_msg)
+        angle1, speed1, torque1 = self.m1ctrl.measure()
+        calc_current, _, _ = self.m1ctrl.get_debug_info()
+
+        motor_msg1 = Motor()
+        motor_msg1.position = float(angle1)
+        motor_msg1.velocity = float(speed1)
+        motor_msg1.torque = float(torque1)
+        self.motor_status_pub1.publish(motor_msg1)
         self.debug_pub.publish(Float32(data=calc_current))
+
+        angle2, speed2, torque2 = self.m2ctrl.measure()
+        motor_msg2 = Motor()
+        motor_msg2.position = float(angle2)
+        motor_msg2.velocity = float(speed2)
+        motor_msg2.torque = float(torque2)
+        self.motor_status_pub2.publish(motor_msg2)
 
 if __name__ == "__main__":
     motor_interface = ServoMotorLowLevelControl()
@@ -271,4 +339,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
     finally:
-        motor_interface.m1ctrl.stop()
+        motor_interface.shutdown()
