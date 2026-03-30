@@ -83,12 +83,18 @@ class MujocoSim:
 
         self.height = 480
         self.width = 640
-        self.renderer = mujoco.Renderer(self.model, height=self.height, width=self.width)
-        self.camera_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_CAMERA, "depth_camera")
+        self.renderer = None
+        self.camera_id = -1
+        try:
+            self.renderer = mujoco.Renderer(self.model, height=self.height, width=self.width)
+            self.camera_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_CAMERA, "depth_camera")
+        except Exception:
+            self.renderer = None
+            self.camera_id = -1
 
         self.ctrl_q = np.zeros(self.model.nu)
-        
-        self.ee_body_name = "afp_roll_link" # 根据你的模型修改末端执行器的 body 名称 eg: flange
+
+        self.ee_body_name = "tool0" # 与控制器URDF中的tool0对齐
         self.force_sensor_name = "ee_force_sensor"
         self.torque_sensor_name = "ee_torque_sensor"
         self.joint_names = [
@@ -140,9 +146,12 @@ class MujocoSim:
         rospy.Timer(rospy.Duration(1.0 / wrench_freq), lambda event: self.publish_wrench())
         rospy.Timer(rospy.Duration(1.0 / joint_state_freq), lambda event: self.publish_state())
         rospy.Timer(rospy.Duration(1.0 / joint_state_freq), lambda event: self.publish_joint_states())
-        rospy.Timer(rospy.Duration(1.0 / self.pointcloud_freq), lambda event: self.pointcloud_publisher())
+        if self.renderer is not None and self.camera_id != -1:
+            rospy.Timer(rospy.Duration(1.0 / self.pointcloud_freq), lambda event: self.pointcloud_publisher())
+            self._precompute_camera_params()
+        else:
+            rospy.logwarn("No depth_camera found in MuJoCo scene, pointcloud publishing disabled.")
 
-        self._precompute_camera_params()
         self.run_simulation()
 
     # ============ 新增的接口模拟回调函数 ============
@@ -279,17 +288,17 @@ class MujocoSim:
                 #     # self.publish_state()
                 #     self.last_pc_time = wall_time
                 # === 修改核心：主线程只负责极其快速的渲染并把数据交接给后台 ===
-                if wall_time - self.last_pc_time >= pc_interval:
+                if self.renderer is not None and self.camera_id != -1 and wall_time - self.last_pc_time >= pc_interval:
                     with self.data_lock:
                         mujoco.mj_forward(self.model, self.data)
                         rgb, depth = self.render_rgbd()
                         cam_pos = self.data.cam_xpos[self.camera_id].copy()
                         cam_rot = self.data.cam_xmat[self.camera_id].reshape(3, 3).copy()
-                    
+
                     # 将渲染结果放入缓冲区，供 Timer 线程提取
                     with self.pc_buffer_lock:
                         self.latest_render_data = (rgb, depth, cam_pos, cam_rot)
-                    
+
                     self.last_pc_time = wall_time
 
                 sim.sync()
@@ -445,7 +454,7 @@ class MujocoSim:
         except Exception: pass
 
 if __name__ == "__main__":
-    model_path = "/home/lgx/Project/AFP/src/afp_mjc/env/mujoco_ur5e/scene.xml"
+    model_path = "/home/hzk/AFPController/src/afp_mjc/env/mujoco_ur5e/scene_contact_nomesh.xml"
     rospy.init_node("mujoco_sim_node")
     try:
         sim = MujocoSim(model_path)

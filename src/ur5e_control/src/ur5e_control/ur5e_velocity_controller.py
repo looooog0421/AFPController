@@ -31,8 +31,8 @@ import threading
 
 # 工具类
 sys.path.insert(0, os.path.dirname(__file__))
-from lowpass_filter import LowPassOnlineFilter
 from pinocchio_kinematic import Kinematics
+from wrench_processor import WrenchProcessor, WrenchProcessorConfig
 
 # ------------------------------------ 数据类 ------------------------------------
 @dataclass
@@ -131,13 +131,24 @@ class UR5eController:
         self.kinematics_lock = threading.Lock()
 
         # —— 力传感器 ——
-        self.current_wrench = np.zeros(6)  # [fx, fy, fz, tx, ty, tz]
+        self.current_wrench = np.zeros(6)  # processed ee-frame compensated wrench [fx, fy, fz, tx, ty, tz]
+        self.raw_wrench = np.zeros(6)
         self.wrench_received = False
-        self._wrench_filter = LowPassOnlineFilter(
-            dimension=6,
-            tau=filter_tau,
-            dt=self.dt,
-            initial_states=np.zeros(6)
+        self.wrench_ready = False
+        self.wrench_timestamp = 0.0
+        self.wrench_config_path = rospy.get_param(
+            "~wrench_config_path",
+            "/home/hzk/AFPController/src/il_capture/config/capture_config.yaml"
+        )
+        self.wrench_processor = WrenchProcessor(
+            WrenchProcessorConfig.from_yaml(
+                file_path=self.wrench_config_path,
+                dt=self.dt,
+                filter_tau=filter_tau,
+                tare_sample_count=int(rospy.get_param("~wrench_tare_samples", 100)),
+                wrench_timeout=float(rospy.get_param("~wrench_timeout", 0.2)),
+                enable_point_shift=bool(rospy.get_param("~wrench_enable_point_shift", False)),
+            )
         )
 
         # —— 轨迹跟踪 ——
@@ -221,16 +232,30 @@ class UR5eController:
 
     def _wrench_callback(self, msg: WrenchStamped):
         """
-        力传感器回调函数，更新当前末端执行器的力数据，并进行低通滤波
+        力传感器回调函数，更新处理后的末端力数据
         """
         try:
             raw_wrench = np.array([
                 msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z,
                 msg.wrench.torque.x, msg.wrench.torque.y, msg.wrench.torque.z
-            ])
-            self.current_wrench = self._wrench_filter.update(raw_wrench)
-            self.wrench_received = True
+            ], dtype=float)
+            self.raw_wrench = raw_wrench.copy()
+
+            with self.kinematics_lock:
+                ee_rotation = self.robot_state.ee_state.robot_trans[:3, :3].copy()
+
+            state = self.wrench_processor.update(
+                raw_wrench=raw_wrench,
+                ee_rotation=ee_rotation,
+                timestamp=msg.header.stamp.to_sec() if msg.header.stamp else time.time()
+            )
+
+            self.current_wrench = state.compensated_ee_wrench.copy()
+            self.wrench_timestamp = state.timestamp
+            self.wrench_ready = state.ready and self.wrench_processor.is_ready(time.time())
+            self.wrench_received = state.tare_done
         except Exception as e:
+            self.wrench_ready = False
             rospy.logwarn_throttle(5.0, f"wrench_callback error: {e}")
     
     def _reference_trajectory_callback(self, msg: PoseStamped):
@@ -534,6 +559,9 @@ class UR5eController:
             self.trajectory_tracking_enabled = False
             rospy.loginfo("Trajectory tracking disabled")
 
+    def is_wrench_ready(self) -> bool:
+        return bool(self.wrench_ready and self.wrench_processor.is_ready(time.time()))
+
     def compute_servo_command(self, target_pos, target_rot):
         """
         计算伺服控制命令，基于当前位姿和目标位姿的误差
@@ -640,11 +668,10 @@ if __name__ == "__main__":
     # quat = np.array([-0.0098799, 0.98947, 0.015474, -0.14354]) # xyzw
     target_rot = R.from_quat([0, 1, 0, 0]).as_matrix()
 
-    rospy.loginfo("Moving to above the mold...")
+    rospy.loginfo("Moving to above the contact table...")
     target_rot = R.from_quat([0, 1, 0, 0]).as_matrix()
     controller.move_to_cartesian(
-        target_pos=np.array([-0.560, -0.140, 0.010]),  # 根据实际情况调整初始位置，保持在模具上方
-        # target_pos=np.array([-0.3, -0.3, 0.4]),        
+        target_pos=np.array([0.450, -0.250, 0.500]),
         target_rot=target_rot,
         velocity=0.1,
         wait4complete=True

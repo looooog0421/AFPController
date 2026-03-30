@@ -89,6 +89,12 @@ class UR5eAdmittanceController(UR5eController):
         if target_wrench is None:
             target_wrench = self.target_wrench
 
+        if not self.is_wrench_ready():
+            self._in_contact = False
+            self._dxc *= self.release_decay
+            self._xc *= self.release_decay
+            return np.zeros(6)
+
         F_ext = self.current_wrench.copy()  # 当前末端力/力矩
         F_err = target_wrench - F_ext  # 力/力矩误差
 
@@ -199,6 +205,12 @@ class UR5eAdmittanceController(UR5eController):
                         ref_rot = self.robot_state.ee_state.robot_trans[:3, :3]
 
                     
+                    if not self.is_wrench_ready():
+                        self.reset_admittance_state()
+                        self.servo_cartesian_pos(ref_pos, ref_rot)
+                        self.rate.sleep()
+                        continue
+
                     corrected_pos, corrected_rot = self.compute_servo_command(ref_pos, ref_rot)
                     
                     loop_count += 1
@@ -213,7 +225,8 @@ class UR5eAdmittanceController(UR5eController):
                             f"EE: [{ee_pos[0]:.3f}, {ee_pos[1]:.3f}, {ee_pos[2]:.3f}] | "
                             f"Target: [{corrected_pos[0]:.3f}, {corrected_pos[1]:.3f}, {corrected_pos[2]:.3f}] | "
                             f"Ref: [{ref_pos[0]:.3f}, {ref_pos[1]:.3f}, {ref_pos[2]:.3f}]"
-                            f"wrench: [{self.current_wrench[0]:.2f}, {self.current_wrench[1]:.2f}, {self.current_wrench[2]:.2f}] N"
+                            f" wrench_ready: {self.is_wrench_ready()} |"
+                            f" wrench: [{self.current_wrench[0]:.2f}, {self.current_wrench[1]:.2f}, {self.current_wrench[2]:.2f}] N"
                         )
                         last_log_time = now
 
